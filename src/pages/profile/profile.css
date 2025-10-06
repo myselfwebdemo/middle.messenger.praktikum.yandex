@@ -1,0 +1,31 @@
+.profile {
+    --sg: 13vh;
+    width: 35%;
+    height: 100%;
+    /* background: rgba(135, 207, 235, 0.137); */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+._profile-icon {
+    margin: 0 auto;
+}
+.profile h1 {
+    width: 100%;
+    text-align: center;
+    font-weight: 900;
+    font-size: x-large;
+    text-transform: capitalize;
+    margin: 3vh 0 var(--sg) 0;
+}
+.profile-action {
+    margin-top: var(--sg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5vh;
+}
+.profile ._send.back-btn {
+    top: 48.2vh;
+    left: 5vw;
+}

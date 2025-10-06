@@ -1,0 +1,16 @@
+<div class="dialog-wrapper">
+        <div class="dialog">
+            <h1>{{title}}</h1>
+            {{> component_input 
+                class="recipient"
+                id="login"
+                label="Login"
+                type="text"
+                value=recipientLogin}}
+            {{> component_button 
+                type="primary"
+                btype="submit" 
+                clientAction=atr}}
+        </div>
+    </div>
+</div>

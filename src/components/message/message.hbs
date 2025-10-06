@@ -1,0 +1,22 @@
+<div class="body _{{mesType}} {{#if fromYou}}_self{{else}}_toSelf{{/if}}">
+    {{#if (eq mesType 'text')}}
+        <p>{{mesContent}}</p>
+    {{else}}
+        <img src="{{mesSrc}}">
+    {{/if}}
+    <h6>{{time}}</h6>
+</div>
+
+{{!-- 
+
+mesType: text, image
+fromYou: boolean
+
+if mesType = 'text':
+    mesContent
+else:
+    mesSrc
+
+time
+
+ --}}

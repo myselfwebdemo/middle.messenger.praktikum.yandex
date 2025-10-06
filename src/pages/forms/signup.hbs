@@ -1,0 +1,72 @@
+<form class="form">
+    <div class="header">
+        <h1 class="form-title">Join</h1>
+        <span class="form-switch">
+            <span>Part of a hub?</span> 
+            {{> component_button type="secondary" btype="button" clientAction="Access It"}}
+        </span>
+    </div>
+    <div class="input-fields">
+        {{> component_input
+            class="form-input"
+            id="form-input email"
+            label="Email"
+            type="email" 
+            name="email" 
+            required="true"
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input username"
+            label="Username"
+            type="text" 
+            name="username" 
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input name"
+            label="Name"
+            type="text" 
+            name="name"
+            required="true"
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input surname"
+            label="Surname"
+            type="text" 
+            name="surname"
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input phone"
+            label="Phone"
+            name="phone" 
+            type="tel" 
+            autocomplete='tel'
+            inputmode='numeric'
+            pattern='[0-9]*'
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input password"
+            label="Password"
+            type="password" 
+            name="password" 
+            required="true"
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input passworda"
+            label="Password (again)"
+            type="password" 
+            name="passworda" 
+            required="true"
+        }}
+    </div>
+    {{> component_button 
+        type="primary"
+        btype="submit" 
+        clientAction="Get Started" 
+    }}
+</form>

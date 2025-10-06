@@ -1,0 +1,29 @@
+<form class="form" method="POST">
+    <div class="header">
+        <h1 class="form-title">Login</h1>
+        <span class="form-switch">
+            <span>No account? No problem.</span> 
+            {{> component_button type="secondary" btype="button" clientAction="Boot New Profile"}}
+        </span>
+    </div>
+    <div class="input-fields">
+        {{> component_input 
+            class="form-input"
+            id="username"
+            label="Email or username"
+            type="text" 
+            name="username"
+            required="true"}}
+        {{> component_input 
+            class="form-input"
+            id="password"
+            label="Password"
+            type="password" 
+            name="password" 
+            required="true"}}
+    </div>
+    {{> component_button 
+        type="primary"
+        btype="submit" 
+        clientAction="Jump In"}}
+</form>

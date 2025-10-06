@@ -1,0 +1,19 @@
+.psl {
+    width: 100%;
+    height: fit-content;
+    padding: 1.3vh 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: solid var(--border-thickness) var(--lightgray);
+}
+.psl:last-child {
+    border-bottom: none;
+}
+.psl p:nth-child(1) {
+    color: var(--theme-main-color);
+}
+.psl p:last-child {
+    color: var(--secondary-text-color);
+}

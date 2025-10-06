@@ -1,0 +1,197 @@
+<div class="chatapp-container">
+    <div class="sidebar">
+        <div class="explore">
+            {{> component_button
+                type="secondary"
+                btype="button"
+                clientAction="Profile"
+                typeIMG="true"
+                src="to.png"
+                onclick="userprofile"}}
+            <span id="search-container">
+                {{> component_input
+                    id="search"
+                    placeholder="Search"
+                    typeIMG="true"
+                    src="search.png"}}
+            </span>
+        </div>
+        <div class="chat-list">
+            {{> chatCard 
+                src="/profile/1.png"
+                recipientName="Elizabeth"
+                lastMessage="Hey, I just seen a very cool car!"
+                time="2:00"}}
+            {{> chatCard 
+                src="/profile/3.png"
+                recipientName="George"
+                lastTextYou=true
+                lastMessage="Whassup."
+                time="10:03"
+                unread=10000}}
+            {{> chatCard 
+                src="/profile/2.png"
+                recipientName="Marie"
+                lastMessage="Have you done the slides?"
+                time="8:42"
+                unread=4}}
+            {{> chatCard 
+                selected=true
+                src="/profile/4.png"
+                recipientName="John"
+                lastTextYou=true
+                lastMessage="Bro check out the new podcast!"
+                unread=10
+                time="3:23"}}
+            {{> chatCard
+                recipientName="Elizabeth"
+                lastTextYou=true
+                lastMessage="Hey, I just saw a really cool car!"
+                time="09:12"}}
+            {{> chatCard
+                recipientName="Michael"
+                lastMessage="Don’t forget the meeting tomorrow."
+                time="10:45"}}
+            {{> chatCard
+                recipientName="Sophia"
+                lastTextYou=true
+                lastMessage="Lunch at the new café later?"
+                time="11:20"}}
+            {{> chatCard
+                recipientName="Daniel"
+                lastMessage="Can you send me the report draft?"
+                time="12:03"}}
+            {{> chatCard
+                recipientName="Olivia"
+                lastTextYou=true
+                lastMessage="Loved the photos you posted!"
+                time="12:45"}}
+            {{> chatCard
+                recipientName="James"
+                lastMessage="I’ll be late to practice today."
+                time="01:15"}}
+            {{> chatCard
+                recipientName="Amelia"
+                lastMessage="Movie night tonight?"
+                time="02:27"}}
+            {{> chatCard
+                recipientName="Ethan"
+                lastTextYou=true
+                lastMessage="Did you finish the homework?"
+                time="03:10"}}
+            {{> chatCard
+                recipientName="Chloe"
+                lastTextYou=true
+                lastMessage="Happy birthday again! 🎉"
+                time="04:30"}}
+            {{> chatCard
+                recipientName="Liam"
+                lastMessage="I’m almost at the station."
+                time="05:02"}}
+        </div>
+    </div>
+    <div class="chat">
+        <span class="chat-header">
+            <span>
+                {{> component_image
+                    class="chat-recipient"
+                    src="/profile/4.png"}}
+                    {{!-- INPUT REAL recipient's image by fetching--}}
+                <h3>John</h3>
+                {{!-- INPUT REAL recipient's name --}}
+            </span>
+            <div class="action-to-recipient">
+                {{> component_image
+                    class="action-to-recipient drop-btn"
+                    src="atr.png"}}
+
+                <ul class="atr-choice">
+                    <li class="atr-li">
+                        {{> component_image
+                            class="atr-choice"
+                            src="recipient-add.png"}}
+                        Add recipient
+                    </li>
+                    {{!-- <li class="remove-recipient">
+                        {{> component_image
+                            class="atr-choice"
+                            src="recipient-delete.png"}}
+                        Remove recipient
+                    </li> --}}
+                    <li>
+                        {{> component_button 
+                            type="fatal-primary del-rec"
+                            btype="button"
+                            clientAction="Remove recipient"}}
+                    </li>
+                </ul>
+            </div>
+        </span>
+        <div class="messages">
+            {{> message 
+                mesType="text"
+                mesContent="Look at this."
+                time="12:30"}}
+            {{> message 
+                mesType="image"
+                mesSrc="/main.png"
+                time="1:31"}}
+            {{> message 
+                mesType="text"
+                fromYou=true
+                mesContent="Cool!"
+                time="2:02"}}
+            {{> message 
+                mesType="text"
+                fromYou=true
+                mesContent="For all the marvel of our technological ascendancy—the transistors etched finer than a human hair, the processors orchestrating trillions of operations each second—our comprehension of the inner life of modern computing remains astonishingly incomplete. We know, in principle, the logic of silicon; we design the architectures, dictate the algorithms, trace the flow of electrons through gates no wider than strands of DNA. Yet as the scale of these systems surpasses the intuitive reach of the human mind, an uncanny opacity emerges."
+                time="2:15"}}
+            {{> message 
+                mesType="image"
+                fromYou=true
+                mesSrc="/image.png"
+                time="3:13"}}
+        </div>
+        <span class="prompt">
+            <span class="add-btn-container">
+                {{> component_image
+                    class="add-btn drop-btn"
+                    src="add.png"}}
+                    
+                <ul class="abc-choice">
+                    <li>
+                        {{> component_image
+                            class="abc-choice"
+                            src="abc-iov.png"}}
+                        Photo or Video
+                    </li>
+                    <li>
+                        {{> component_image
+                            class="abc-choice"
+                            src="abc-files.png"}}
+                        Files
+                    </li>
+                    <li>
+                        {{> component_image
+                            class="abc-choice"
+                            src="pin.png"}}
+                        Location
+                    </li>
+                </ul>
+            </span>
+            {{> component_input
+                id="prompt-line"
+                type="text"
+                placeholder="Communicate..."}}
+            {{> component_button
+                typeIMG=true
+                type="send"
+                btype="submit"
+                src="send.png"}}
+        </span>
+    </div>
+</div>
+{{> dialog
+    title='Add recipient'
+    atr='Add'
+    recipientLogin='destroyer1997'}}

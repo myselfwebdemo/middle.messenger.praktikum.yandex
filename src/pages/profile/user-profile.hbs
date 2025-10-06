@@ -1,0 +1,35 @@
+<div class="profile">
+    {{> component_image
+        class="profile-icon"
+        src=""}}
+    <h1>user name</h1>
+    <div class="ps-lines">
+        {{#each upPSLcontext}}
+            {{> profileSettingLine
+                trait=trait
+                traitValue=value}}
+        {{/each}}
+    </div>
+    <div class="profile-action">
+        {{> component_button
+            type="c2-primary"
+            btype="button"
+            clientAction="Edit profile"}}
+        {{> component_button
+            type="c2-primary"
+            btype="button"
+            clientAction="Change password"}}
+        {{> component_button
+            type="fatal-secondary"
+            btype="button"
+            clientAction="Log out"}}
+    </div>
+
+
+
+    {{> component_button
+        typeIMG=true
+        type="send back-btn"
+        btype="button"
+        src="back.png"}}
+</div>

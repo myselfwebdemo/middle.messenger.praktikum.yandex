@@ -1,0 +1,12 @@
+<button class="button _{{type}}" type="{{btype}}" 
+{{#if onclick}}onclick="render({{onclick}})"{{/if}}>
+    {{#if clientAction}}{{clientAction}}{{/if}}
+    {{#if typeIMG}}<img src="/assets/{{src}}">{{/if}}
+</button>
+
+{{!-- 
+
+type: primary, tetriary, link
+btype: button type
+
+ --}}
