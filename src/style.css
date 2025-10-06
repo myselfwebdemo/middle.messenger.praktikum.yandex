@@ -44,7 +44,6 @@ body {
     position: absolute;
     width: var(--size);
     height: var(--size);
-    padding: 3vh;
     pointer-events: none;
     filter: drop-shadow(0 0 2vh var(--theme-main-color));
     z-index: 9999;
