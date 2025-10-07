@@ -7,4 +7,5 @@ export default defineConfig({
     partialDirectory: path.resolve(__dirname, 'src/components'),
   })],
   assetsInclude: ['**/*.hbs']
-}) 
+})
+ 
