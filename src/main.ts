@@ -36,6 +36,8 @@ const pages = {
     'e5': [Pages.e5Page],
     'chatapp': [Pages.chatApp],
     'userprofile': [Pages.UserProfile, UPPSLC],
+    'upediti': [Pages.UPeditProfile, UPPSLC],
+    'uppass': [Pages.UPchangePass],
 }
 
 function render(page: string) {
@@ -98,6 +100,16 @@ function render(page: string) {
                 searchContainer.style.justifyContent = 'center';
             }
         })
+        document.querySelector('.toprofile').addEventListener('click', () => {
+            render('userprofile');
+        })
+    } else if (page == 'userprofile') {
+        const ppcTrigger = document.querySelector('.pi-wrapper');
+        ppcTrigger.addEventListener('click', dialogOpen);
+
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            render('chatapp');
+        })
     }
 }
 
@@ -149,9 +161,7 @@ function drops() {
             }
         });
     });
-    atrLi.addEventListener('click', () => {
-        dialogOpen();
-    });
+    atrLi.addEventListener('click', dialogOpen);
     document.addEventListener('click', (e) => {   
         if (!e.target.closest('._action-to-recipient') && !e.target.closest('._atr-choice')) {
             atrChoice.style.display = 'none';
@@ -192,7 +202,6 @@ function sendMessage() {
         }
     });
 }
-
 
 function dialogOpen() {
     const dialogWrapper = document.querySelector('.dialog-wrapper');

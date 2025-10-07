@@ -1,4 +1,21 @@
 <span class="psl">
     <p>{{trait}}</p>
-    <p>{{traitValue}}</p>
+    {{#if traitValue}}<p>{{traitValue}}</p>{{/if}}
+    {{#if reqInput}}
+        {{> component_input
+            class=class
+            type=type
+            placeholder=plchldr
+            required="true"}}
+    {{/if}}
 </span>
+
+{{!-- 
+
+trait: Email, Username, Name, etc.
+traitValue if traitValue
+if reqInput:
+    class
+    type
+
+ --}}

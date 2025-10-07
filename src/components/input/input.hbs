@@ -1,7 +1,7 @@
 {{#if label}}<label for="{{id}}">{{label}}</label>{{/if}}
 <input 
   {{#if class}}class="{{class}}"{{/if}}
-  id="{{id}}" 
+  {{#if id}}id="{{id}}"{{/if}}
   type="{{type}}" 
   {{#if name}}name="{{name}}"{{/if}}
   {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}

@@ -1,0 +1,44 @@
+<div class="profile">
+    {{> component_button
+        typeIMG=true
+        type="send back-btn"
+        btype="button"
+        src="back.png"}}
+
+
+
+    <div class="pi-wrapper">
+        {{> component_image
+            class="profile-icon"
+            src=""}}
+    </div>
+    <h1>user name</h1>
+    <div class="paw">
+        <div class="ps-lines">
+            {{> profileSettingLine
+                trait="Old password"
+                plchldr="Current password"
+                reqInput="true"
+                class="paw-input"
+                type="password"}}
+            {{> profileSettingLine
+                trait="New password"
+                plchldr="New password"
+                reqInput="true"
+                class="paw-input"
+                type="password"}}
+            {{> profileSettingLine
+                trait="New password (again)"
+                plchldr="Confirmation"
+                reqInput="true"
+                class="paw-input"
+                type="password"}}
+        </div>
+        <div class="profile-action">
+            {{> component_button
+                type="primary"
+                btype="button"
+                clientAction="Change password"}}
+        </div>
+    </div>
+</div>

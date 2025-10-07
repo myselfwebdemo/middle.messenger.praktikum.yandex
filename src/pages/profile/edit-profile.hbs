@@ -1,0 +1,33 @@
+<div class="profile">
+    {{> component_button
+        typeIMG=true
+        type="send back-btn"
+        btype="button"
+        src="back.png"}}
+
+
+
+    <div class="pi-wrapper">
+        {{> component_image
+            class="profile-icon"
+            src=""}}
+    </div>
+    <h1>user name</h1>
+    <div class="paw">
+        <div class="ps-lines">
+            {{#each upPSLcontext}}
+                {{> profileSettingLine
+                    trait=trait
+                    reqInput="true"
+                    class="paw-input"
+                    type="text"}}
+            {{/each}}
+        </div>
+        <div class="profile-action">
+            {{> component_button
+                type="primary"
+                btype="button"
+                clientAction="Confirm changes"}}
+        </div>
+    </div>
+</div>

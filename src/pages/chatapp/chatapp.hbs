@@ -2,7 +2,7 @@
     <div class="sidebar">
         <div class="explore">
             {{> component_button
-                type="secondary"
+                type="secondary toprofile"
                 btype="button"
                 clientAction="Profile"
                 typeIMG="true"
@@ -192,6 +192,10 @@
     </div>
 </div>
 {{> dialog
-    title='Add recipient'
-    atr='Add'
-    recipientLogin='destroyer1997'}}
+    title="Add recipient"
+    class="recipient"
+    id="login"
+    label="Logic"
+    atr="Add"
+    itype="text"
+    recipientLogin="destroyer1997"}}

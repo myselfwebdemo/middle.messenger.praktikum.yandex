@@ -36,7 +36,7 @@
     font-weight: 600;
     margin-bottom: 2.5vh;
 }
-.recipient {
+.dialog .recipient {
     --strength: 1.6vh;
     width: var(--form-header-width);
     margin: 0 0 4vh 0;
@@ -44,7 +44,7 @@
     color: var(--primary-text-color);
     transition: var(--theme-transition);
 }
-.recipient:focus {
+.dialog .recipient:focus {
     border-bottom: solid var(--border-thickness) var(--theme-comlpementary-color);
 }
 .dialog label {
@@ -53,4 +53,10 @@
 }
 .dialog button {
     margin: 0;
+}
+.dialog .file-submit {
+    padding: 1.2vh 0 2.4vh 0;
+}
+.dialog .file-submit::file-selector-button {
+    color: blue;
 }
