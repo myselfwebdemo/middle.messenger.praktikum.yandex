@@ -6,12 +6,12 @@
     flex-direction: column;
     justify-content: center;
 }
-.pi-wrapper {
+.profile-icon-wrapper {
     position: relative;
     margin: 0 auto;
     overflow: hidden;
 }
-.profile-origin .pi-wrapper:hover::after {
+.profile-origin .profile-icon-wrapper:hover::after {
     position: absolute;
     content: 'Change avatar';
     inset: 0;
@@ -63,9 +63,6 @@
 .profile .paw-input::placeholder {
     color: var(--secondary-text-color);
 }
-/* .profile .paw-input::placeholder {
-    color: lightgray;
-} */
 .profile ._primary {
     width: 50%;
 }

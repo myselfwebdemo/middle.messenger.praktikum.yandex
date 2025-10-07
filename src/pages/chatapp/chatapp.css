@@ -31,7 +31,6 @@
     -webkit-backdrop-filter: var(--blur);
     mask-image: linear-gradient(to top, transparent 0%, black 27%);
     -webkit-mask-image: linear-gradient(to top, transparent 0%, black 27%);
-    /* border-bottom: solid var(--border-thickness) var(--lightgray); */
 }
 .explore button:hover > img {
     filter: var(--theme-sub1-color-filter);

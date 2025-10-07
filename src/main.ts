@@ -19,7 +19,7 @@ function clog(x) {
     console.log(x);
 }
 
-const UPPSLC = {
+const UserProfileSettingLineContext = {
     upPSLcontext: [
         { trait: "Email", value: "user-email@domain.com" },
         { trait: "Name", value: "User name" },
@@ -35,8 +35,8 @@ const pages = {
     'e404': [Pages.e404Page],
     'e5': [Pages.e5Page],
     'chatapp': [Pages.chatApp],
-    'userprofile': [Pages.UserProfile, UPPSLC],
-    'upediti': [Pages.UPeditProfile, UPPSLC],
+    'userprofile': [Pages.UserProfile, UserProfileSettingLineContext],
+    'upediti': [Pages.UPeditProfile, UserProfileSettingLineContext],
     'uppass': [Pages.UPchangePass],
 }
 
@@ -104,7 +104,7 @@ function render(page: string) {
             render('userprofile');
         })
     } else if (page == 'userprofile') {
-        const ppcTrigger = document.querySelector('.pi-wrapper');
+        const ppcTrigger = document.querySelector('.profile-icon-wrapper');
         ppcTrigger.addEventListener('click', dialogOpen);
 
         document.querySelector('.back-btn').addEventListener('click', () => {
@@ -217,8 +217,6 @@ function dialogClose(e) {
         dialogWrapper.removeEventListener('click', dialogClose)
     }
 }
-
-
 
 
 
