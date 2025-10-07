@@ -1,7 +1,7 @@
 # Middle Messenger (Sprint 1)
 
 The project is a starter layout for a messenger-style web application.
-It includes several static pages and Handlebars templates, uses TypeScript modules for better code structure, and PostCSS with Autoprefixer / CSSNano for optimized and consistent styling. The build is configured with Vite for fast development and bundling.
+It includes several static pages and Handlebars templates, uses TypeScript modules for better code structure, and PostCSS with autoprefixer alongside CSSnano for optimized styling. The build is configured with Vite for fast development and bundling.
 
 ## Fast Deploy
 
