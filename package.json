@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start": "vite --port 3000",
+    "dev": "vite --port 3000",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 3000"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
@@ -21,5 +22,8 @@
   "dependencies": {
     "handlebars": "^4.7.8",
     "vite-plugin-handlebars": "^2.0.0"
+  },
+  "enginer": {
+    "node": ">=18"
   }
 }
