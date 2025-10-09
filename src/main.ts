@@ -21,11 +21,11 @@ function clog(x) {
 
 const UserProfileSettingLineContext = {
     upPSLcontext: [
-        { trait: "Email", value: "user-email@domain.com" },
-        { trait: "Name", value: "User name" },
-        { trait: "Surname", value: "User surname" },
-        { trait: "Username (name that others see)", value: "Username" },
-        { trait: "Phone", value: "+112223334455" },
+        { trait: "Email", profileInputIdentifier: "email", value: "user-email@domain.com" },
+        { trait: "Name", profileInputIdentifier: "profile_first_name", value: "User name" },
+        { trait: "Surname", profileInputIdentifier: "profile_second_name", value: "User surname" },
+        { trait: "Username (name that others see)", profileInputIdentifier: "profile_login", value: "Username" },
+        { trait: "Phone", profileInputIdentifier: "profile_phone", value: "+112223334455" },
     ]
 };
 const pages = {
@@ -172,13 +172,16 @@ function drops() {
     });
 }
 function sendMessage() {
+    const chatSendForm = document.getElementById('chat-send-form');
+    const prompt = document.getElementById('message');
     const sendBtn = document.querySelector('.button._send');
-    const prompt = document.getElementById('prompt-line');
     const messages = document.querySelector('.messages');
 
     const messageTmpl = Handlebars.compile(Components.message);
 
-    sendBtn.addEventListener('click', (e) => {
+    chatSendForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
         const promptContent = prompt.value.trim();
         if (promptContent && promptContent !== 'Enter your message!') {
             const message = {
@@ -197,7 +200,7 @@ function sendMessage() {
     });
     prompt.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-            // e.preventDefault();
+            e.preventDefault();
             sendBtn.click();
         }
     });

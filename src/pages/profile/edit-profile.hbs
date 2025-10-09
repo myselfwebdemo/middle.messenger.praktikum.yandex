@@ -10,24 +10,29 @@
     <div class="profile-icon-wrapper">
         {{> component_image
             class="profile-icon"
-            src=""}}
+            src=""
+            alt="your avatar"}}
     </div>
     <h1>user name</h1>
     <div class="paw">
-        <div class="ps-lines">
-            {{#each upPSLcontext}}
-                {{> profileSettingLine
-                    trait=trait
-                    reqInput="true"
-                    class="paw-input"
-                    type="text"}}
-            {{/each}}
-        </div>
-        <div class="profile-action">
-            {{> component_button
-                type="primary"
-                btype="button"
-                clientAction="Confirm changes"}}
-        </div>
+        <form action="#" method="post">
+            <div class="ps-lines">
+                {{#each upPSLcontext}}
+                    {{> profileSettingLine
+                        trait=trait
+                        reqInput="true"
+                        class="paw-input"
+                        id=profileInputIdentifier
+                        name=profileInputIdentifier
+                        type="text"}}
+                {{/each}}
+            </div>
+            <div class="profile-action">
+                {{> component_button
+                    type="primary"
+                    btype="submit"
+                    clientAction="Confirm changes"}}
+            </div>
+        </form>
     </div>
 </div>
