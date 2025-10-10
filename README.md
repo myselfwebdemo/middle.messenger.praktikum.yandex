@@ -2,7 +2,7 @@
 
 ## What's New?
 
-— Implemented TypeScript.
+— Implemented TypeScript.  
 — Added component approach to the project:
     • (+) Block & Event Bus implementation
     • (+) ```block```
