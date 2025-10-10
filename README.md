@@ -3,9 +3,11 @@
 ## What's New?
 
 — Implemented TypeScript.  
-— Added component approach to the project:
-    • (+) Block & Event Bus implementation
-    • (+) ```block```
+— Added component approach to the project:  
+    • (+) Block & Event Bus implementation  
+    • (+) ```blocks``` folder onto the same layer as ```components``` & ```pages``` folders  
+
+## Project Overview:
 
 The project is a starter layout for a messenger-style web application.
 It includes several static pages and Handlebars templates, uses TypeScript modules for better code structure, and PostCSS with Autoprefixer / CSSNano for optimized and consistent styling. The build is configured with Vite for fast development and bundling.
