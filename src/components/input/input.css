@@ -7,7 +7,6 @@ input {
 .form-input{
     --strength: 1.6vh;
     width: var(--form-header-width);
-    margin: 0 0 .2vh 0;
     border-bottom: solid var(--border-thickness) var(--theme-main-color);
     color: var(--primary-text-color);
     transition: var(--theme-transition);

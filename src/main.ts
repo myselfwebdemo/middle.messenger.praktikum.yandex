@@ -1,6 +1,7 @@
 // @ts-nocheck
 import './style.css'
 import Handlebars, { log } from 'handlebars';
+import * as Utils from './utils';
 import * as Components from './components';
 import * as Pages from './pages/';
 
@@ -49,6 +50,40 @@ function render(page: string) {
 
     document.removeEventListener('click', navigate);
     if (page == 'login' || page == 'signup') {
+        function validate(e) {
+            try {
+                if (e.name) {
+                    const { verdict } = Utils.FormValidationHandler(page, e.name, e.value);
+                    e.style.borderBottom = verdict ? 'dashed .2vh red' : '';
+                } else {
+                    const { verdict } = Utils.FormValidationHandler(page, e.target.name, e.target.value);
+                    e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
+                    const targetUID = e.target.id;
+                    document.querySelector(`.input-requirements-mismatch.${targetUID}`).textContent = verdict;
+                }
+            } catch (er) {
+                console.log(`Iteration stopped on ${e} due to ${er}`);
+            }
+        }
+        
+        const form = document.querySelector('.form');
+        form.addEventListener('input', (e) => {
+            validate(e);
+        })
+        form.addEventListener('submit', (e) => {
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                
+                for (const e of form.elements) {
+                    if (!e.checkValidity()) {
+                        validate(e)
+                        form.reportValidity();
+                    }
+                }
+            } else {
+                return
+            }
+        })
 
         const inputs = document.querySelectorAll('input');
         const labels = document.querySelectorAll('label');
@@ -56,8 +91,9 @@ function render(page: string) {
         for (let i = 0; i<inputs.length; i++) {
             inputs[i].addEventListener('focus', () => {
                 if (i>0) {
-                    inputs[i].style.margin = '3vh 0 .2vh 0';
-                    labels[i].style.transform = 'translateY(3vh)';
+                    const inputTopSpacing = 1.3;
+                    inputs[i].style.margin = `${inputTopSpacing}vh 0 .2vh 0`;
+                    labels[i].style.transform = `translateY(${inputTopSpacing}vh)`;
                 } else {
                     labels[i].style.transform = 'unset';
                 }
@@ -114,8 +150,10 @@ function render(page: string) {
 }
 
 const navigate = (e: Event) => {
-    const page = e.target.getAttribute('page');
-    render(page);
+    if (e.target.getAttribute('page')) {
+        const page = e.target.getAttribute('page');
+        render(page);
+    }
 }
 
 function activateSearch() {

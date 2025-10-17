@@ -48,3 +48,11 @@
 .form ._primary {
     margin: 7vh 0 4vh;
 }
+.input-requirements-mismatch {
+    width: var(--form-header-width);
+    color: red;
+    font-size: small;
+    text-align: left;
+    /* text-transform: capitalize; */
+    margin-top: 1%;
+}
