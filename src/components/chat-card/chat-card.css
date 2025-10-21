@@ -2,7 +2,6 @@
     box-sizing: border-box;
     width: 100%;
     height: fit-content;
-    padding: 0 1vw;
 }
 ._selected {
     background: linear-gradient(to top, transparent 5%, var(--theme-secondary-color) 5% 95%, transparent 95%);
@@ -15,13 +14,16 @@
 }
 .chat-card {
     width: 100%;
-    height: 100%;
+    height: 9.68vh;
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 1.34vh 0;
+    padding: 1.34vh 1vw;
     border-top: solid var(--border-thickness) var(--lightgray);
-    justify-content: space-between;
+    justify-content: space-between
+}
+.chat-card img {
+    filter: grayscale(100%);
 }
 ._chat-list-recipient {
     --size: 6vh;
@@ -31,8 +33,9 @@
     background: var(--theme-main-color);
 }
 .chat-info {
-    width: 65%;
-    height: 7vh;
+    width: 100%;
+    height: fit-content;
+    max-height: 7vh;
     display: flex;
     flex-direction: column;
     justify-content: start;

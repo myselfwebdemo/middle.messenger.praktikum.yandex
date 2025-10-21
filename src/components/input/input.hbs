@@ -6,9 +6,22 @@
   name="{{name}}"
   {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}
   {{#if value}}value="{{value}}"{{/if}}
-  {{!-- {{#if autocomplete}}autocomplete="{{autocomplete}}"{{/if}}
-  {{#if inputmode}}inputmode="{{inputmode}}"{{/if}}
-  {{#if pattern}}pattern="{{pattern}}"{{/if}}  --}}
   {{#if required}}required="{{required}}"{{/if}}/>
   {{#if typeIMG}}<img src="/assets/{{src}}" alt="{{alt}}">{{/if}}
 {{#if mismatchObject}}<p class="{{mismatchObject}}"></p>{{/if}}
+
+{{!-- 
+
+label?: string
+class?
+id
+type: text, password, etc.
+name = id
+placeholder?
+value?
+required?: boolean
+typeIMG?: boolean
+  src: path: "image.png"
+mismatchObject: class
+
+ --}}

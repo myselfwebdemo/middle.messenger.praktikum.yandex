@@ -2,8 +2,11 @@
 import EventBus from "./eventBus";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
-
-export default class Block {
+import { clg } from "../main";
+export default class Block<T extends Record<string, any> = any> {
+  props!: T;
+  children!: Record<string, Block | Block[]>;
+  
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
@@ -34,18 +37,15 @@ export default class Block {
     };
 
     this.props = this._makePropsProxy(props);
-
     this._registerEvents(eventBus);
     eventBus.emit(Block.EVENTS.INIT);
   }
-
   _registerEvents(eventBus) {
     eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
-
   _createResources() {
     const { tagName, props } = this._meta;
     this._element = this._createDocumentElement(tagName);
@@ -60,12 +60,10 @@ export default class Block {
       });
     }
   }
-
   init() {
     this._createResources();
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
   }
-
   _getChildrenAndProps(propsAndChildren) {
     const children = {};
     const props = {};
@@ -91,17 +89,13 @@ export default class Block {
 
     return { children, props };
   }
-
   _componentDidMount() {
     this.componentDidMount();
   }
-
   componentDidMount(oldProps) {}
-
   dispatchComponentDidMount() {
     this._eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
-
   _componentDidUpdate(oldProps, newProps) {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
@@ -109,31 +103,24 @@ export default class Block {
     }
     this._render();
   }
-
   componentDidUpdate(oldProps, newProps) {
     return true;
   }
-
-  setProps = (nextProps) => {
+  setProps(nextProps) {
     if (!nextProps) {
       return;
     }
-
     Object.assign(this.props, nextProps);
-  };
-
+  }
   get element() {
     return this._element;
   }
-
   _addEvents() {
     const { events = {} } = this.props;
-
     Object.keys(events).forEach((eventName) => {
       this._element.addEventListener(eventName, events[eventName]);
     });
   }
-
   _removeEvents() {
     const { events = {} } = this.props;
 
@@ -141,7 +128,6 @@ export default class Block {
       this._element.removeEventListener(eventName, events[eventName]);
     });
   }
-
   _compile() {
     const propsAndStubs = { ...this.props };
 
@@ -177,7 +163,6 @@ export default class Block {
 
     return fragment.content;
   }
-
   _render() {
     this._removeEvents();
     const block = this._compile();
@@ -190,15 +175,12 @@ export default class Block {
 
     this._addEvents();
   }
-
   render() {
     return "";
   }
-
   getContent() {
     return this.element;
   }
-
   _makePropsProxy(props) {
     const eventBus = this.eventBus();
     const emitBind = eventBus.emit.bind(eventBus);
@@ -209,30 +191,41 @@ export default class Block {
         return typeof value === "function" ? value.bind(target) : value;
       },
       set(target, prop, value) {
-        const oldTarget = { ...target };
+        const oldTarget = { ...target }; // <—— cloneDeep
         target[prop] = value;
 
-        // Запускаем обновление компоненты
+        // Запускаем обновление компоненты 
         // Плохой cloneDeep, в следующей итерации нужно заставлять добавлять cloneDeep им самим
         emitBind(Block.EVENTS.FLOW_CDU, oldTarget, target);
         return true;
       },
       deleteProperty() {
-        throw new Error("Нет доступа");
+        throw new Error('Access denied');
       },
     });
   }
-
   _createDocumentElement(tagName) {
-    // Можно сделать метод, который через фрагменты в цикле создаёт сразу несколько блоков
     return document.createElement(tagName);
   }
-
   show() {
     this.getContent().style.display = "block";
   }
-
   hide() {
     this.getContent().style.display = "none";
   }
+  addChildren(block, name) {
+    if (!(block instanceof Block)) throw new Error(`block arg: ${block} must an instance of class Block.`);
+    this.children[name] = block;
+    this._render();
+    this.children[name]._element.scrollIntoView({behavior: 'smooth'});
+  }    
+  removeChildren(name) {
+    if (!this.children[name]) alert("You cannot delete Master Chat");
+    // if (!this.children[name]) throw new Error(`${name} is either not a child of ${this} or doesn't exist.`);
+    const remObj = Object.keys(this.children).indexOf(name);
+    clg(Object.keys(this.children)[remObj-1])
+    delete this.children[name];
+    this._render();
+    this.children[Object.keys(this.children)[remObj-1]]._element.scrollIntoView({behavior: 'smooth'});
+  }    
 }

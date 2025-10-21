@@ -7,13 +7,18 @@
     <title>middle.messenger.praktikum.yandex</title>
   </head>
   <body>
-    <img class="mouse" src="/cursor.png"></img>
+    <!-- <div class="switch-theme">
+      <img name="darkTheme" src="/assets/theme-dark.png">
+      <img class="disabled" name="lightTheme" src="/assets/theme-light.png">
+    </div> -->
+    <!-- <img class="mouse" src="/cursor.png"></img> -->
     
     <div id="app"></div>
 
     <script type="module" src="/src/main.ts"></script>
+    <!-- <script type="module" src="/src/theme.ts"></script> -->
     
-    <script>
+    <!-- <script>
       const mouse = document.querySelector('.mouse');
       document.addEventListener('mousemove', e => {
         const x = e.clientX;
@@ -25,6 +30,6 @@
 
         mouse.style.transform = `translate3d(${x-7}px,${y-7}px,0)`;
       });
-    </script>
+    </script> -->
   </body>
 </html>

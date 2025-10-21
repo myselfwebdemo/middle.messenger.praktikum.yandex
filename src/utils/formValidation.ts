@@ -1,9 +1,10 @@
 let createdPassword: string;
 
-function validateForm(
+export default function FormValidationHandler(
     form: string,
     field: string, 
-    value: string
+    value: string,
+    submitEvent: boolean
 ) {
     const CYRILLIC = 'А-ЯЁа-яё';
     const LATIN = 'A-Za-z';
@@ -149,8 +150,10 @@ function validateForm(
                     // fetch "login" to retrive user data //
                     ////////////////////////////////////////
 
-                    if (value.trim().length === 0) {
-                        return validate(true);
+                    if (value.trim().length === 0 && submitEvent) {
+                        return validate(false, CaseBlankSpace);
+                    } else if (value.trim().length === 0) {
+                        return validate(true)
                     }
                     return validate(false,'Error');
                 }
@@ -160,8 +163,10 @@ function validateForm(
                     // fetch "login" to retrive password //
                     ///////////////////////////////////////
 
-                    if (value.trim().length === 0) {
-                        return validate(true);
+                    if (value.trim().length === 0 && submitEvent) {
+                        return validate(false, CaseBlankSpace);
+                    } else if (value.trim().length === 0) {
+                        return validate(true)
                     }
                     return validate(false,'Error');
                 }
@@ -176,4 +181,3 @@ function validateForm(
     }
 }
 
-export { validateForm as FormValidationHandler };

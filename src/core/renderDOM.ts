@@ -1,4 +1,4 @@
-import Block from "./Block";
+import Block from '../core/block';
 
 
 export default function renderDOM(block: Block) {

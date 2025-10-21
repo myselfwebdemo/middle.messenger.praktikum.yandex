@@ -1,9 +1,49 @@
 // @ts-nocheck
 import './style.css'
 import Handlebars, { log } from 'handlebars';
-import * as Utils from './utils';
 import * as Components from './components';
 import * as Pages from './pages/';
+
+import renderDOM from './core/renderDOM';
+import LoginPage from './pages/forms/login';
+import SignupPage from './pages/forms/signup';
+import ChatAPP from './pages/chatapp/chatapp';
+import ChatList from './pages/chatapp/chat-list';
+import ChatCard from './components/chat-card/chat-card';
+  
+export function clg(...i: any[]): void {
+    console.log(...i);
+}
+export function FormInputOnFocus(e) {
+    const parentOfParentElOfCurrentInput = e.target.parentElement.parentElement;
+
+    for (let i = 0;i<parentOfParentElOfCurrentInput.children.length; i++) {
+        const label = parentOfParentElOfCurrentInput.children[i].children[0];
+        if (parentOfParentElOfCurrentInput.children[i].children[1].id === e.target.id) {
+            if (i == 0) {
+                label.style.transform = 'unset';
+            } else {
+                const inputTopSpacing = 1.3;
+                e.target.style.margin = `${inputTopSpacing}vh 0 .2vh 0`;
+                label.style.transform = `translateY(${inputTopSpacing}vh)`;
+            }
+            label.style.fontSize = 'small';
+        }
+    }
+}
+export function FormInputOnBlur(e) {
+    const parentOfParentElOfCurrentInput = e.target.parentElement.parentElement;
+
+    for (let i = 0;i<parentOfParentElOfCurrentInput.children.length; i++) {
+        const label = parentOfParentElOfCurrentInput.children[i].children[0];
+
+        if (parentOfParentElOfCurrentInput.children[i].children[1].id === e.target.id && !e.target.value) {
+            e.target.style.margin = '0 0 .2vh 0';
+            label.style.transform = 'translateY(2.4vh)';
+            label.style.fontSize = 'medium';
+        }
+    }
+}
 
 Handlebars.registerHelper('isNumber', (value) => {
     return typeof value === 'number' && !isNaN(value)
@@ -13,12 +53,42 @@ Handlebars.registerHelper('eq', (a,b) => {
 })
 
 Object.entries(Components).forEach(([ name,tmpl ]) => {
+    if (typeof tmpl === 'function') {
+        return;
+    }
     Handlebars.registerPartial(name,tmpl);
 });
 
-function clog(x) {
-    console.log(x);
-}
+const capp = new ChatAPP();
+renderDOM(capp);
+
+window.MyApp = capp;
+window.CL = capp.children['ChatList']
+
+let k = 2;
+
+window.addEventListener('keydown', (e) => {
+    if (e.key=== 'k') {
+        let nun = Math.floor(Math.random()*10);
+        if (nun === 0) {
+            CL.addChildren(new ChatCard({ src: 'profile/example.png', recipientName: `Recipient ${k}` }), `CC${k}`);
+        } else {
+            CL.addChildren(new ChatCard({ src: 'profile/example.png', recipientName: `Recipient ${k}`, time: `${Math.floor(Math.random()*12)}:${Math.floor(Math.random()*60)}`, unread: nun }), `CC${k}`);
+        }
+        k++;
+    }
+    if (e.key === 'd') {
+        CL.removeChildren(`CC${k-1}`);
+        k--
+    }
+});
+
+
+// Other pages that you can render:
+//  renderDOM(new LoginPage({method: 'get'}))
+//  renderDOM(new SignupPage({method: 'post'}))
+//  renderDOM(new ChatAPP())
+
 
 const UserProfileSettingLineContext = {
     upPSLcontext: [
@@ -32,7 +102,6 @@ const UserProfileSettingLineContext = {
 const pages = {
     'login': [Pages.loginPage],
     'signup': [Pages.signupPage],
-    'nav': [Pages.nav],
     'e404': [Pages.e404Page],
     'e5': [Pages.e5Page],
     'chatapp': [Pages.chatApp],
@@ -43,6 +112,10 @@ const pages = {
 
 function render(page: string) {
     const [ src, context ] = pages[page];
+    if (typeof src === "function") {
+        renderDOM(new source({}));
+        return;
+    }
     const app = document.getElementById('app');
     const temlpatingFunction = Handlebars.compile(src);
     // @ts-ignore
@@ -50,70 +123,10 @@ function render(page: string) {
 
     document.removeEventListener('click', navigate);
     if (page == 'login' || page == 'signup') {
-        function validate(e) {
-            try {
-                if (e.name) {
-                    const { verdict } = Utils.FormValidationHandler(page, e.name, e.value);
-                    e.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-                } else {
-                    const { verdict } = Utils.FormValidationHandler(page, e.target.name, e.target.value);
-                    e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-                    const targetUID = e.target.id;
-                    document.querySelector(`.input-requirements-mismatch.${targetUID}`).textContent = verdict;
-                }
-            } catch (er) {
-                console.log(`Iteration stopped on ${e} due to ${er}`);
-            }
-        }
-        
-        const form = document.querySelector('.form');
-        form.addEventListener('input', (e) => {
-            validate(e);
-        })
-        form.addEventListener('submit', (e) => {
-            if (!form.checkValidity()) {
-                e.preventDefault();
-                
-                for (const e of form.elements) {
-                    if (!e.checkValidity()) {
-                        validate(e)
-                        form.reportValidity();
-                    }
-                }
-            } else {
-                return
-            }
-        })
-
-        const inputs = document.querySelectorAll('input');
-        const labels = document.querySelectorAll('label');
-        
-        for (let i = 0; i<inputs.length; i++) {
-            inputs[i].addEventListener('focus', () => {
-                if (i>0) {
-                    const inputTopSpacing = 1.3;
-                    inputs[i].style.margin = `${inputTopSpacing}vh 0 .2vh 0`;
-                    labels[i].style.transform = `translateY(${inputTopSpacing}vh)`;
-                } else {
-                    labels[i].style.transform = 'unset';
-                }
-                labels[i].style.textAlign = 'left';
-                labels[i].style.fontSize = 'small';
-            });
-            inputs[i].addEventListener('blur', () => {
-                if (!inputs[i].value) {
-                    inputs[i].style.margin = '0 0 .2vh 0';
-                    labels[i].style.transform = 'translateY(2.4vh)';
-                    labels[i].style.fontSize = 'medium';
-                }
-            });
-        }
-    } else if (page == 'nav') {
-        document.addEventListener('click', navigate);
+        skip
     } else if (page == 'chatapp') {
         document.body.style.background = 'none';
         drops(); 
-        activateSearch();
         sendMessage();
 
         const searchContainer = document.querySelector('#search-container');
@@ -156,29 +169,6 @@ const navigate = (e: Event) => {
     }
 }
 
-function activateSearch() {
-    const search = document.querySelector('#search');
-    const chatCards = document.querySelectorAll('.chat-card');
-    
-    if (search) {
-        console.log('Search activated.')
-        search.addEventListener('input', () => {
-            const term = search.value.toLowerCase();
-            
-            chatCards.forEach(card => {
-                console.log(card.dataset);
-                const recipients = card.dataset.recipient.toLowerCase();
-                const lastMessages = card.dataset.lastMessage.toLowerCase();
-            
-                if (recipients.includes(term) || lastMessages.includes(term)) {
-                    card.parentElement.style.display = 'block';
-                } else {
-                    card.parentElement.style.display = 'none';
-                }
-            });
-        });
-    }
-}
 function drops() {
     const dropdown = document.querySelector('.action-to-recipient');
     const dropTriggers = document.querySelectorAll('.drop-btn');
@@ -261,5 +251,5 @@ function dialogClose(e) {
 
 
 
-document.addEventListener('DOMContentLoaded', () => { render('nav'); })
+// document.addEventListener('DOMContentLoaded', () => { render('signup'); })
 
