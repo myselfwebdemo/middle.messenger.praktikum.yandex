@@ -2,10 +2,10 @@
 
 ## What's New?
 
-— Implemented TypeScript.  
-— Added component approach to the project:  
-    • (+) Block & Event Bus implementation  
-    • (+) ```blocks``` folder onto the same layer as ```components``` & ```pages``` folders  
+- Implemented TypeScript.  
+- Added component approach to the project:  
+    - (+) Block & Event Bus implementation  
+    - (+) ```blocks``` folder onto the same layer as ```components``` & ```pages``` folders  
 
 ## Project Overview:
 
@@ -31,16 +31,16 @@ https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?no
 - Added full component system using custom `Block` class built on top of `EventBus`.  
 - Implemented reactive props via `Proxy` – components re-render automatically when props change.  
 - Created base UI components:  
-    • (+) `Button`, `Input`, `ChatItem`, etc.  
+    - (+) `Button`, `Input`, `ChatItem`, etc.  
 - Implemented pages:  
-    • (+) Login, Registration, Chats, Profile.  
+    - (+) Login, Registration, Chats, Profile.  
 - Added form data collection and console output of form data.  
 - Added form validation with unified mechanism and regex rules for:  
-    • (+) first_name, second_name, login, email, password, phone, message.  
+    - (+) first_name, second_name, login, email, password, phone, message.  
 - Implemented `HTTPTransport` class for XHR requests with:  
-    • (+) GET (with query string)  
-    • (+) POST, PUT, DELETE (with JSON body)  
-    • (+) Timeout, headers, and error handling.  
+    - (+) GET (with query string)  
+    - (+) POST, PUT, DELETE (with JSON body)  
+    - (+) Timeout, headers, and error handling.  
 
 ## Tech Stack
 - **TypeScript** — static typing and safer architecture.  
