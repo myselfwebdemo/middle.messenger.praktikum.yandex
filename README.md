@@ -1,12 +1,5 @@
 # Middle Messenger (Sprint 2)
 
-## What's New?
-
-- Implemented TypeScript.  
-- Added component approach to the project:  
-    - (+) Block & Event Bus implementation  
-    - (+) ```blocks``` folder onto the same layer as ```components``` & ```pages``` folders  
-
 ## Project Overview:
 
 The project is a starter layout for a messenger-style web application.
@@ -27,7 +20,7 @@ Link: https://middle-messenger-yandex-praktikum.netlify.app/
 ## Figma Prototype Of The App
 https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?node-id=0-1&t=YNX3VAGORjhamOaX-1
 
-## New Functionality
+## What's New? New Functionality
 - Added full component system using custom `Block` class built on top of `EventBus`.  
 - Implemented reactive props via `Proxy` – components re-render automatically when props change.  
 - Created base UI components:  
