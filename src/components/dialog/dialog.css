@@ -1,0 +1,62 @@
+.dialog-wrapper {
+    --blur: blur(20px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--theme-tetriary-color);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    z-index: 9998;
+    display: none;
+}
+.dialog {
+    --blur: 15px;
+    box-sizing: border-box;
+    width: 40vh;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: solid .2vh var(--theme-main-color);
+    border-radius: 1.8vh;
+    padding: 4vh 0 ;
+    background: #fff;
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    box-shadow: 0 0 10vh white;
+}
+.dialog h1 {
+    width: var(--form-header-width);
+    font-weight: 600;
+    margin-bottom: 2.5vh;
+}
+.dialog .recipient {
+    --strength: 1.6vh;
+    width: var(--form-header-width);
+    margin: 0 0 4vh 0;
+    border-bottom: solid var(--border-thickness) var(--theme-main-color);
+    color: var(--primary-text-color);
+    transition: var(--theme-transition);
+}
+.dialog .recipient:focus {
+    border-bottom: solid var(--border-thickness) var(--theme-comlpementary-color);
+}
+.dialog label {
+    transform: none;
+    font-size: small;
+}
+.dialog button {
+    margin: 0;
+}
+.dialog .file-submit {
+    padding: 1.2vh 0 2.4vh 0;
+}
+.dialog .file-submit::file-selector-button {
+    color: blue;
+}

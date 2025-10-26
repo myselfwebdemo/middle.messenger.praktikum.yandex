@@ -1,0 +1,60 @@
+.button {
+    all: unset;
+    width: fit-content;
+    height: fit-content;
+}
+._primary, ._fatal-primary {
+    color: var(--complimentary-text-color);
+    text-shadow: 0 0 2vh var(--theme-main-color);
+    text-transform: capitalize;
+    text-align: center;
+    font-weight: 400;
+    font-size: medium;
+    text-shadow: none;
+    height: 5vh;
+    width: 80%;
+    border-radius: 1.3vh;
+    transition: .5s;
+}
+._primary {
+    background: var(--theme-main-color);
+}
+._c2-primary {
+    color: var(--theme-main-color);
+}
+._secondary:hover {
+    color: var(--theme-comlpementary-color);
+}
+._secondary {
+    color: var(--primary-text-color);
+    text-transform: capitalize;
+    margin-left: .5vh;
+    padding-right: .5vh;
+    transition: var(--theme-transition);
+}
+._tetriary {
+    padding: 0 .5vh;
+    color: var(--theme-main-color);
+    font-size: large;
+    font-weight: 600;
+    transform: translateY(12.5vh);
+    transition: var(--theme-transition);
+}
+._tetriary:hover {
+    color: var(--theme-comlpementary-color);
+    border-left: solid .3vh var(--theme-comlpementary-color);
+    border-right: solid .3vh var(--theme-comlpementary-color);
+}
+._fatal-primary {
+    background: var(--color-fatal);
+}
+._fatal-secondary {
+    color: var(--color-fatal);
+}
+._send {
+    width: 2vh;
+    height: 2vh;
+    background: var(--theme-main-color);
+    padding: .8vh;
+    border-radius: 5vh;
+}

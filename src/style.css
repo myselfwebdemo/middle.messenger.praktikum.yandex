@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Lexend+Deca:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    font-family: 'funnel display', sans-serif;
+    font-weight: 200;
+    cursor: none;
+}
+:root {
+    --theme: #fff;
+    --theme-main-color: blueviolet;
+    --theme-secondary-color: rgba(137,43,226,.25);
+    --theme-tetriary-color: rgba(137,43,226,.1);
+    --theme-comlpementary-color: violet;
+    --color-fatal: red;
+    --primary-text-color: #000;
+    --secondary-text-color: gray;
+    --complimentary-text-color: #fff;
+    --lightgray: rgb(230,230,230);
+    --form-header-width: 77%;
+    --theme-transition: .3s;
+    --border-thickness: .2vh;
+    --app-input-bg: rgb(230,230,230);
+    --theme-sub1-color-filter: invert(70%) sepia(45%) saturate(1608%) hue-rotate(236deg) brightness(98%) contrast(91%);
+}
+body {
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+}
+#app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.mouse {
+    --size: 10vh;
+    position: fixed;
+    width: var(--size);
+    height: var(--size);
+    pointer-events: none;
+    filter: drop-shadow(0 0 2vh var(--theme-main-color));
+    will-change: transform;
+    transform: translate3d(0,0,0);
+    z-index: 9999;
+}
+#temppn {
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: solid .2vh #fff;
+    list-style: decimal;
+    padding: 5vh 5vw;
+    border-radius: 3vh;
+} #temppn li {
+    margin: 2vh;
+    color: #fff;
+} #temppn li a {
+    color: var(--theme-main-color);
+    text-transform: uppercase;
+    text-shadow: 0 0 2vh #fff;
+}

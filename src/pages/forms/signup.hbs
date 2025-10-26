@@ -1,0 +1,72 @@
+<form class="form">
+    <div class="header">
+        <h1 class="form-title">Join</h1>
+        <span class="form-switch">
+            <span>Part of a hub?</span> 
+            {{> component_button type="secondary" btype="button" clientAction="Access It"}}
+        </span>
+    </div>
+    <div class="input-fields">
+        {{> component_input
+            class="form-input"
+            id="form-input email"
+            label="Email"
+            type="email" 
+            name="email" 
+            required="true"
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input login"
+            label="Username"
+            type="text" 
+            name="login" 
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input first_name"
+            label="Name"
+            type="text" 
+            name="first_name"
+            required="true"
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input second_name"
+            label="Surname"
+            type="text" 
+            name="second_name"
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input phone"
+            label="Phone"
+            name="phone" 
+            type="tel" 
+            autocomplete='tel'
+            inputmode='numeric'
+            pattern='[0-9]*'
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input password"
+            label="Password"
+            type="password" 
+            name="password" 
+            required="true"
+        }}
+        {{> component_input
+            class="form-input"
+            id="form-input password_rep"
+            label="Password (again)"
+            type="password" 
+            name="password_rep" 
+            required="true"
+        }}
+    </div>
+    {{> component_button 
+        type="primary"
+        btype="submit" 
+        clientAction="Get Started" 
+    }}
+</form>

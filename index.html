@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/mascot.png"/>
+    <title>middle.messenger.praktikum.yandex</title>
+  </head>
+  <body>
+    <img class="mouse" src="/cursor.png"></img>
+    
+    <div id="app"></div>
+
+    <script type="module" src="/src/main.ts"></script>
+    
+    <script>
+      const mouse = document.querySelector('.mouse');
+      document.addEventListener('mousemove', e => {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        const bounding = mouse.getBoundingClientRect();
+        const width = bounding.right - bounding.left;
+        const height = bounding.bottom - bounding.top;
+
+        mouse.style.transform = `translate3d(${x-7}px,${y-7}px,0)`;
+      });
+    </script>
+  </body>
+</html>

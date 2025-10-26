@@ -1,0 +1,46 @@
+<div class="profile profile-origin">
+    {{> component_button
+        typeIMG=true
+        type="send back-btn"
+        btype="button"
+        src="back.png"}}
+
+    <div class="profile-icon-wrapper">
+        {{> component_image
+            class="profile-icon"
+            src=""
+            alt="your avatar"}}
+    </div>
+    <h1>user name</h1>
+    <div class="paw"> {{!-- PAW: profile action wrapper --}}
+        <div class="ps-lines">
+            {{#each upPSLcontext}}
+                {{> profileSettingLine
+                    trait=trait
+                    traitValue=value}}
+            {{/each}}
+        </div>
+        <div class="profile-action">
+            {{> component_button
+                type="c2-primary"
+                btype="button"
+                clientAction="Edit profile"}}
+            {{> component_button
+                type="c2-primary"
+                btype="button"
+                clientAction="Change password"}}
+            {{> component_button
+                type="fatal-secondary"
+                btype="button"
+                clientAction="Log out"}}
+        </div>
+    </div>
+</div>
+{{> dialog
+    title='Add file'
+    class="file-submit"
+    id="file-submit"
+    label="New avatar"
+    atr='Confirm'
+    type="file"
+    recipientLogin='.....'}}

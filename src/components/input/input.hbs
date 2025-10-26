@@ -1,0 +1,13 @@
+{{#if label}}<label for="{{id}}">{{label}}</label>{{/if}}
+<input 
+  {{#if class}}class="{{class}}"{{/if}}
+  {{#if id}}id="{{id}}"{{/if}}
+  type="{{type}}" 
+  name="{{name}}"
+  {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}
+  {{#if value}}value="{{value}}"{{/if}}
+  {{#if autocomplete}}autocomplete="{{autocomplete}}"{{/if}}
+  {{#if inputmode}}inputmode="{{inputmode}}"{{/if}}
+  {{#if pattern}}pattern="{{pattern}}"{{/if}} 
+  {{#if required}}required="{{required}}"{{/if}}/>
+  {{#if typeIMG}}<img src="/assets/{{src}}" alt="{{alt}}">{{/if}}

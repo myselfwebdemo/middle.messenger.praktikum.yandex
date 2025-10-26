@@ -1,0 +1,76 @@
+.on-hover {
+    box-sizing: border-box;
+    width: 100%;
+    height: fit-content;
+    padding: 0 1vw;
+}
+._selected {
+    background: linear-gradient(to top, transparent 5%, var(--theme-secondary-color) 5% 95%, transparent 95%);
+}
+.on-hover:hover._selected {
+    background: linear-gradient(to top, transparent 5%, var(--theme-secondary-color) 5% 95%, transparent 95%);
+}
+.on-hover:hover {
+    background: linear-gradient(to top, transparent 5%, var(--theme-tetriary-color) 5% 95%, transparent 95%);
+}
+.chat-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1.34vh 0;
+    border-top: solid var(--border-thickness) var(--lightgray);
+    justify-content: space-between;
+}
+._chat-list-recipient {
+    --size: 6vh;
+    width: var(--size);
+    height: var(--size);
+    border-radius: var(--size);
+    background: var(--theme-main-color);
+}
+.chat-info {
+    width: 65%;
+    height: 7vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    text-overflow: ellipsis;
+    margin: 0 1vh;
+}
+.chat-info h3 {
+    font-weight: 500;
+    margin-bottom: .1vh;
+}
+.chat-info p {
+    max-height: 100%;
+    color: var(--secondary-text-color);    
+    text-overflow: ellipsis;
+    overflow-y: hidden;
+}
+.chat-info p mark {
+    font-weight: 500;
+    background: none;
+}
+.chat-last-text {
+    height: 6vh;
+    color: var(--secondary-text-color);
+    font-size: small;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: space-between;
+}
+.n-of-unread {
+    min-width: 1vh;
+    height: 2vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--theme-main-color);
+    padding: .2vh .7vh;
+    border-radius: 5vh;
+    color: var(--complimentary-text-color);
+    font-size: small;
+}

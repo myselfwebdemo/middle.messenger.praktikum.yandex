@@ -1,0 +1,14 @@
+<span class="psl">
+    <p>{{trait}}</p>
+    {{#if traitValue}}<p>{{traitValue}}</p>{{/if}}
+    {{#if reqInput}}
+        {{> component_input
+            class=class
+            id=id
+            name=name
+            type=type
+            placeholder=plchldr
+            required="true"}}
+    {{/if}}
+</span>
+
