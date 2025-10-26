@@ -3,9 +3,9 @@ import EventBus from "./eventBus";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
 import { clg } from "../main";
-export default class Block<T extends Record<string, any> = any> {
+export default class block<T extends Record<string, any> = any> {
   props!: T;
-  children!: Record<string, Block | Block[]>;
+  children!: Record<string, block | block[]>;
   
   static EVENTS = {
     INIT: "init",
@@ -38,13 +38,13 @@ export default class Block<T extends Record<string, any> = any> {
 
     this.props = this._makePropsProxy(props);
     this._registerEvents(eventBus);
-    eventBus.emit(Block.EVENTS.INIT);
+    eventBus.emit(block.EVENTS.INIT);
   }
   _registerEvents(eventBus) {
-    eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
-    eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
-    eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
-    eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
+    eventBus.on(block.EVENTS.INIT, this.init.bind(this));
+    eventBus.on(block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
+    eventBus.on(block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
+    eventBus.on(block.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
   _createResources() {
     const { tagName, props } = this._meta;
@@ -62,7 +62,7 @@ export default class Block<T extends Record<string, any> = any> {
   }
   init() {
     this._createResources();
-    this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
+    this.eventBus().emit(block.EVENTS.FLOW_RENDER);
   }
   _getChildrenAndProps(propsAndChildren) {
     const children = {};
@@ -71,7 +71,7 @@ export default class Block<T extends Record<string, any> = any> {
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach((obj) => {
-          if (obj instanceof Block) {
+          if (obj instanceof block) {
             children[key] = value;
           } else {
             props[key] = value;
@@ -80,7 +80,7 @@ export default class Block<T extends Record<string, any> = any> {
 
         return;
       }
-      if (value instanceof Block) {
+      if (value instanceof block) {
         children[key] = value;
       } else {
         props[key] = value;
@@ -94,7 +94,7 @@ export default class Block<T extends Record<string, any> = any> {
   }
   componentDidMount(oldProps) {}
   dispatchComponentDidMount() {
-    this._eventBus().emit(Block.EVENTS.FLOW_CDM);
+    this._eventBus().emit(block.EVENTS.FLOW_CDM);
   }
   _componentDidUpdate(oldProps, newProps) {
     const response = this.componentDidUpdate(oldProps, newProps);
@@ -196,7 +196,7 @@ export default class Block<T extends Record<string, any> = any> {
 
         // Запускаем обновление компоненты 
         // Плохой cloneDeep, в следующей итерации нужно заставлять добавлять cloneDeep им самим
-        emitBind(Block.EVENTS.FLOW_CDU, oldTarget, target);
+        emitBind(block.EVENTS.FLOW_CDU, oldTarget, target);
         return true;
       },
       deleteProperty() {
@@ -213,9 +213,9 @@ export default class Block<T extends Record<string, any> = any> {
   close() {
     this.getContent().style.display = "none";
   }
-  addChildren(block, name) {
-    if (!(block instanceof Block)) throw new Error(`block arg: ${block} must an instance of class Block.`);
-    this.children[name] = block;
+  addChildren(Block, name) {
+    if (!(Block instanceof block)) throw new Error(`Block arg: ${Block} must an instance of class Block.`);
+    this.children[name] = Block;
     this._render();
     this.children[name]._element.scrollIntoView({behavior: 'smooth'});
   }    
