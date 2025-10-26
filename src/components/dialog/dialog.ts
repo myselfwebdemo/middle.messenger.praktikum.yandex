@@ -35,12 +35,12 @@ export default class DialogWindow extends Block {
                         if (input.textContent === '') {
                             input?.setAttribute('placeholder','Required field: must contain the adress.');
                         }
-                        if (e.target.closest('.button._primary') && input.textContent !== '') {
+                        if (e.target.closest('.button.u-primary') && input.textContent !== '') {
                             document.querySelector('.dialog form').submit();
                         }
                     }
-                    
-                    if (!e.target.closest('.dialog') && document.activeElement.id !== 'map' && document.activeElement.id !== 'standalone' || e.target.closest('.dialog .button._secondary')) {
+
+                    if (!e.target.closest('.dialog') && document.activeElement.id !== 'map' && document.activeElement.id !== 'standalone' || e.target.closest('.dialog .button.u-secondary')) {
                         this.close();
                     }
                 }

@@ -1,5 +1,6 @@
 .profile {
     --sg: 13vh;
+
     width: 35vw;
     height: 100%;
     display: flex;
@@ -7,22 +8,25 @@
     align-items: center;
     justify-content: center;
 }
+
 .profile-icon-wrapper {
     position: relative;
     margin: 0 auto;
     overflow: hidden;
 }
+
 .profile-origin .profile-icon-wrapper:hover::after {
     position: absolute;
     content: 'Change avatar';
     inset: 0;
+
     --size: 10vh;
     --blur: blur(10px);
+
     width: var(--size);
     height: var(--size);
-    background: rgb(255,255,255,.3);
+    background: rgb(255 255 255 / 30%);
     backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
     border-radius: 50%;
     bottom: -2rem;
     left: 50%;
@@ -35,9 +39,11 @@
     color: var(--theme-main-color);
     z-index: 10;
 }
-._profile-icon {
+
+.u-profile-icon {
     z-index: 0;
 }
+
 .profile h1:nth-child(3) {
     width: 100%;
     text-align: center;
@@ -46,27 +52,33 @@
     text-transform: capitalize;
     margin-top: 3vh;
 }
+
 .profile .ps-lines {
     padding: var(--sg) 0;
 }
+
 .profile-action {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2vh;
 }
-.profile ._send.back-btn {
+
+.profile .u-send.back-btn {
     top: 50%;
     transform: translateY(-50%);
     left: 5vw;
 }
+
 .profile .paw-input {
     text-align: right;
 }
+
 .profile .paw-input::placeholder {
     color: var(--secondary-text-color);
 }
-.profile ._primary {
+
+.profile .u-primary {
     width: 50%;
 }
 

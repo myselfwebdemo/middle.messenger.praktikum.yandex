@@ -4,39 +4,46 @@
     margin: 0;
     font-family: 'funnel display', sans-serif;
     font-weight: 200;
+
     /* cursor: none; */
 }
+
 :root {
     --theme: #fff;
+
     /* --theme: #0A0A0A; */
     --theme-main-color: blueviolet;
-    --theme-main-color-075: rgba(137,43,226,.75);
-    --theme-main-color-05: rgba(137,43,226,.5);
-    --theme-main-color-025: rgba(137,43,226,.25);
-    --theme-main-color-01: rgba(137,43,226,.1);
+    --theme-main-color-075: rgb(137 43 226 / 75%);
+    --theme-main-color-05: rgb(137 43 226 / 50%);
+    --theme-main-color-025: rgb(137 43 226 / 25%);
+    --theme-main-color-01: rgb(137 43 226 / 10%);
     --theme-complementary-color: violet;
     --color-fatal: red;
     --primary-text-color: #000;
+
     /* --primary-text-color: #f8f2ff; */
     --secondary-text-color: gray;
     --complementary-text-color: #fff;
+
     /* --complementary-text-color: #f8f2ff; */
-    --lightgray: rgb(230,230,230);
+    --lightgray: rgb(230 230 230);
     --lightergray: #f5f5f5;
     --form-header-width: 77%;
     --theme-transition: .3s;
     --border-thickness: .2vh;
-    --app-input-bg: rgb(230,230,230);
+    --app-input-bg: rgb(230 230 230);
     --theme-sub1-color-filter: invert(70%) sepia(45%) saturate(1608%) hue-rotate(236deg) brightness(98%) contrast(91%);
     --theme-image-inversion: invert(0%);
     --wrappers-rad: 1.8vh;
 }
+
 body {
     width: 100%;
     height: 100dvh;
     background: var(--theme);
     overflow: hidden;
 }
+
 #app {
     width: 100vw;
     height: 100vh;
@@ -45,8 +52,10 @@ body {
     align-items: center;
     justify-content: center;
 }
+
 .mouse {
     --size: 10vh;
+
     position: fixed;
     top: 0;
     left: 0;
@@ -58,6 +67,7 @@ body {
     transform: translate3d(0,0,0);
     z-index: 9999;
 }
+
 .switch-theme {
     position: absolute;
     top: 3vh;
@@ -66,30 +76,34 @@ body {
     gap: 1.4vh;
     z-index: 9999;
 }
+
 .switch-theme img {
     --size: 4vh;
+
     width: var(--size);
     height: var(--size);
     border-radius: 50%;
 }
+
 .switch-theme img.disabled {
     filter: grayscale(100%);
 }
 
-
-
 #temppn {
-    background: rgba(255,255,255,.1);
+    background: rgb(255 255 255 / 10%);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: solid .2vh #fff;
     list-style: decimal;
     padding: 5vh 5vw;
     border-radius: 3vh;
-} #temppn li {
+}
+
+ #temppn li {
     margin: 2vh;
     color: #fff;
-} #temppn li a {
+}
+
+ #temppn li a {
     color: var(--theme-main-color);
     text-transform: uppercase;
     text-shadow: 0 0 2vh #fff;

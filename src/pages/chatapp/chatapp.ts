@@ -49,11 +49,11 @@ export default class ChatAPP extends Block {
                         ABCChoice.style.display = 'none';
                         ATRChoice.style.display = ATRChoice.style.display === 'block' ? 'none' : 'block';
                         return;
-                    } else if (e.target.className.includes('_add-btn')) {
+                    } else if (e.target.className.includes('u-add-btn')) {
                         ATRChoice.style.display = 'none';
                         ABCChoice.style.display = ABCChoice.style.display === 'block' ? 'none' : 'block';
                         return;
-                    } else if (e.target.children[0].className.includes('_atr-choice')) {
+                    } else if (e.target.children[0].className.includes('u-atr-choice')) {
                         this.children['AddRecipientDialog'].show();
                     } else if (e.target.children[0].className.includes('abc-choice')) {
                         const attachChoice = e.target.children[0].className.split(' ')[2];

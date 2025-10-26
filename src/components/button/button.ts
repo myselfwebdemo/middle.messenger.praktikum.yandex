@@ -13,7 +13,7 @@ export default class Button extends Block {
     constructor(props: localProps) {
         super('button', {
             ...props,
-            className: `button _${props.classTypeOfButton}`,
+            className: `button u-${props.classTypeOfButton}`,
             clientAction: props.clientAction,
             attrs: {
                 type: props.buttonType

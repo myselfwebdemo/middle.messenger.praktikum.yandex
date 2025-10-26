@@ -9,7 +9,7 @@ export default class Image extends Block {
     constructor(props: ImageProps) {
         super('img', {
             ...props,
-            className: `app-img _${props.class}`,
+            className: `app-img u-${props.class}`,
             attrs: {
                 src: `/assets/${props.src}`,
                 alt: props.alt

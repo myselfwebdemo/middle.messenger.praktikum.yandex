@@ -19,7 +19,7 @@ export default class Message extends Block {
     }
     public render(): string {
         return `
-            <div class="mbody _{{messageType}} {{#if fromYou}}_self{{else}}_toSelf{{/if}}">
+            <div class="mbody u-{{messageType}} {{#if fromYou}}u-self{{else}}u-toself{{/if}}">
                 {{#if (eq messageType 'text')}}
                     <p>{{textContent}}</p>
                 {{/if}}

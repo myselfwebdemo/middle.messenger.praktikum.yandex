@@ -4,13 +4,16 @@
     object-fit: cover;
     object-position: center;
 }
-._profile-icon {
+
+.u-profile-icon {
     --size: 10vh;
+
     width: var(--size);
     height: var(--size);
     background: var(--lightgray);
     border-radius: 50%;
 }
+
 .back-btn {
     position: absolute;
     top: 0;

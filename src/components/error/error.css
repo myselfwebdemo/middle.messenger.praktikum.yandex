@@ -6,6 +6,7 @@
     mix-blend-mode: difference;
     z-index: 1;
 }
+
 .error-title {
     position: absolute;
     top: -8%;

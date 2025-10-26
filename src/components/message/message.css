@@ -1,5 +1,6 @@
 .mbody {
     --rad: 1vh;
+
     width: fit-content;
     max-width: 45%;
     height: fit-content;
@@ -11,73 +12,83 @@
     border-bottom-left-radius: var(--rad);
     border-top-right-radius: var(--rad);
     transition: var(--theme-transition);
-
-    word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
 }
-.mbody._text {
+
+.mbody.u-text {
     padding: .8vh .8vw;
 }
-.mbody._image {
+
+.mbody.u-image {
     max-width: 35%;
     max-height: 50vh;
     border-radius: 1vh;
     overflow: hidden;
-    padding: none;
+    padding: 0;
 }
-.mbody._self {
+
+.mbody.u-self {
     background: var(--theme-main-color-01);
     margin-left: auto;
     border-top-left-radius: var(--rad);
 }
-.mbody._toSelf {
-    background: rgb(245,245,245);
+
+.mbody.u-toself {
+    background: rgb(245 245 245);
     border-bottom-right-radius: var(--rad);
 }
+
 .mbody p {
     overflow-x: hidden;
     text-overflow: ellipsis;
     text-align: left;
 }
-.mbody._image img {
+
+.mbody.u-image img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     object-position: center;
-    margin: none;
+    margin: 0;
 }
+
 .mbody h6 {
     width: fit-content;
     height: fit-content;
     margin-left: 1vw;
 }
-.mbody._image h6 {
+
+.mbody.u-image h6 {
     --blur: 3px;
+
     right: .5vh;
     bottom: .5vh;
     position: absolute;
     background: var(--theme-main-color-025);
     backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
     padding: .3vh .5vw;
     border-radius: 1vh;
     color: var(--complementary-text-color);
     pointer-events: none;
 }
-.mbody._location {
+
+.mbody.u-location {
     border-radius: var(--rad);
     overflow: hidden;
 }
-.mbody.mbody._location:hover {
+
+.mbody.mbody.u-location:hover {
     box-shadow: 0 0 20vh var(--theme-main-color-05);
     animation: ml-pulse 2s linear infinite;
 }
+
 @keyframes ml-pulse {
     0% {box-shadow: 0 0 20vh var(--theme-main-color-05);}
     50% {box-shadow: 0 0 20vh var(--theme-main-color);}
     100% {box-shadow: 0 0 20vh var(--theme-main-color-05);}
 }
+
 .mbody iframe {
     width: 23vw;
     height: 30vh;
