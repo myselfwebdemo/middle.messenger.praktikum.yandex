@@ -26,3 +26,11 @@ Link: https://middle-messenger-yandex-praktikum.netlify.app/
 
 ## Figma Prototype Of The App
 https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?node-id=0-1&t=YNX3VAGORjhamOaX-1
+
+## Utilities & Tips
+To count lines of code use ```cloc```
+# By default ```clocl``` traverse whole directory!
+If you want to specify directory, write ```cloc ./directory-name```
+Same way you can specify file: ```cloc ./directory-name/file-name.ext```
+You can exclude directory or file by using ```clocl --exclude-dir=dir-name1,dir-name2``` or ```cloc --exclude-list-file=file-name.ext```
+Exclude files by extension(s): ```cloc --exclude-ext=extensions```
