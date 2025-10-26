@@ -1,10 +1,10 @@
 // @ts-nocheck
-import Block from '../../core/block';
-import renderDOM from '../../core/renderDOM';
+import Block from 'core/block';
+import renderDOM from 'core/renderDOM';
 import Button from '../button/button';
 import Input from '../input/input';
-import { clg } from '../../main';
-import { getLocByQuery } from '../../utils/locationAPI';
+import { clg } from 'main';
+import { getLocByQuery } from 'utils/locationAPI';
 import SelfSearch from '../input/selfsearch';
 
 interface DialogProps {

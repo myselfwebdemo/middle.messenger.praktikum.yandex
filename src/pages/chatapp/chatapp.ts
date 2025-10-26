@@ -1,12 +1,12 @@
 // @ts-nocheck
-import Button from '../../components/button/button';
-import DialogWindow from '../../components/dialog/dialog';
-import Image from '../../components/image/image';
-import Input from '../../components/input/input';
-import MessageList from '../../components/message/mes-list';
-import Block from '../../core/block';
-import { clg } from '../../main';
-import { MapInit } from '../../utils/map';
+import Button from 'components/button/button';
+import DialogWindow from 'components/dialog/dialog';
+import Image from 'components/image/image';
+import Input from 'components/input/input';
+import MessageList from 'components/message/mes-list';
+import Block from 'core/block';
+import { clg } from 'main';
+import { MapInit } from 'utils/map';
 import ChatList from './chat-list';
 
 export default class ChatAPP extends Block {

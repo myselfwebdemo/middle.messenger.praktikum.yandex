@@ -1,4 +1,4 @@
-import Block from '../../core/block';
+import Block from 'core/block';
 import Message from './message';
 
 export default class MessageList extends Block {

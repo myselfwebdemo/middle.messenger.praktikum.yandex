@@ -1,12 +1,12 @@
 // @ts-nocheck
-import Block from "../../core/Block";
+import Block from "core/Block";
 
-import Input from "../../components/input/input";
-import Button from "../../components/button/button";
-import { clg } from "../../main";
-import { FormInputOnFocus, FormInputOnBlur} from "../../main";
-import FormValidationHandler from "../../utils/formValidation";
-import renderDOM from "../../core/renderDOM";
+import Input from "components/input/input";
+import Button from "components/button/button";
+import { clg } from "main";
+import { FormInputOnFocus, FormInputOnBlur} from "main";
+import FormValidationHandler from "utils/formValidation";
+import renderDOM from "core/renderDOM";
 import LoginPage from "./login";
 
 function validate(e) {

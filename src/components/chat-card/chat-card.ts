@@ -1,4 +1,4 @@
-import Block from '../../core/block';
+import Block from 'core/block';
 
 interface CardInterface {
     recipientName: string

@@ -1,6 +1,6 @@
-import Button from "../../components/button/button";
-import e from "../../components/error/error";
-import Block from "../../core/block";
+import Button from "components/button/button";
+import e from "components/error/error";
+import Block from "core/block";
 
 interface EProps {
     eSrc: string

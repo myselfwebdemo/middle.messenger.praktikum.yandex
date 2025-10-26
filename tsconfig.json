@@ -7,7 +7,7 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
 
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",          
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -21,8 +21,18 @@
     "strictNullChecks": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
-  },
-  "include": ["src"]
-}
+    "noUncheckedSideEffectImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
 
+    "baseUrl": "src",
+    "paths": {
+      "core/*": ["core/*"],
+      "components/*": ["components/*"],
+      "pages/*": ["pages/*"],
+      "utils/*": ["utils/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "build"]
+}
