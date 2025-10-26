@@ -136,7 +136,17 @@ export default class ChatAPP extends Block {
                 classTypeOfButton: 'send',
                 buttonType: 'submit',
                 typeIMG: true,
-                src: 'send.png'
+                src: 'send.png',
+                events: {
+                    click: (e: Event) => {
+                        e.preventDefault();
+                        e.stopImmediatePropagation()
+
+                        if (document.getElementById('message').value !== '') {
+                            e.target.closest('form').submit()
+                        }
+                    }
+                }
             }),
 
             AddRecipientDialog: new DialogWindow({
@@ -224,7 +234,7 @@ export default class ChatAPP extends Block {
                                     <li> {{{ AddLocation }}} Location </li>
                                 </ul>
                             </span>
-                            <form action="#" method="post" id="chat-send-form">
+                            <form id="chat-send-form">
                                 {{{ Message }}}
                                 {{{ SendBtn }}}
                             </form>

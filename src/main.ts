@@ -64,8 +64,8 @@ Object.entries(Components).forEach(([ name,tmpl ]) => {
     Handlebars.registerPartial(name,tmpl);
 });
 
-// const app = new ChatAPP();
-const app = new E({ eSrc: 'error.png', eAlt: "error 500: something went wrong on our end, we're already fixing it.", error: '500' });
+const app = new ChatAPP();
+// const app = new E({ eSrc: 'error.png', eAlt: "error 500: something went wrong on our end, we're already fixing it.", error: '500' });
 renderDOM(app);
 
 // function render(page: string) {
