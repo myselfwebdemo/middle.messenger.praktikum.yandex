@@ -2,14 +2,13 @@
 import Block from "../../core/block";
 
 interface localProps {
-    classTypeOfButton: string;
-    buttonType: "button" | "submit";
-    clientAction?: string;
-    typeIMG?: boolean;
-    src?: string;
-    events?: Record<string, () => void>;
+    classTypeOfButton: string
+    buttonType: "button" | "submit"
+    clientAction?: string
+    typeIMG?: boolean
+    src?: string
+    events?: Record<string, () => void>
 }
-
 export default class Button extends Block {
     constructor(props: localProps) {
         super('button', {

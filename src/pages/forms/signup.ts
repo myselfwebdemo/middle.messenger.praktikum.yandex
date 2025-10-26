@@ -28,7 +28,7 @@ function validate(e) {
 }
 
 interface signupProp {
-    class: string,
+    class: string
     method: string
 }
 
@@ -94,7 +94,7 @@ export default class SignupPage extends Block {
             },
 
             ChangeForm: new Button({
-                classTypeOfButton: 'secondary', 
+                classTypeOfButton: 'tetriary', 
                 buttonType: 'button', 
                 clientAction: 'Boot New Profile',
             }),

@@ -1,9 +1,9 @@
-.input-wrapper {
+.input-wrapper, .ta-wrapper {
     width: var(--form-header-width);
     display: flex;
     flex-direction: column;
 }
-input {
+input,textarea {
     all: unset;
     outline: none;
     font-size: medium;
@@ -16,7 +16,7 @@ input {
     transition: var(--theme-transition);
 }
 .form-input:focus {
-    border-bottom: solid var(--border-thickness) var(--theme-comlpementary-color);
+    border-bottom: solid var(--border-thickness) var(--theme-complementary-color);
 }
 .form-input::placeholder {
     text-transform: capitalize;

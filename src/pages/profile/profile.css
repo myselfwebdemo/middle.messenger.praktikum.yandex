@@ -1,9 +1,10 @@
 .profile {
     --sg: 13vh;
-    width: 35%;
+    width: 35vw;
     height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
 }
 .profile-icon-wrapper {
@@ -37,16 +38,18 @@
 ._profile-icon {
     z-index: 0;
 }
-.profile h1 {
+.profile h1:nth-child(3) {
     width: 100%;
     text-align: center;
     font-weight: 900;
     font-size: x-large;
     text-transform: capitalize;
-    margin: 3vh 0 var(--sg) 0;
+    margin-top: 3vh;
+}
+.profile .ps-lines {
+    padding: var(--sg) 0;
 }
 .profile-action {
-    margin-top: var(--sg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -65,4 +68,8 @@
 }
 .profile ._primary {
     width: 50%;
+}
+
+.profile .dialog button {
+    width: 80%;
 }

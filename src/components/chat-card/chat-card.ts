@@ -1,12 +1,12 @@
 import Block from '../../core/block';
 
 interface CardInterface {
-    recipientName: string,
-    lastMessage?: string,
-    src?: string;
-    time?: string,
-    lastTextYou?: boolean,
-    unread?: number,
+    recipientName: string
+    lastMessage?: string
+    src?: string
+    time?: string
+    lastTextYou?: boolean
+    unread?: number
 }
 
 export default class ChatCard extends Block {

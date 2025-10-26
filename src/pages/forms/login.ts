@@ -83,7 +83,7 @@ export default class LoginPage extends Block {
             },
 
             ChangeForm: new Button({
-                classTypeOfButton: 'secondary', 
+                classTypeOfButton: 'tetriary', 
                 buttonType: 'button', 
                 clientAction: 'Boot New Profile',
             }),

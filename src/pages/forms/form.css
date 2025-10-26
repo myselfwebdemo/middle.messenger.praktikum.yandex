@@ -10,7 +10,7 @@
     width: 40vh;
     min-height: 55vh;
     border: solid .2vh var(--theme-main-color);
-    border-radius: 1.8vh;
+    border-radius: var(--wrappers-rad);
     padding-top: 4vh;
     /* background: rgb(255,255,255,.6); */
     backdrop-filter: blur(var(--blur));
@@ -23,7 +23,7 @@
 .form-title {
     width: var(--form-header-width);
     -webkit-text-fill-color: transparent;
-    background: linear-gradient(to top, var(--theme-main-color), var(--theme-comlpementary-color) 55%);
+    background: linear-gradient(to top, var(--theme-main-color), var(--theme-complementary-color) 55%);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;

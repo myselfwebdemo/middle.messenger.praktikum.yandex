@@ -1,9 +1,12 @@
 // @ts-nocheck
 import Button from '../../components/button/button';
+import DialogWindow from '../../components/dialog/dialog';
 import Image from '../../components/image/image';
 import Input from '../../components/input/input';
+import MessageList from '../../components/message/mes-list';
 import Block from '../../core/block';
 import { clg } from '../../main';
+import { MapInit } from '../../utils/map';
 import ChatList from './chat-list';
 
 export default class ChatAPP extends Block {
@@ -13,7 +16,7 @@ export default class ChatAPP extends Block {
                 input: (e: Event) => {
                     if (e.target.id === 'search') {
                         document.querySelector('.chat-list').scrollIntoView({block:'start'});
-                        
+
                         const chatCards = document.querySelectorAll('.chat-card');
                         const term = e.target.value.toLowerCase();
                         const fieldLast = document.querySelectorAll('.chat-last-text');
@@ -37,11 +40,34 @@ export default class ChatAPP extends Block {
                         }
                     }
                 },
-                click: (e: Event) => {},
+                click: (e: Event) => {
+                    const ATRChoice = document.querySelector('.atr-choice');
+                    const ABCChoice = document.querySelector('.abc-choice');
+                    const dropdowns = [ATRChoice, ABCChoice];
+
+                    if (e.target.className.includes('action-to-recipient')) {
+                        ABCChoice.style.display = 'none';
+                        ATRChoice.style.display = ATRChoice.style.display === 'block' ? 'none' : 'block';
+                        return;
+                    } else if (e.target.className.includes('_add-btn')) {
+                        ATRChoice.style.display = 'none';
+                        ABCChoice.style.display = ABCChoice.style.display === 'block' ? 'none' : 'block';
+                        return;
+                    } else if (e.target.children[0].className.includes('_atr-choice')) {
+                        this.children['AddRecipientDialog'].show();
+                    } else if (e.target.children[0].className.includes('abc-choice')) {
+                        const attachChoice = e.target.children[0].className.split(' ')[2];
+                        if (attachChoice === 'AttachLocation') MapInit();
+                        this.children[`${attachChoice}Dialog`].show();
+                    }
+                    dropdowns.forEach(el => {
+                        el.style.display = 'none';
+                    })                    
+                },
             },
 
             OpenProfile: new Button({
-                classTypeOfButton: 'secondary',
+                classTypeOfButton: 'tetriary',
                 buttonType: 'button',
                 clientAction: 'Profile',
                 typeIMG: true,
@@ -56,6 +82,7 @@ export default class ChatAPP extends Block {
                 src: 'search.png'
             }),
             ChatList: new ChatList(),
+
             CurrentRecipient: new Image({
                 class: 'chat-recipient',
                 src: 'profile/example.png',
@@ -67,7 +94,7 @@ export default class ChatAPP extends Block {
                 alt: 'button that opens list of action that can be done to current recipient',
             }),
             AddRecipient: new Image({
-                class: '_atr-choice',
+                class: 'atr-choice',
                 src: 'recipient-add.png',
                 alt: 'symbol of adding recipient to contacts'
             }),
@@ -76,18 +103,100 @@ export default class ChatAPP extends Block {
                 buttonType: 'button',
                 clientAction: 'Remove recipient'
             }),
+
+            Messages: new MessageList(),
+
+            Attach: new Image({
+                class: 'add-btn drop-btn',
+                src: 'add.png',
+                alt: 'button that opens options of files to be sent'
+            }),
+            AddMedia: new Image({
+                class: 'abc-choice AttachMedia',
+                src: 'attach-media.png',
+                alt: 'action representation image: add photo or video',
+            }),
+            AddFiles: new Image({
+                class: 'abc-choice AttachFile',
+                src: 'attach-files.png',
+                alt: 'action representation image: add file',
+            }),
+            AddLocation: new Image({
+                class: 'abc-choice AttachLocation',
+                src: 'pin.png',
+                alt: 'action representation image: add location',
+            }),
+            Message: new Input({
+                id: 'message',
+                name: 'message',
+                type: 'text',
+                placeholder: 'Communicate...'
+            }),
+            SendBtn: new Button({
+                classTypeOfButton: 'send',
+                buttonType: 'submit',
+                typeIMG: true,
+                src: 'send.png'
+            }),
+
+            AddRecipientDialog: new DialogWindow({
+                title: 'Add recipient',
+                class: 'dialog-simple-input',
+                
+                id: 'login',
+                name: 'login',
+                type: 'text',
+                label: 'Login',
+                recipientLogin: 'ddd2408ddd',
+
+                executiveAction: 'Add',
+            }),
+            AttachMediaDialog: new DialogWindow({
+                title: 'Choose image or video',
+                class: 'dialog-simple-input',
+
+                id: 'media',
+                name: 'media',
+                type: 'file',
+                label: 'Selection',
+                
+                executiveAction: 'Confirm Selection',
+            }),
+            AttachFileDialog: new DialogWindow({
+                title: 'Choose a file',
+                class: 'dialog-simple-input',
+                
+                id: 'file',
+                name: 'file',
+                type: 'file',
+                label: 'Selection',
+                
+                executiveAction: 'Confirm Selection',
+            }),
+            AttachLocationDialog: new DialogWindow({
+                title: 'Share location',
+                locat: true,
+                executiveAction: 'Share',
+            }),
         })
     }
     public render(): string {
+        const children_names = Object.keys(this.children);
+        const line = [];
+
+        for(const name of children_names) {
+            if (name.toLowerCase().includes('dialog')) {
+                line.push(`{{{ ${name} }}}`)
+            }
+        }
+
         return `
             <main>
                 <div class="chatapp-container">
                     <div class="sidebar">
                         <div class="explore">
                             {{{ OpenProfile }}}
-                            <span id="search-container">
-                                {{{ SearchBar }}}
-                            </span>
+                            <span id="search-container"> {{{ SearchBar }}} </span>
                         </div>
                         {{{ ChatList }}}
                     </div>
@@ -95,103 +204,35 @@ export default class ChatAPP extends Block {
                         <span class="chat-header">
                             <span>
                                 {{{ CurrentRecipient }}}
-                                {{!-- INPUT REAL recipient's image by fetching--}}
                                 <h3>Current Recipient</h3>
-                                {{!-- INPUT REAL recipient's name --}}
                             </span>
                             <div class="action-to-recipient">
-                                
                                 {{{ ActionToRecipient }}}
-
                                 <ul class="atr-choice">
-                                    <li class="atr-li">
-                                        {{{ AddRecipient }}}
-                                        Add recipient
-                                    </li>
+                                    <li class="atr-li"> {{{ AddRecipient }}} Add recipient </li>
                                     <li> {{{ DeleteRecipient }}} </li>
                                 </ul>
                             </div>
                         </span>
-                        <div class="messages">
-                            {{> message 
-                                mesType="text"
-                                mesContent="Look at this."
-                                time="12:30"}}
-                            {{> message 
-                                mesType="image"
-                                mesSrc="/main.png"
-                                time="1:31"}}
-                            {{> message 
-                                mesType="text"
-                                fromYou=true
-                                mesContent="Cool!"
-                                time="2:02"}}
-                            {{> message 
-                                mesType="text"
-                                fromYou=true
-                                mesContent="For all the marvel of our technological ascendancy—the transistors etched finer than a human hair, the processors orchestrating trillions of operations each second—our comprehension of the inner life of modern computing remains astonishingly incomplete. We know, in principle, the logic of silicon; we design the architectures, dictate the algorithms, trace the flow of electrons through gates no wider than strands of DNA. Yet as the scale of these systems surpasses the intuitive reach of the human mind, an uncanny opacity emerges."
-                                time="2:15"}}
-                            {{> message 
-                                mesType="image"
-                                fromYou=true
-                                mesSrc="/image.png"
-                                time="3:13"}}
-                        </div>
+                        {{{ Messages }}}
                         <span class="prompt">
                             <span class="add-btn-container">
-                                {{> component_image
-                                    class="add-btn drop-btn"
-                                    src="add.png"
-                                    alt="button that opens options of files to be sent"}}
-                                    
+                                {{{ Attach }}} 
                                 <ul class="abc-choice">
-                                    <li>
-                                        {{> component_image
-                                            class="abc-choice"
-                                            src="abc-iov.png"
-                                            alt="action representation image: add photo or video"}}
-                                        Photo or Video
-                                    </li>
-                                    <li>
-                                        {{> component_image
-                                            class="abc-choice"
-                                            src="abc-files.png"
-                                            alt="action representation image: add file"}}
-                                        Files
-                                    </li>
-                                    <li>
-                                        {{> component_image
-                                            class="abc-choice"
-                                            src="pin.png"
-                                            alt="action representation image: add location"}}
-                                        Location
-                                    </li>
+                                    <li> {{{ AddMedia }}} Photo or Video </li>
+                                    <li> {{{ AddFiles }}} Files </li>
+                                    <li> {{{ AddLocation }}} Location </li>
                                 </ul>
                             </span>
                             <form action="#" method="post" id="chat-send-form">
-                                {{> component_input
-                                    id="message"
-                                    name="message"
-                                    type="text"
-                                    placeholder="Communicate..."}}
-                                {{> component_button
-                                    typeIMG=true
-                                    type="send"
-                                    btype="submit"
-                                    src="send.png"}}
+                                {{{ Message }}}
+                                {{{ SendBtn }}}
                             </form>
                         </span>
                     </div>
                 </div>
             </main>
-            {{> dialog
-                title="Add recipient"
-                class="recipient"
-                id="login"
-                label="Logic"
-                atr="Add"
-                itype="text"
-                recipientLogin="destroyer1997"}}
+            ${line.join(' ')}
         `
     }
 }

@@ -1,4 +1,4 @@
-.body {
+.mbody {
     --rad: 1vh;
     width: fit-content;
     max-width: 45%;
@@ -10,54 +10,76 @@
     margin-bottom: .4vh;
     border-bottom-left-radius: var(--rad);
     border-top-right-radius: var(--rad);
+    transition: var(--theme-transition);
+
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
 }
-.body._text {
+.mbody._text {
     padding: .8vh .8vw;
 }
-.body._image {
+.mbody._image {
+    max-width: 35%;
+    max-height: 50vh;
     border-radius: 1vh;
-    border: solid .2vh var(--theme-main-color);
     overflow: hidden;
     padding: none;
 }
-.body._self {
-    background: var(--theme-tetriary-color);
+.mbody._self {
+    background: var(--theme-main-color-01);
     margin-left: auto;
     border-top-left-radius: var(--rad);
 }
-.body._toSelf {
+.mbody._toSelf {
     background: rgb(245,245,245);
     border-bottom-right-radius: var(--rad);
 }
-.body p {
+.mbody p {
     overflow-x: hidden;
     text-overflow: ellipsis;
     text-align: left;
 }
-.body img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
+.mbody._image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
     object-position: center;
     margin: none;
 }
-.body h6 {
+.mbody h6 {
     width: fit-content;
     height: fit-content;
     margin-left: 1vw;
 }
-.body._image h6 {
+.mbody._image h6 {
     --blur: 3px;
-    background: var(--theme-secondary-color);
+    right: .5vh;
+    bottom: .5vh;
+    position: absolute;
+    background: var(--theme-main-color-025);
     backdrop-filter: blur(var(--blur));
     -webkit-backdrop-filter: blur(var(--blur));
     padding: .3vh .5vw;
     border-radius: 1vh;
-    color: var(--complimentary-text-color);
-    transform: translate(-3.6vw,-.5vh);
+    color: var(--complementary-text-color);
     pointer-events: none;
+}
+.mbody._location {
+    border-radius: var(--rad);
+    overflow: hidden;
+}
+.mbody.mbody._location:hover {
+    box-shadow: 0 0 20vh var(--theme-main-color-05);
+    animation: ml-pulse 2s linear infinite;
+}
+@keyframes ml-pulse {
+    0% {box-shadow: 0 0 20vh var(--theme-main-color-05);}
+    50% {box-shadow: 0 0 20vh var(--theme-main-color);}
+    100% {box-shadow: 0 0 20vh var(--theme-main-color-05);}
+}
+.mbody iframe {
+    width: 23vw;
+    height: 30vh;
+    border: none;
 }

@@ -208,9 +208,9 @@ export default class Block<T extends Record<string, any> = any> {
     return document.createElement(tagName);
   }
   show() {
-    this.getContent().style.display = "block";
+    this.getContent().style.display = "flex";
   }
-  hide() {
+  close() {
     this.getContent().style.display = "none";
   }
   addChildren(block, name) {
@@ -223,7 +223,6 @@ export default class Block<T extends Record<string, any> = any> {
     if (!this.children[name]) alert("You cannot delete Master Chat");
     // if (!this.children[name]) throw new Error(`${name} is either not a child of ${this} or doesn't exist.`);
     const remObj = Object.keys(this.children).indexOf(name);
-    clg(Object.keys(this.children)[remObj-1])
     delete this.children[name];
     this._render();
     this.children[Object.keys(this.children)[remObj-1]]._element.scrollIntoView({behavior: 'smooth'});

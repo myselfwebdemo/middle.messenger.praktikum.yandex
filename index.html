@@ -4,21 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/mascot.png"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <title>middle.messenger.praktikum.yandex</title>
   </head>
   <body>
     <!-- <div class="switch-theme">
       <img name="darkTheme" src="/assets/theme-dark.png">
       <img class="disabled" name="lightTheme" src="/assets/theme-light.png">
-    </div> -->
-    <!-- <img class="mouse" src="/cursor.png"></img> -->
+    </div>
+    <script type="module" src="/src/theme.ts"></script> -->
     
     <div id="app"></div>
-
-    <script type="module" src="/src/main.ts"></script>
-    <!-- <script type="module" src="/src/theme.ts"></script> -->
     
-    <!-- <script>
+    <script type="module" src="/src/main.ts"></script>
+    
+    <!-- <img class="mouse" src="/cursor.png"></img>
+    <script>
       const mouse = document.querySelector('.mouse');
       document.addEventListener('mousemove', e => {
         const x = e.clientX;

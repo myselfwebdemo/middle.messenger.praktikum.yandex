@@ -10,22 +10,26 @@
     --theme: #fff;
     /* --theme: #0A0A0A; */
     --theme-main-color: blueviolet;
-    --theme-secondary-color: rgba(137,43,226,.25);
-    --theme-tetriary-color: rgba(137,43,226,.1);
-    --theme-comlpementary-color: violet;
+    --theme-main-color-075: rgba(137,43,226,.75);
+    --theme-main-color-05: rgba(137,43,226,.5);
+    --theme-main-color-025: rgba(137,43,226,.25);
+    --theme-main-color-01: rgba(137,43,226,.1);
+    --theme-complementary-color: violet;
     --color-fatal: red;
-    --primary-text-color: ##fff;
+    --primary-text-color: #000;
     /* --primary-text-color: #f8f2ff; */
     --secondary-text-color: gray;
-    --complimentary-text-color: #fff;
-    /* --complimentary-text-color: #f8f2ff; */
+    --complementary-text-color: #fff;
+    /* --complementary-text-color: #f8f2ff; */
     --lightgray: rgb(230,230,230);
+    --lightergray: #f5f5f5;
     --form-header-width: 77%;
     --theme-transition: .3s;
     --border-thickness: .2vh;
     --app-input-bg: rgb(230,230,230);
     --theme-sub1-color-filter: invert(70%) sepia(45%) saturate(1608%) hue-rotate(236deg) brightness(98%) contrast(91%);
     --theme-image-inversion: invert(0%);
+    --wrappers-rad: 1.8vh;
 }
 body {
     width: 100%;
