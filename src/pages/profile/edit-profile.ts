@@ -3,7 +3,7 @@ import Button from 'components/button/button';
 import DialogWindow from 'components/dialog/dialog';
 import Image from 'components/image/image';
 import PSL from 'components/profile-info/psl';
-import Block from 'core/block';
+import Block from 'core/Block';
 
 export default class EditUserProfile extends Block {
     constructor() {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import Block from 'core/block';
+import Block from 'core/Block';
 import Input from '../input/input';
 
 interface PSLProps {

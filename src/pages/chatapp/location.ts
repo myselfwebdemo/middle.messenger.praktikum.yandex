@@ -1,4 +1,4 @@
-import Block from 'core/block';
+import Block from 'core/Block';
 
 export default class Map extends Block {
     constructor(props: any) {

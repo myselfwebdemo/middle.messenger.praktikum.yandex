@@ -4,7 +4,7 @@ import DialogWindow from 'components/dialog/dialog';
 import Image from 'components/image/image';
 import Input from 'components/input/input';
 import MessageList from 'components/message/mes-list';
-import Block from 'core/block';
+import Block from 'core/Block';
 import { clg } from 'main';
 import { MapInit } from 'utils/map';
 import ChatList from './chat-list';
