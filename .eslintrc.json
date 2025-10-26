@@ -1,4 +1,7 @@
 {
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "extends": ["plugin:@typescript-eslint/recommended"],
     "rules": {
         "no-unused-vars": 2,
         "max-len": [1, 100],
