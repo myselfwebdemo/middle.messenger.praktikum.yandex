@@ -14,17 +14,18 @@ import DialogWindow from './components/dialog/dialog';
 import UserProfile from './pages/profile/user-profile';
 import EditUserProfile from './pages/profile/edit-profile';
 import NewPassword from './pages/profile/new-password';
-import E from './pages/errors/5';
+import E from './pages/errors/error';
   
 export function clg(...i: any[]): void {
     console.log(...i);
 }
-export function FormInputOnFocus(e) {
-    const parentOfParentElOfCurrentInput = e.target.parentElement.parentElement;
+export function formInputOnFocus(e) {
+    clg(e.target, e.target.parentElement.parentElement)
+    const inputFields = document.querySelector('.input-fields');
 
-    for (let i = 0;i<parentOfParentElOfCurrentInput.children.length; i++) {
-        const label = parentOfParentElOfCurrentInput.children[i].children[0];
-        if (parentOfParentElOfCurrentInput.children[i].children[1].id === e.target.id) {
+    for (let i = 0;i<inputFields.children.length; i++) {
+        const label = inputFields.children[i].children[0];
+        if (inputFields.children[i].children[1].id === e.target.id) {
             if (i == 0) {
                 label.style.transform = 'unset';
             } else {
@@ -36,13 +37,13 @@ export function FormInputOnFocus(e) {
         }
     }
 }
-export function FormInputOnBlur(e) {
-    const parentOfParentElOfCurrentInput = e.target.parentElement.parentElement;
+export function formInputOnBlur(e) {
+    const inputFields = document.querySelector('.input-fields');
 
-    for (let i = 0;i<parentOfParentElOfCurrentInput.children.length; i++) {
-        const label = parentOfParentElOfCurrentInput.children[i].children[0];
+    for (let i = 0;i<inputFields.children.length; i++) {
+        const label = inputFields.children[i].children[0];
 
-        if (parentOfParentElOfCurrentInput.children[i].children[1].id === e.target.id && !e.target.value) {
+        if (inputFields.children[i].children[1].id === e.target.id && !e.target.value) {
             e.target.style.margin = '0 0 .2vh 0';
             label.style.transform = 'translateY(2.4vh)';
             label.style.fontSize = 'medium';
@@ -56,6 +57,9 @@ Handlebars.registerHelper('isNumber', (value) => {
 Handlebars.registerHelper('eq', (a,b) => {
     return a === b;
 })
+Handlebars.registerHelper('deq', (a,b) => {
+    return a !== b;
+})
 
 Object.entries(Components).forEach(([ name,tmpl ]) => {
     if (typeof tmpl === 'function') {
@@ -64,9 +68,26 @@ Object.entries(Components).forEach(([ name,tmpl ]) => {
     Handlebars.registerPartial(name,tmpl);
 });
 
-const app = new ChatAPP();
-// const app = new E({ eSrc: 'error.png', eAlt: "error 500: something went wrong on our end, we're already fixing it.", error: '500' });
-renderDOM(app);
+const pages = {
+    'login' : new LoginPage({method: 'get'}),
+    'signup' : new SignupPage({method: 'post'}),
+    'chatapp' : new ChatAPP(),
+    'usp' : new UserProfile(),
+    'eusp' : new EditUserProfile(),
+    'chp' : new NewPassword(),
+    '404' : new E({eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'}),
+    '500' : new E({eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'}), 
+}
+
+document.getElementById('nav').addEventListener('click', (e) => {
+    clg(e.target.getAttribute('page'))
+    clg(pages[e.target.page])
+    renderDOM(pages[e.target.getAttribute('page')]);
+})
+// const app = new ChatAPP();
+// renderDOM(app);
+
+// renderDOM(new UserProfile())
 
 // function render(page: string) {
 //     const [ src, context ] = pages[page];

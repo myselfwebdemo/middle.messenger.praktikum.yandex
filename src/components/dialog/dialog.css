@@ -135,7 +135,7 @@
     margin: 3vh 0;
 }
 
-.input-wrapper label, .ta-wrapper label {
+.dialog .input-wrapper label, .ta-wrapper label {
     transform: none;
 }
 
@@ -172,4 +172,9 @@
 .dialog-actions button {
     width: 47%;
     text-align: center;
+}
+
+.dialog #dialog-preview {
+    width: 80%;
+    height: auto;
 }

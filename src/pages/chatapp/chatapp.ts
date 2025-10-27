@@ -165,8 +165,8 @@ export default class ChatAPP extends Block {
                 title: 'Choose image or video',
                 class: 'dialog-simple-input',
 
-                id: 'media',
-                name: 'media',
+                id: 'dialog_media',
+                name: 'dialog_media',
                 type: 'file',
                 label: 'Selection',
                 
@@ -176,8 +176,8 @@ export default class ChatAPP extends Block {
                 title: 'Choose a file',
                 class: 'dialog-simple-input',
                 
-                id: 'file',
-                name: 'file',
+                id: 'dialog_file',
+                name: 'dialog_file',
                 type: 'file',
                 label: 'Selection',
                 

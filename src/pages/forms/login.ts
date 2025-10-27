@@ -4,21 +4,21 @@ import Block from "core/Block";
 import Input from "components/input/input";
 import Button from "components/button/button";
 import { clg } from "main";
-import { FormInputOnFocus, FormInputOnBlur} from "main";
-import FormValidationHandler from "utils/formValidation";
+import { formInputOnFocus, formInputOnBlur} from "main";
+import formValidationHandler from "utils/formValidation";
 import SignupPage from "./signup";
 import renderDOM from "core/renderDOM";
 
 function validate(e) {
     let isValid;
     if (e.name) {
-        const { valid, verdict } = FormValidationHandler('login', e.name, e.value, true);
+        const { valid, verdict } = formValidationHandler('login', e.name, e.value, true);
         e.style.borderBottom = verdict ? 'dashed .2vh red' : '';
         document.querySelector(`.input-requirements-mismatch.${e.id}`).textContent = verdict;
 
         isValid = valid;
     } else {
-        const { valid, verdict } = FormValidationHandler('login', e.target.name, e.target.value);
+        const { valid, verdict } = formValidationHandler('login', e.target.name, e.target.value);
         e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
         document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
         
@@ -46,10 +46,10 @@ export default class LoginPage extends Block {
             }, 
             events: {
                 focusin: (e) => {
-                    FormInputOnFocus(e)
+                    formInputOnFocus(e)
                 },
                 focusout: (e) => {
-                    FormInputOnBlur(e)
+                    formInputOnBlur(e)
                 },
                 input: (e) => {
                     validate(e)

@@ -4,21 +4,21 @@ import Block from "core/Block";
 import Input from "components/input/input";
 import Button from "components/button/button";
 import { clg } from "main";
-import { FormInputOnFocus, FormInputOnBlur} from "main";
-import FormValidationHandler from "utils/formValidation";
+import { formInputOnFocus, formInputOnBlur} from "main";
+import formValidationHandler from "utils/formValidation";
 import renderDOM from "core/renderDOM";
 import LoginPage from "./login";
 
 function validate(e) {
     let isValid;
     if (e.name) {
-        const { valid, verdict } = FormValidationHandler('signup', e.name, e.value, true);
+        const { valid, verdict } = formValidationHandler('signup', e.name, e.value, true);
         e.style.borderBottom = verdict ? 'dashed .2vh red' : '';
         document.querySelector(`.input-requirements-mismatch.${e.id}`).textContent = verdict;
 
         isValid = valid;
     } else {
-        const { valid, verdict } = FormValidationHandler('login', e.target.name, e.target.value);
+        const { valid, verdict } = formValidationHandler('login', e.target.name, e.target.value);
         e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
         document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
         
@@ -28,7 +28,6 @@ function validate(e) {
 }
 
 interface signupProp {
-    class: string
     method: string
 }
 
@@ -51,13 +50,13 @@ export default class SignupPage extends Block {
             }, 
             events: {
                 focusin: (e) => {
-                    FormInputOnFocus(e)
+                    formInputOnFocus(e)
                 },
                 focusout: (e) => {
-                    FormInputOnBlur(e)
+                    formInputOnBlur(e)
                 },
                 input: (e) => {
-                    const { verdict } = FormValidationHandler('signup', e.target.name, e.target.value);
+                    const { verdict } = formValidationHandler('signup', e.target.name, e.target.value);
                     e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
                     document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
                 },

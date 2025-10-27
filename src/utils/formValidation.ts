@@ -1,28 +1,28 @@
 let createdPassword: string;
 
-export default function FormValidationHandler(
+export default function formValidationHandler(
     form: string,
     field: string, 
     value: string,
     submitEvent: boolean
 ) {
-    const CYRILLIC = 'А-ЯЁа-яё';
-    const LATIN = 'A-Za-z';
-    const CaseBlankSpace = 'Cannot leave blank space';
-    const CaseNotString = 'must be a string';
+    const cyrillic = 'А-ЯЁа-яё';
+    const latin = 'A-Za-z';
+    const caseBlankSpace = 'Cannot leave blank space';
+    const caseNotString = 'must be a string';
 
     const validate = (valid: boolean, verdict?: string, caseDefault?: boolean) => 
         caseDefault === true ? {verdict} : (valid === true ? {valid: true} : {valid: false, verdict});
   
     if (typeof value !== 'string') {
-        return validate(false, `${field} ${CaseNotString}.`);
+        return validate(false, `${field} ${caseNotString}.`);
     }
     switch (form) {
         case 'signup': {
             switch (field) {
                 case 'email': {
                     if (value.trim().length === 0) {
-                        return validate(false, CaseBlankSpace);
+                        return validate(false, caseBlankSpace);
                     }
                     const parts = value.split('@');
                     if (parts.length !== 2) {
@@ -76,12 +76,12 @@ export default function FormValidationHandler(
                 case 'first_name':
                 case 'second_name': {
                     if (value.trim().length === 0) {
-                        return validate(false, CaseBlankSpace);
+                        return validate(false, caseBlankSpace);
                     }
         
-                    const latin = new RegExp(`^[A-Z][${LATIN}-]*$`);
-                    const cyr = new RegExp(`^[А-ЯЁ][${CYRILLIC}-]*$`);
-                    if (!latin.test(value) && !cyr.test(value)) {
+                    const lat = new RegExp(`^[A-Z][${latin}-]*$`);
+                    const cyr = new RegExp(`^[А-ЯЁ][${cyrillic}-]*$`);
+                    if (!lat.test(value) && !cyr.test(value)) {
                         return validate(false, 'First letter must be capital');
                     }
                     return validate(true);
@@ -90,7 +90,7 @@ export default function FormValidationHandler(
                     createdPassword = value.trim();
         
                     if (value.trim().length === 0) {
-                        return validate(false, CaseBlankSpace);
+                        return validate(false, caseBlankSpace);
                     }
                     if (value.length < 8 || value.length > 40) {
                         return validate(false, 'Length must be between 8 and 40 figures');
@@ -105,7 +105,7 @@ export default function FormValidationHandler(
                 } 
                 case 'password-rep': {
                     if (value.trim().length === 0) {
-                        return validate(false, CaseBlankSpace);
+                        return validate(false, caseBlankSpace);
                     }
                     if (value !== createdPassword) {
                         return validate(false, 'Passwords do not match');
@@ -120,7 +120,7 @@ export default function FormValidationHandler(
                 }
                 case 'phone': {
                     if (value.trim().length === 0) {
-                        return validate(false, CaseBlankSpace);
+                        return validate(false, caseBlankSpace);
                     }
                     if (!value.includes("+")) {
                         return validate(false, 'Must start with "+"');
@@ -151,7 +151,7 @@ export default function FormValidationHandler(
                     ////////////////////////////////////////
 
                     if (value.trim().length === 0 && submitEvent) {
-                        return validate(false, CaseBlankSpace);
+                        return validate(false, caseBlankSpace);
                     } else if (value.trim().length === 0) {
                         return validate(true)
                     }
@@ -164,7 +164,7 @@ export default function FormValidationHandler(
                     ///////////////////////////////////////
 
                     if (value.trim().length === 0 && submitEvent) {
-                        return validate(false, CaseBlankSpace);
+                        return validate(false, caseBlankSpace);
                     } else if (value.trim().length === 0) {
                         return validate(true)
                     }

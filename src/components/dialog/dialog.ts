@@ -43,6 +43,14 @@ export default class DialogWindow extends Block {
                     if (!e.target.closest('.dialog') && document.activeElement.id !== 'map' && document.activeElement.id !== 'standalone' || e.target.closest('.dialog .button.u-secondary')) {
                         this.close();
                     }
+                },
+                change: (e: Event) => {
+                    if (props.type !== 'text') {
+                        const i = document.querySelector('.dialog input[type="file"]')
+                        const preview = document.getElementById('dialog-preview');
+
+                        preview.src = window.URL.createObjectURL(i.files[0]);
+                    }
                 }
             },
 
@@ -113,6 +121,9 @@ export default class DialogWindow extends Block {
                         </div>
                     </form>
                 {{else}}
+                    {{#if (deq type "text")}}
+                        <img id="dialog-preview" src="">
+                    {{/if}}
                     {{{ Input }}}
                     {{{ Commit }}}
                 {{/if}}
