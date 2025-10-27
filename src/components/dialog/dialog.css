@@ -135,12 +135,12 @@
     margin: 3vh 0;
 }
 
-.dialog .input-wrapper label, .ta-wrapper label {
-    transform: none;
-}
-
 .ta-wrapper label {
     margin-bottom: .5vh;
+}
+
+.dialog .input-wrapper label, .ta-wrapper label {
+    transform: none;
 }
 
 #standalone{
