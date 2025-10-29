@@ -1,23 +1,19 @@
 #error-image {
+    position: fixed;
     width: 50%;
     height: auto;
     filter: invert(100%) drop-shadow(0 0 3vh orange);
     mix-blend-mode: difference;
     z-index: 1;
 }
-#error-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+
 .error-title {
     position: absolute;
     top: -8%;
-    left: auto;
-    color: black;
+    color: var(--primary-text-color);
     font-size: 90vh;
     font-weight: 900;
-    text-shadow: 0 0 5vh black;
+    text-shadow: 0 0 5vh var(--primary-text-color);
     z-index: 0;
 }
+

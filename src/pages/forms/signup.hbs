@@ -1,4 +1,4 @@
-<form class="form">
+<form class="form" method="post" novalidate>
     <div class="header">
         <h1 class="form-title">Join</h1>
         <span class="form-switch">
@@ -9,59 +9,65 @@
     <div class="input-fields">
         {{> component_input
             class="form-input"
-            id="form-input email"
+            id="email"
             label="Email"
             type="email" 
             name="email" 
             required="true"
+            mismatchObject="input-requirements-mismatch email"
         }}
         {{> component_input
             class="form-input"
-            id="form-input login"
+            id="login"
             label="Username"
             type="text" 
             name="login" 
+            mismatchObject="input-requirements-mismatch login"
         }}
         {{> component_input
             class="form-input"
-            id="form-input first_name"
+            id="first_name"
             label="Name"
             type="text" 
             name="first_name"
             required="true"
+            mismatchObject="input-requirements-mismatch first_name"
         }}
         {{> component_input
             class="form-input"
-            id="form-input second_name"
+            id="second_name"
             label="Surname"
             type="text" 
             name="second_name"
+            required="true"
+            mismatchObject="input-requirements-mismatch second_name"
         }}
         {{> component_input
             class="form-input"
-            id="form-input phone"
+            id="phone"
             label="Phone"
-            name="phone" 
-            type="tel" 
-            autocomplete='tel'
-            inputmode='numeric'
-            pattern='[0-9]*'
+            type="tel"
+            name="phone"
+            required="true" 
+            mismatchObject="input-requirements-mismatch phone"
         }}
         {{> component_input
             class="form-input"
-            id="form-input password"
+            id="password"
             label="Password"
             type="password" 
             name="password" 
             required="true"
+            mismatchObject="input-requirements-mismatch password"
         }}
         {{> component_input
             class="form-input"
-            id="form-input password_rep"
+            id="password-rep"
             label="Password (again)"
             type="password" 
-            name="password_rep" 
+            name="password-rep" 
             required="true"
+            mismatchObject="input-requirements-mismatch password-rep"
         }}
     </div>
     {{> component_button 

@@ -1,0 +1,4 @@
+1. Try integrate google maps instead of OpenStreetMaps
+2. Add ability to create HTML Fragment element with super('fragment', ...) by enhancing Block class by removing neccessity of wrappers around the elements. To remind myself, in class Input, class Message, class E, you wrap elements in extra elements because of the complexity of working without wrapper.
+
+

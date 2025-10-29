@@ -3,9 +3,9 @@
     width: fit-content;
     height: fit-content;
 }
-._primary, ._fatal-primary {
-    color: var(--complimentary-text-color);
-    text-shadow: 0 0 2vh var(--theme-main-color);
+
+.u-primary, .u-secondary, .u-fatal-primary {
+    color: var(--complementary-text-color);
     text-transform: capitalize;
     text-align: center;
     font-weight: 400;
@@ -16,42 +16,44 @@
     border-radius: 1.3vh;
     transition: .5s;
 }
-._primary {
+
+.u-primary {
     background: var(--theme-main-color);
 }
-._c2-primary {
+
+.u-c2-primary {
     color: var(--theme-main-color);
 }
-._secondary:hover {
-    color: var(--theme-comlpementary-color);
-}
-._secondary {
+
+.u-secondary {
     color: var(--primary-text-color);
     text-transform: capitalize;
     margin-left: .5vh;
     padding-right: .5vh;
     transition: var(--theme-transition);
+    border: solid var(--border-thickness) var(--primary-text-color);
 }
-._tetriary {
-    padding: 0 .5vh;
-    color: var(--theme-main-color);
-    font-size: large;
-    font-weight: 600;
-    transform: translateY(12.5vh);
-    transition: var(--theme-transition);
+
+.u-secondary:hover {
+    background: var(--theme-main-color-01);
+    color: var(--theme-complementary-color);
+    border-color: var(--theme-complementary-color);
 }
-._tetriary:hover {
-    color: var(--theme-comlpementary-color);
-    border-left: solid .3vh var(--theme-comlpementary-color);
-    border-right: solid .3vh var(--theme-comlpementary-color);
+.u-tetriary { transition: var(--theme-transition) }
+
+.u-tetriary:hover {
+    color: var(--theme-complementary-color);
 }
-._fatal-primary {
+
+.u-fatal-primary {
     background: var(--color-fatal);
 }
-._fatal-secondary {
+
+.u-fatal-secondary {
     color: var(--color-fatal);
 }
-._send {
+
+.u-send {
     width: 2vh;
     height: 2vh;
     background: var(--theme-main-color);

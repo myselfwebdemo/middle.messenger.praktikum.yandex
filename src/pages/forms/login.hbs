@@ -1,4 +1,4 @@
-<form class="form" method="POST">
+<form class="form" method="get">
     <div class="header">
         <h1 class="form-title">Login</h1>
         <span class="form-switch">
@@ -9,18 +9,22 @@
     <div class="input-fields">
         {{> component_input 
             class="form-input"
-            id="username"
+            id="login"
             label="Email or username"
             type="text" 
-            name="username"
-            required="true"}}
+            name="login"
+            required="true"
+            mismatchObject="input-requirements-mismatch login"
+        }}
         {{> component_input 
             class="form-input"
             id="password"
             label="Password"
             type="password" 
             name="password" 
-            required="true"}}
+            required="true"
+            mismatchObject="input-requirements-mismatch password"
+        }}
     </div>
     {{> component_button 
         type="primary"

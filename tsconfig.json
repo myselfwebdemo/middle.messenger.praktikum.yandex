@@ -7,21 +7,33 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",          
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
 
-    /* Linting */
     "strict": true,
+    "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
-  },
-  "include": ["src"]
-}
+    "noUncheckedSideEffectImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
 
+    "baseUrl": "src",
+    "paths": {
+      "core/*": ["core/*"],
+      "components/*": ["components/*"],
+      "pages/*": ["pages/*"],
+      "utils/*": ["utils/*"],
+      "main": ["main.ts"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "build"]
+}

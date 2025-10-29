@@ -1,9 +1,23 @@
 .error-container {
     width: 100%;
     height: 100%;
-    background: var(--theme);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.error-container div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-container .button.u-tetriary {
+    position: absolute;
+    left: auto;
+    bottom: 5vh;
+    color: var(--primary-text-color);
 }
