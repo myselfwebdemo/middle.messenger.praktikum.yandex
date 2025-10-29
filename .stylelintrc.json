@@ -1,7 +1,8 @@
 {
     "extends": "stylelint-config-standard",
     "rules": {
-        "color-hex-length": "short"
+        "color-hex-length": "short",
+        "rule-empty-line-before": null        
     },
     "ignoreFiles": [
         "build/*",

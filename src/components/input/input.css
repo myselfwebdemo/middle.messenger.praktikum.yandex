@@ -3,14 +3,12 @@
     display: flex;
     flex-direction: column;
 }
-
 input,textarea {
     all: unset;
     outline: none;
     font-size: medium;
     height: 3.3vh;
 }
-
 .form-input{
     --strength: 1.6vh;
 
@@ -18,15 +16,12 @@ input,textarea {
     color: var(--primary-text-color);
     transition: var(--theme-transition);
 }
-
 .form-input:focus {
     border-bottom: solid var(--border-thickness) var(--theme-complementary-color);
 }
-
 .form-input::placeholder {
     text-transform: capitalize;
 }
-
 label {
     width: var(--form-header-width);
     color: gray;

@@ -84,20 +84,3 @@ document.getElementById('nav').addEventListener('click', (e) => {
     clg(pages[e.target.page])
     renderDOM(pages[e.target.getAttribute('page')]);
 })
-// const app = new ChatAPP();
-// renderDOM(app);
-
-// renderDOM(new UserProfile())
-
-// function render(page: string) {
-//     const [ src, context ] = pages[page];
-//     if (typeof src === "function") {
-//         renderDOM(new source({}));
-//         return;
-//     }
-//     const app = document.getElementById('app');
-//     const temlpatingFunction = Handlebars.compile(src);
-//     // @ts-ignore
-//     app.innerHTML = temlpatingFunction(context);
-// }
-// document.addEventListener('DOMContentLoaded', () => { render('chatapp'); })

@@ -61,9 +61,12 @@ https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?no
 | **password** | Cannot be blank on submit. Optional otherwise. |
 
 ## Utilities & Tips
+### Cloc: find out number of lines in your project
 To count lines of code use ```cloc```  
 #### By default ```cloc``` traverses whole directory!  
 If you want to specify directory, write ```cloc ./directory-name```  
 Same way you can specify file: ```cloc ./directory-name/file-name.ext```  
 You can exclude directory or file by using ```clocl --exclude-dir=dir-name1,dir-name2``` or ```cloc --exclude-list-file=file-name.ext```  
-Exclude files by extension(s): ```cloc --exclude-ext=extensions```  
+Exclude files by extension(s): ```cloc --exclude-ext=extensions```
+### Stylelint: check your styles
+To run stylelint use command ``` npx stylelint "**/*.css" ```

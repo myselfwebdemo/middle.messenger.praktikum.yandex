@@ -7,11 +7,8 @@
 
     /* cursor: none; */
 }
-
 :root {
     --theme: #fff;
-
-    /* --theme: #0A0A0A; */
     --theme-main-color: blueviolet;
     --theme-main-color-075: rgb(137 43 226 / 75%);
     --theme-main-color-05: rgb(137 43 226 / 50%);
@@ -20,12 +17,8 @@
     --theme-complementary-color: violet;
     --color-fatal: red;
     --primary-text-color: #000;
-
-    /* --primary-text-color: #f8f2ff; */
     --secondary-text-color: gray;
     --complementary-text-color: #fff;
-
-    /* --complementary-text-color: #f8f2ff; */
     --lightgray: rgb(230 230 230);
     --lightergray: #f5f5f5;
     --form-header-width: 77%;
@@ -36,14 +29,12 @@
     --theme-image-inversion: invert(0%);
     --wrappers-rad: 1.8vh;
 }
-
 body {
     width: 100%;
     height: 100dvh;
     background: var(--theme);
     overflow: hidden;
 }
-
 #app {
     width: 100vw;
     height: 100vh;
@@ -52,7 +43,6 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 .mouse {
     --size: 10vh;
 
@@ -67,7 +57,6 @@ body {
     transform: translate3d(0,0,0);
     z-index: 9999;
 }
-
 .switch-theme {
     position: absolute;
     top: 3vh;
@@ -76,7 +65,6 @@ body {
     gap: 1.4vh;
     z-index: 9999;
 }
-
 .switch-theme img {
     --size: 4vh;
 
@@ -84,11 +72,9 @@ body {
     height: var(--size);
     border-radius: 50%;
 }
-
 .switch-theme img.disabled {
     filter: grayscale(100%);
 }
-
 #temppn {
     background: rgb(255 255 255 / 10%);
     backdrop-filter: blur(10px);
@@ -97,13 +83,11 @@ body {
     padding: 5vh 5vw;
     border-radius: 3vh;
 }
-
- #temppn li {
+#temppn li {
     margin: 2vh;
     color: #fff;
 }
-
- #temppn li a {
+#temppn li a {
     color: var(--theme-main-color);
     text-transform: uppercase;
     text-shadow: 0 0 2vh #fff;

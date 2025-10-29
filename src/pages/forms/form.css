@@ -3,7 +3,6 @@
     flex-direction: column;
     align-items: center;
 }
-
 .form {
     --blur: 15px;
 
@@ -16,12 +15,10 @@
     padding-top: 4vh;
     backdrop-filter: blur(var(--blur));
 }
-
 .header {
     width: 100%;
     height: fit-content;
 }
-
 .form-title {
     width: var(--form-header-width);
     -webkit-text-fill-color: transparent;
@@ -32,14 +29,12 @@
     font-weight: 900;
     font-size: xx-large;
 }
-
 .form-switch {
     width: var(--form-header-width);
     color: var(--secondary-text-color);
     font-size: small;
     margin: .3vh 0 3vh;
 }
-
 .input-fields {
     width: 100%;
     height: fit-content;
@@ -48,11 +43,9 @@
     align-items: center;
     margin-bottom: auto;
 }
-
 .form .u-primary {
     margin: 7vh 0 4vh;
 }
-
 .input-requirements-mismatch {
     width: var(--form-header-width);
     color: red;

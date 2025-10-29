@@ -15,11 +15,9 @@
     overflow-wrap: break-word;
     white-space: pre-wrap;
 }
-
 .mbody.u-text {
     padding: .8vh .8vw;
 }
-
 .mbody.u-image {
     max-width: 35%;
     max-height: 50vh;
@@ -27,24 +25,20 @@
     overflow: hidden;
     padding: 0;
 }
-
 .mbody.u-self {
     background: var(--theme-main-color-01);
     margin-left: auto;
     border-top-left-radius: var(--rad);
 }
-
 .mbody.u-toself {
     background: rgb(245 245 245);
     border-bottom-right-radius: var(--rad);
 }
-
 .mbody p {
     overflow-x: hidden;
     text-overflow: ellipsis;
     text-align: left;
 }
-
 .mbody.u-image img {
     max-width: 100%;
     max-height: 100%;
@@ -52,13 +46,11 @@
     object-position: center;
     margin: 0;
 }
-
 .mbody h6 {
     width: fit-content;
     height: fit-content;
     margin-left: 1vw;
 }
-
 .mbody.u-image h6 {
     --blur: 3px;
 
@@ -72,12 +64,10 @@
     color: var(--complementary-text-color);
     pointer-events: none;
 }
-
 .mbody.u-location {
     border-radius: var(--rad);
     overflow: hidden;
 }
-
 .mbody.mbody.u-location:hover {
     box-shadow: 0 0 20vh var(--theme-main-color-05);
     animation: ml-pulse 2s linear infinite;
@@ -88,7 +78,6 @@
     50% {box-shadow: 0 0 20vh var(--theme-main-color);}
     100% {box-shadow: 0 0 20vh var(--theme-main-color-05);}
 }
-
 .mbody iframe {
     width: 23vw;
     height: 30vh;

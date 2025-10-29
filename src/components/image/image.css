@@ -4,7 +4,6 @@
     object-fit: cover;
     object-position: center;
 }
-
 .u-profile-icon {
     --size: 10vh;
 
@@ -13,7 +12,6 @@
     background: var(--lightgray);
     border-radius: 50%;
 }
-
 .back-btn {
     position: absolute;
     top: 0;
