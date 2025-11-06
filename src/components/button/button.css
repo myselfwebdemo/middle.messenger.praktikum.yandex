@@ -1,4 +1,4 @@
-.button {
+button {
     all: unset;
     width: fit-content;
     height: fit-content;
@@ -8,7 +8,7 @@
     text-transform: capitalize;
     text-align: center;
     font-weight: 400;
-    font-size: medium;
+    font-size: var(--regular-font-size);
     text-shadow: none;
     height: 5vh;
     width: 80%;
@@ -17,6 +17,10 @@
 }
 .u-primary {
     background: var(--theme-main-color);
+    transition: var(--theme-transition);
+}
+.u-primary:hover {
+    background: var(--theme-main-color-darker);
 }
 .u-c2-primary {
     color: var(--theme-main-color);
@@ -34,12 +38,21 @@
     color: var(--theme-complementary-color);
     border-color: var(--theme-complementary-color);
 }
-.u-tetriary { transition: var(--theme-transition) }
+.u-tetriary, .u-tetriary-nt { 
+    color: var(--primary-text-color);
+    transition: var(--theme-transition);
+}
 .u-tetriary:hover {
     color: var(--theme-complementary-color);
 }
 .u-fatal-primary {
+    width: 100%;
     background: var(--color-fatal);
+    border-radius: .8vh;
+    transition: var(--theme-transition);
+}
+.u-fatal-primary:hover {
+    background: var(--color-fatal-darker);
 }
 .u-fatal-secondary {
     color: var(--color-fatal);
@@ -50,4 +63,11 @@
     background: var(--theme-main-color);
     padding: .8vh;
     border-radius: 5vh;
+}
+
+.button.small {
+    width: fit-content;
+    height: 3.4vh;
+    border-radius: 2vh;
+    padding: 0 1vw;
 }

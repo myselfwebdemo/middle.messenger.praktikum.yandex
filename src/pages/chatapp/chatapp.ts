@@ -8,10 +8,17 @@ import Block from 'core/Block';
 import { clg } from 'main';
 import { MapInit } from 'utils/map';
 import ChatList from './chat-list';
+import { injectRouter } from 'utils/injectRouter';
+import './chatapp.css';
+import Fatal from 'components/dialog/fatal';
+import FoundUsersList from './list';
+import transport from 'core/APIs/api';
 
-export default class ChatAPP extends Block {
-    constructor() {
+class Messenger extends Block {
+    constructor(props) {
         super('main', {
+            nameOCR: props.nameOCR | 'Petya',
+            ...props,
             events: {
                 input: (e: Event) => {
                     if (e.target.id === 'search') {
@@ -47,18 +54,51 @@ export default class ChatAPP extends Block {
 
                     if (e.target.className.includes('action-to-recipient')) {
                         ABCChoice.style.display = 'none';
-                        ATRChoice.style.display = ATRChoice.style.display === 'block' ? 'none' : 'block';
+
+                        const atr = document.querySelector('.action-to-recipient');
+
+                        const cancel = new Button({
+                                            classTypeOfButton: 'tetriary small',
+                                            buttonType: 'button',
+                                            clientAction: 'Cancel',
+                                            events: {
+                                                click: () => {
+                                                    atr.innerHTML = '';
+                                                    atr.appendChild(this.children.ActionToRecipient.getContent());
+                                                }
+                                            }
+                                        });
+                        const confirm = new Button({
+                                            classTypeOfButton: 'fatal-primary small',
+                                            buttonType: 'button',
+                                            clientAction: 'Delete',
+                                            events: {
+                                                click: () => {
+                                                    this.children.ConfirmDeletionDialog.show()
+                                                    atr.innerHTML = '';
+                                                    atr.appendChild(this.children.ActionToRecipient.getContent());
+                                                }
+                                            }
+                                        });
+
+                        atr.innerHTML = '';
+                        atr.append(cancel.getContent(), confirm.getContent())
+
                         return;
                     } else if (e.target.className.includes('u-add-btn')) {
                         ATRChoice.style.display = 'none';
                         ABCChoice.style.display = ABCChoice.style.display === 'block' ? 'none' : 'block';
                         return;
-                    } else if (e.target.children[0].className.includes('u-atr-choice')) {
-                        this.children['AddRecipientDialog'].show();
-                    } else if (e.target.children[0].className.includes('abc-choice')) {
-                        const attachChoice = e.target.children[0].className.split(' ')[2];
-                        if (attachChoice === 'AttachLocation') MapInit();
-                        this.children[`${attachChoice}Dialog`].show();
+                    } 
+
+                    if (e.target.closest('.atr-choice') || e.target.closest('.abc-choice')) {
+                        if (e.target.children[0].className.includes('u-atr-choice')) {
+                            this.children.AddRecipientDialog.show();
+                        } else if (e.target.children[0].className.includes('abc-choice')) {
+                            const attachChoice = e.target.children[0].className.split(' ')[2];
+                            if (attachChoice === 'AttachLocation') MapInit();
+                            this.children[`${attachChoice}Dialog`].show();
+                        }
                     }
                     dropdowns.forEach(el => {
                         el.style.display = 'none';
@@ -72,6 +112,11 @@ export default class ChatAPP extends Block {
                 clientAction: 'Profile',
                 typeIMG: true,
                 src: 'to.png',
+                events: {
+                    click: () => {
+                        this.props.router.go('/settings');
+                    }
+                }
             }),
             SearchBar: new Input({
                 type: 'text',
@@ -82,6 +127,33 @@ export default class ChatAPP extends Block {
                 src: 'search.png'
             }),
             ChatList: new ChatList(),
+            OpenUserSearch: new Button({
+                classTypeOfButton: 'tetriary-nt ous',
+                buttonType: 'button',
+                clientAction: 'Open user search',
+                typeIMG: true,
+                src: 'to.png',
+                events: {
+                    click: () => {
+                        document.querySelector('.user-search').classList.toggle('u-s-opened');
+                        document.querySelector('.ous').children[1].style.transform = document.querySelector('.ous').children[1].style.transform === 'rotate(270deg)' ? 'rotate(90deg)' : 'rotate(270deg)';
+                    }
+                }
+            }),
+            SearchUser: new Input({
+                type: 'text',
+                id: 'search_user',
+                name: 'search_user',
+                placeholder: '...search by username',
+                events: {
+                    input: () => {
+                        const xhr = new transport('user');
+
+                        xhr.get('/search', { login: search_user.value }).then((res) => alert(res.status))
+                    }
+                }
+            }),
+            FoundUsersList: new FoundUsersList(),
 
             CurrentRecipient: new Image({
                 class: 'chat-recipient',
@@ -92,16 +164,6 @@ export default class ChatAPP extends Block {
                 class: 'action-to-recipient drop-btn',
                 src: 'atr.png',
                 alt: 'button that opens list of action that can be done to current recipient',
-            }),
-            AddRecipient: new Image({
-                class: 'atr-choice',
-                src: 'recipient-add.png',
-                alt: 'symbol of adding recipient to contacts'
-            }),
-            DeleteRecipient: new Button({
-                classTypeOfButton: 'fatal-primary del-rec',
-                buttonType: 'button',
-                clientAction: 'Remove recipient'
             }),
 
             Messages: new MessageList(),
@@ -149,17 +211,11 @@ export default class ChatAPP extends Block {
                 }
             }),
 
-            AddRecipientDialog: new DialogWindow({
-                title: 'Add recipient',
-                class: 'dialog-simple-input',
-                
-                id: 'login',
-                name: 'login',
-                type: 'text',
-                label: 'Login',
-                recipientLogin: 'ddd2408ddd',
-
-                executiveAction: 'Add',
+            ConfirmDeletionDialog: new Fatal({
+                title: `Delete contact?`,
+                mainMessage: `This will delete ${props.nameOCR} from your contacts. You will be able to add this user again later.`,
+                extratip: `This action erases all messages ever sent to ${props.nameOCR}`,
+                finalAction: 'Delete'
             }),
             AttachMediaDialog: new DialogWindow({
                 title: 'Choose image or video',
@@ -209,19 +265,24 @@ export default class ChatAPP extends Block {
                             <span id="search-container"> {{{ SearchBar }}} </span>
                         </div>
                         {{{ ChatList }}}
+                        <div class="user-search">
+                            <div>
+                                <div id="u-s-title-img"></div>
+                                {{{ OpenUserSearch }}}
+                                <h2>Find people</h2>
+                                {{{ SearchUser }}}
+                                {{{ FoundUsersList }}}
+                            </div>
+                        </div>
                     </div>
                     <div class="chat">
                         <span class="chat-header">
                             <span>
                                 {{{ CurrentRecipient }}}
-                                <h3>Current Recipient</h3>
+                                <h3>{{ nameOCR }}</h3>
                             </span>
                             <div class="action-to-recipient">
                                 {{{ ActionToRecipient }}}
-                                <ul class="atr-choice">
-                                    <li class="atr-li"> {{{ AddRecipient }}} Add recipient </li>
-                                    <li> {{{ DeleteRecipient }}} </li>
-                                </ul>
                             </div>
                         </span>
                         {{{ Messages }}}
@@ -246,3 +307,5 @@ export default class ChatAPP extends Block {
         `
     }
 }
+
+export default injectRouter(Messenger);

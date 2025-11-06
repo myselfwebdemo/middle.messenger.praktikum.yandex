@@ -1,4 +1,6 @@
 import Block from 'core/Block';
+import './chat-card.css';
+import Image from 'components/image/image';
 
 interface CardInterface {
     recipientName: string
@@ -17,14 +19,17 @@ export default class ChatCard extends Block {
             attrs: {
                 'data-recipient': props.recipientName,
                 'data-last-message': props.lastMessage,
-            }
+            },
+            image: new Image({
+                class: 'chat-list-recipient',
+                src: props.src || 'profile/example.png',
+                alt: 'recipient image in chat list'
+            })
         })
     }
     public render(): string {
         return `
-            {{> component_image
-                class="chat-list-recipient"
-                src=src}}
+            {{{ image}}}
             <div class="chat-info">
                 <h3>{{recipientName}}</h3>
                 {{#if lastMessage}}

@@ -17,4 +17,9 @@
 .psl p:last-child {
     color: var(--secondary-text-color);
 }
+.psl p {
+    display: flex;
+    align-items: center;
+    height: 3.3vh;
+}
 

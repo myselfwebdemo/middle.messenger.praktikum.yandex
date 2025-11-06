@@ -1,4 +1,5 @@
 import Block from "core/Block";
+import './image.css';
 
 interface ImageProps {
     class: string

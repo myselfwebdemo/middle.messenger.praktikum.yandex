@@ -1,37 +1,23 @@
 // @ts-nocheck
 import Block from "core/Block";
+import './form.css';
 
 import Input from "components/input/input";
 import Button from "components/button/button";
-import { clg } from "main";
+import { clg, resetForm, validate } from "main";
 import { formInputOnFocus, formInputOnBlur} from "main";
-import formValidationHandler from "utils/formValidation";
 import SignupPage from "./signup";
 import renderDOM from "core/renderDOM";
-
-function validate(e) {
-    let isValid;
-    if (e.name) {
-        const { valid, verdict } = formValidationHandler('login', e.name, e.value, true);
-        e.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.id}`).textContent = verdict;
-
-        isValid = valid;
-    } else {
-        const { valid, verdict } = formValidationHandler('login', e.target.name, e.target.value);
-        e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
-        
-        isValid = valid;
-    }
-    return isValid
-}
+import { injectRouter } from "utils/injectRouter";
+import transport from "core/APIs/api";
+import { checkLogin, login } from "../../services/auth-service";
+import { linkStorage } from "utils/link-storage";
 
 interface loginProps {
     method: string
 }
 
-export default class LoginPage extends Block {
+class LoginPage extends Block {
     constructor(props: loginProps) {
         super('form', {
             ...props,
@@ -78,20 +64,29 @@ export default class LoginPage extends Block {
                     })
                     clg(this.props.formState);
 
-                    if (validate) return
-                }
+                    if (this.getContent().checkValidity()) {
+                        login(this.props.formState);
+                        return
+                    }
+                },
             },
 
             ChangeForm: new Button({
                 classTypeOfButton: 'tetriary', 
                 buttonType: 'button', 
                 clientAction: 'Boot New Profile',
+                events: {
+                    click: () => {
+                        resetForm();
+                        this.props.router.go('/signup');
+                    }
+                }
             }),
             Login: new Input({
                 class: 'form-input',
                 id: 'login',
                 label: 'Email or username',
-                type: 'email',
+                type: 'text',
                 name: 'login',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch login',
@@ -105,19 +100,25 @@ export default class LoginPage extends Block {
                 required: true,
                 mismatchObject: 'input-requirements-mismatch password',
             }),
+
             Submit: new Button({
                 classTypeOfButton: 'primary', 
                 buttonType: 'submit', 
-                clientAction: 'Jump In',
+                clientAction: 'Jump In'
             }),
         })
     }
     public render(): string {
         return `
+            {{#if loading}}
+                <div class="loader-wrapper">
+                    <video src="/assets/loader.mp4"></video>
+                </div>
+            {{/if}}
             <div class="header">
                 <h1 class="form-title">Login</h1>
                 <span class="form-switch">
-                    <span>No account? No problem.</span> 
+                    <span>No account? No problem –</span> 
                     {{{ ChangeForm }}}
                 </span>
             </div>
@@ -129,3 +130,11 @@ export default class LoginPage extends Block {
         `
     }
 }
+
+const r = (fromStoreState) => {
+    return {
+        loading: fromStoreState.loading,
+        // error: fromStoreState.eAPI
+    }
+}
+export default linkStorage(r)(injectRouter(LoginPage));

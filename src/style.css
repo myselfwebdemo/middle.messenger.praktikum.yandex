@@ -9,25 +9,34 @@
 }
 :root {
     --theme: #fff;
+
     --theme-main-color: blueviolet;
     --theme-main-color-075: rgb(137 43 226 / 75%);
     --theme-main-color-05: rgb(137 43 226 / 50%);
     --theme-main-color-025: rgb(137 43 226 / 25%);
     --theme-main-color-01: rgb(137 43 226 / 10%);
+    --theme-main-color-darker: rgb(101, 31, 166);
     --theme-complementary-color: violet;
+    
     --color-fatal: red;
+    --color-fatal-darker: darkred;
+    
     --primary-text-color: #000;
     --secondary-text-color: gray;
     --complementary-text-color: #fff;
+
     --lightgray: rgb(230 230 230);
     --lightergray: #f5f5f5;
+
+    --regular-font-size: 15px;
+    --small-font-size: small;
+
     --form-header-width: 77%;
     --theme-transition: .3s;
     --border-thickness: .2vh;
-    --app-input-bg: rgb(230 230 230);
+    --wrappers-rad: 1.8vh;
     --theme-sub1-color-filter: invert(70%) sepia(45%) saturate(1608%) hue-rotate(236deg) brightness(98%) contrast(91%);
     --theme-image-inversion: invert(0%);
-    --wrappers-rad: 1.8vh;
 }
 body {
     width: 100%;

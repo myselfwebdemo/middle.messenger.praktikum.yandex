@@ -1,4 +1,5 @@
 import Block from "core/Block";
+import './input.css'
 
 interface InputProps {
     id: string

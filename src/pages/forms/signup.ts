@@ -1,45 +1,30 @@
 // @ts-nocheck
 import Block from "core/Block";
+import './form.css';
 
 import Input from "components/input/input";
 import Button from "components/button/button";
-import { clg } from "main";
+import { clg, resetForm, validate } from "main";
 import { formInputOnFocus, formInputOnBlur} from "main";
-import formValidationHandler from "utils/formValidation";
 import renderDOM from "core/renderDOM";
 import LoginPage from "./login";
-
-function validate(e) {
-    let isValid;
-    if (e.name) {
-        const { valid, verdict } = formValidationHandler('signup', e.name, e.value, true);
-        e.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.id}`).textContent = verdict;
-
-        isValid = valid;
-    } else {
-        const { valid, verdict } = formValidationHandler('login', e.target.name, e.target.value);
-        e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
-        
-        isValid = valid;
-    }
-    return isValid
-}
+import { injectRouter } from "utils/injectRouter";
+import transport from "core/APIs/api";
 
 interface signupProp {
     method: string
 }
 
-export default class SignupPage extends Block {
+class SignupPage extends Block {
     constructor(props: signupProp) {
         super('form', {
             ...props,
+            userid: '',
             formState: {
                 email: '',
                 login: '',
-                firstName: '',
-                secondName: '',
+                first_name: '',
+                second_name: '',
                 phone: '',
                 password: '',
             },
@@ -56,9 +41,7 @@ export default class SignupPage extends Block {
                     formInputOnBlur(e)
                 },
                 input: (e) => {
-                    const { verdict } = formValidationHandler('signup', e.target.name, e.target.value);
-                    e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-                    document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
+                    validate(e.target)
                 },
                 submit: (e) => {
                     e.preventDefault();
@@ -80,22 +63,54 @@ export default class SignupPage extends Block {
                             ...this.props.formState,
                             email: inputEls[0].value,
                             login: inputEls[1].value,
-                            firstName: inputEls[2].value,
-                            secondName: inputEls[3].value,
+                            first_name: inputEls[2].value,
+                            second_name: inputEls[3].value,
                             phone: inputEls[4].value,
                             password: inputEls[5].value,
                         }
                     })
+
                     clg(this.props.formState);
 
-                    if (validate) return
+                    if (this.getContent().checkValidity()) {
+                        const a = new transport('auth');
+
+                        // a.get('/signin', {login: ''})
+                        a.post('/signup', { data: this.props.formState }).then((res) => {
+                            clg('SIGN UP response: ', res.id);
+                            this.props.userid = res.id;
+
+                            if (res.id) {
+                                this.props.router.go('/messenger');
+                            }
+                            // if (res.status === 200) {
+                            //     clg('Sent request to signin');
+                            //     a.get('/signin', {
+                            //         login: this.props.formState.login, 
+                            //         password: this.props.formState.password
+                            //     }).then((res)=>{
+                            //         clg('SIGN IN response: ',res.status);
+                                    
+                            //         clg('Retrieving user info');
+                            //         a.get('/user').then((res)=>clg(res)).catch((e)=>clg(e));
+                            //     }).catch((e)=>clg(e));
+                            // }
+                        }).catch((e) => clg(e))
+                        return
+                    }
                 }
             },
 
             ChangeForm: new Button({
                 classTypeOfButton: 'tetriary', 
                 buttonType: 'button', 
-                clientAction: 'Boot New Profile',
+                clientAction: 'Get In',
+                events: {
+                    click: () => {
+                        resetForm();
+                        this.props.router.go('/login');
+                    }
+                }
             }),
             Login: new Input({
                 class: 'form-input',
@@ -140,6 +155,8 @@ export default class SignupPage extends Block {
                 name: 'phone',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch phone',
+
+                value: '+7-916-111-11-11'
             }),
             Password: new Input({
                 class: 'form-input',
@@ -149,6 +166,8 @@ export default class SignupPage extends Block {
                 name: 'password',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch password',
+
+                value: 'Password1'
             }),
             PasswordRep: new Input({
                 class: 'form-input',
@@ -158,11 +177,14 @@ export default class SignupPage extends Block {
                 name: 'password-rep',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch password-rep',
+
+                value: 'Password1'
             }),
+
             Submit: new Button({
                 classTypeOfButton: 'primary', 
                 buttonType: 'submit', 
-                clientAction: 'Get Started',
+                clientAction: 'Get Started'
             }),
         })
     }
@@ -188,3 +210,5 @@ export default class SignupPage extends Block {
         `
     }
 }
+
+export default injectRouter(SignupPage);

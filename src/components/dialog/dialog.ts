@@ -6,6 +6,7 @@ import Input from '../input/input';
 import { clg } from 'main';
 import { getLocByQuery } from 'utils/locationAPI';
 import SelfSearch from '../input/selfsearch';
+import './dialog.css';
 
 interface DialogProps {
     title: string
@@ -27,8 +28,6 @@ export default class DialogWindow extends Block {
             className: 'dialog-wrapper',
             events: {
                 click: (e: Event) => {
-                    e.preventDefault();
-
                     if (props.locat) {
                         const input = document.getElementById('standalone');
     
@@ -107,7 +106,7 @@ export default class DialogWindow extends Block {
     }
     public render(): string {
         return `
-            <div class="dialog">
+            <div class="dialog {{#if locat}}d-locat{{/if}}">
                 <h1>{{title}}</h1>
                 {{#if locat}}
                     <div id="map-wrapper">

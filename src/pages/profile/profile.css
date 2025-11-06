@@ -52,6 +52,7 @@
     padding: var(--sg) 0;
 }
 .profile-action {
+    height: 15vh;
     display: flex;
     flex-direction: column;
     align-items: center;

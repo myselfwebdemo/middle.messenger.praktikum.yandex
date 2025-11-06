@@ -1,6 +1,7 @@
 import Button from "components/button/button";
 import e from "components/error/error";
 import Block from "core/Block";
+import './errors.css';
 
 interface EProps {
     eSrc: string

@@ -1,4 +1,4 @@
-import {render} from 'core/renderDOM';
+import { renderWithQuery } from 'core/renderDOM';
 
 export default class Route {
     private _pathname: string
@@ -31,12 +31,13 @@ export default class Route {
         return pathname === this._pathname;
     }
     render() {
+        const { blockProps, rootQuery } = this._props;
         if (!this._block) {
-            this._block = new this._blockClass();
-            render(this._props.rootQuery, this._block);
-            return;
+            this._block = new this._blockClass(blockProps);
+
+            window[this._blockClass.name] = this._block;
         }
 
-        this._block.show();
+        renderWithQuery(rootQuery, this._block);
     }
 }

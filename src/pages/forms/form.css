@@ -32,8 +32,12 @@
 .form-switch {
     width: var(--form-header-width);
     color: var(--secondary-text-color);
-    font-size: small;
+    font-size: var(--small-font-size);
     margin: .3vh 0 3vh;
+}
+.form-switch .u-tetriary {
+    text-decoration: underline;
+    /* color: var(--primary-text-color); */
 }
 .input-fields {
     width: 100%;
@@ -48,8 +52,8 @@
 }
 .input-requirements-mismatch {
     width: var(--form-header-width);
-    color: red;
-    font-size: small;
+    color: var(--color-fatal);
+    font-size: var(--small-font-size);
     text-align: left;
     margin-top: 1%;
 }

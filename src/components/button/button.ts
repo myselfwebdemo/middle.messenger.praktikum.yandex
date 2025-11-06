@@ -1,9 +1,11 @@
 import Block from 'core/Block';
+import './button.css';
 
 interface localProps {
     classTypeOfButton: string
     buttonType: "button" | "submit"
     clientAction?: string
+    inlineStyle?: string
     typeIMG?: boolean
     src?: string
     events?: Record<string, () => void>
@@ -15,7 +17,7 @@ export default class Button extends Block {
             className: `button u-${props.classTypeOfButton}`,
             clientAction: props.clientAction,
             attrs: {
-                type: props.buttonType
+                type: props.buttonType,
             },
             events: props.events
         });

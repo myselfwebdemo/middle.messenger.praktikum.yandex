@@ -19,6 +19,7 @@
     padding: .8vh .8vw;
 }
 .mbody.u-image {
+    position: relative;
     max-width: 35%;
     max-height: 50vh;
     border-radius: 1vh;
@@ -68,7 +69,7 @@
     border-radius: var(--rad);
     overflow: hidden;
 }
-.mbody.mbody.u-location:hover {
+.mbody.mbody.u-location:hover, .mbody.mbody.u-location:active {
     box-shadow: 0 0 20vh var(--theme-main-color-05);
     animation: ml-pulse 2s linear infinite;
 }

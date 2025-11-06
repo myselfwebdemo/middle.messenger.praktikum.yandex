@@ -8,6 +8,7 @@
 }
 .sidebar {
     box-sizing: border-box;
+    position: relative;
     width: 25%;
     height: inherit;
     background: var(--lightergray);
@@ -15,7 +16,6 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    mask-image: linear-gradient(to top, transparent 0%, black 15%);
 }
 .explore button img, #search {
     transition: var(--theme-transition);
@@ -83,8 +83,174 @@
     padding-top: 13.5vh;
     padding-bottom: 32%;
     overflow: auto;
+    mask-image: linear-gradient(to top, transparent 0%, black 17%);
 }
 .chat-list::-webkit-scrollbar { display: none; }
+
+.user-search {
+    --blur: blur(30px);
+    --IMGsize: 1.2vh;
+    --titleIMGsize: 2.7vh;
+
+    box-sizing: border-box;
+    bottom: 2%;
+    left: 5%;
+    position: absolute;
+
+    width: 90%;
+    height: 4.2%;
+    max-height: 96%;
+    border-radius: 1.4vh;
+    transition: .5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    z-index: 10;
+    
+    background: var(--theme-main-color-01);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+
+    /* box-shadow: 0 0 2vh var(--theme-main-color-025); */
+}
+.user-search div {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.user-search div * { 
+    margin: auto; 
+}
+.user-search #search_user,
+.user-search .found-users-list,
+.user-search h2 {
+    display: none;
+}
+.user-search.u-s-opened {
+    height: 40%;
+    /* height: 85.35%; */
+    /* height: 96%; */
+    padding-top: 20%;
+    overflow: hidden;
+}
+.user-search.u-s-opened #search_user, 
+.user-search.u-s-opened h2 {
+    display: block;
+}
+.user-search.u-s-opened .found-users-list {
+    display: flex;
+}
+.user-search.u-s-opened #u-s-title-img { 
+    top: -6vh; 
+}
+.user-search.u-s-opened .button.u-tetriary-nt { 
+    top: -5.7vh;
+}
+#u-s-title-img {
+    position: absolute;
+    top: .75vh;
+    left: 0;
+
+    width: var(--titleIMGsize);
+    height: var(--titleIMGsize);
+    margin-left: .58vw;
+    z-index: 10;
+
+    background: url(/assets/star.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.user-search.u-s-opened #u-s-title-img {
+    animation: ti 5s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+@keyframes ti {
+    0% {transform: rotate(0deg);}
+    50% {transform: rotate(360deg);}
+    100% {transform: rotate(0deg);}
+}
+.user-search .button.u-tetriary-nt {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    position: absolute;
+    top: 1vh;
+    right: 0;
+
+    margin-right: .8vw;
+    z-index: 10;
+}
+.user-search .button.u-tetriary-nt:hover {
+    cursor: pointer;
+}
+.user-search .button.u-tetriary-nt img {
+    width: var(--IMGsize);
+    height: var(--IMGsize);
+    margin-left: .4vw;
+    transform: rotate(90deg);
+}
+.user-search h2 {
+    width: 90%;
+}
+.user-search .input-wrapper {
+    width: 90%;
+    height: fit-content;
+}
+#search_user {
+    box-sizing: border-box;
+
+    width: 100%;
+    margin: 1vh 0 0 0;
+    padding: 0 .65vw;
+    /* background: var(--theme-main-color-01); */
+    border: solid .2vh white;
+    border-radius: .8vh;
+}
+#search_user::placeholder {
+    color: gray;
+    font-size: smaller;
+}
+.user-search .found-users-list {
+    box-sizing: border-box;
+    position: relative;
+    
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    height: 67.25%;
+    /* height: 86.1%; */
+    width: 90%;
+    margin-top: 2vh;
+    background: var(--theme-main-color-01);
+    border: solid .2vh white;
+    border-radius: 1vh;
+    overflow: hidden;
+}
+.found-users-list img {
+    --size: 36vh;
+
+    position: absolute;
+    top: -65%;
+    right: -58%;
+
+    width: var(--size);
+    height: var(--size);
+    opacity: .05;
+    z-index: 0;
+}
+.user-search.u-s-opened .found-users-list img {
+    animation: ti1 60s infinite linear;
+}
+@keyframes ti1 {
+    0% {transform: rotate(0deg);}    
+    100% {transform: rotate(360deg);}    
+}
+.found-users-list h5 {
+    width: fit-content;
+    color: gray;
+    z-index: 1;
+}
+
+
 .chat {
     box-sizing: border-box;
     display: flex;
@@ -235,6 +401,7 @@
     filter: invert(85%);
     transform: rotate(-45deg);
 }
+
 .messages {
     box-sizing: border-box;
     width: 100%;
@@ -244,6 +411,7 @@
     z-index: 1;
 }
 .messages::-webkit-scrollbar { display: none; }
+
 .prompt {
     bottom: 0;
     height: fit-content;

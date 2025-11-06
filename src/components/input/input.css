@@ -6,7 +6,7 @@
 input,textarea {
     all: unset;
     outline: none;
-    font-size: medium;
+    font-size: var(--regular-font-size);
     height: 3.3vh;
 }
 .form-input{
@@ -25,7 +25,7 @@ input,textarea {
 label {
     width: var(--form-header-width);
     color: gray;
-    font-size: medium;
+    font-size: var(--regular-font-size);
     transform: translateY(2.4vh);
     transition: var(--theme-transition);
 }

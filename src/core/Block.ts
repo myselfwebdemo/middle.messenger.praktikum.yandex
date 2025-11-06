@@ -94,7 +94,7 @@ export default class Block<T extends Record<string, any> = any> {
   }
   componentDidMount(oldProps) {}
   dispatchComponentDidMount() {
-    this._eventBus().emit(Block.EVENTS.FLOW_CDM);
+    this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
   _componentDidUpdate(oldProps, newProps) {
     const response = this.componentDidUpdate(oldProps, newProps);
@@ -220,8 +220,7 @@ export default class Block<T extends Record<string, any> = any> {
     this.children[name]._element.scrollIntoView({behavior: 'smooth'});
   }    
   removeChildren(name) {
-    if (!this.children[name]) alert("You cannot delete Master Chat");
-    // if (!this.children[name]) throw new Error(`${name} is either not a child of ${this} or doesn't exist.`);
+    if (!this.children[name]) throw new Error(`${name} is either not a child of ${this} or doesn't exist.`);
     const remObj = Object.keys(this.children).indexOf(name);
     delete this.children[name];
     this._render();

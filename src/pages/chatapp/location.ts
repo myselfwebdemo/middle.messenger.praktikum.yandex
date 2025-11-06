@@ -1,4 +1,5 @@
 import Block from 'core/Block';
+import './chatapp.css';
 
 export default class Map extends Block {
     constructor(props: any) {

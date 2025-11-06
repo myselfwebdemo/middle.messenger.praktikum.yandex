@@ -1,4 +1,5 @@
 import Block from "core/Block";
+import './error.css';
 
 interface eProps {
     src: string
