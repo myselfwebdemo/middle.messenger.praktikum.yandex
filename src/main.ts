@@ -15,7 +15,7 @@ import Router from 'core/router';
 import Home from 'pages/app-landing/landing-page';
 import Profile from 'pages/profile/profile';
 import formValidationHandler from 'utils/formValidation';
-import { Storage, StoreEvents } from 'core/Storage';
+import { Storage, StoreEvents } from 'core/storage';
 import transport from 'core/APIs/api';
   
 export function clg(...i: any[]): void {
