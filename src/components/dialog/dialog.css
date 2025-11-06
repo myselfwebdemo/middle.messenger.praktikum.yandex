@@ -1,62 +1,217 @@
 .dialog-wrapper {
     --blur: blur(20px);
+
     position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    background: var(--theme-tetriary-color);
+    background: var(--theme-main-color-01);
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
     z-index: 9998;
+    overflow: hidden;
     display: none;
 }
+
 .dialog {
     --blur: 15px;
+
     box-sizing: border-box;
-    width: 40vh;
+    width: 45vh;
     height: fit-content;
     display: flex;
     flex-direction: column;
     align-items: center;
     border: solid .2vh var(--theme-main-color);
-    border-radius: 1.8vh;
+    border-radius: var(--wrappers-rad);
     padding: 4vh 0 ;
-    background: #fff;
+    background: var(--complementary-text-color);
     backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
-    box-shadow: 0 0 10vh white;
+    box-shadow: 0 0 10vh var(--complementary-text-color);
 }
 .dialog h1 {
     width: var(--form-header-width);
     font-weight: 600;
     margin-bottom: 2.5vh;
 }
-.dialog .recipient {
-    --strength: 1.6vh;
-    width: var(--form-header-width);
-    margin: 0 0 4vh 0;
-    border-bottom: solid var(--border-thickness) var(--theme-main-color);
+.input-wrapper {
+    width: 80%;
+}
+.dialog-simple-input {
+    width: 100%;
+    margin: 0 0 4vh;
     color: var(--primary-text-color);
     transition: var(--theme-transition);
 }
-.dialog .recipient:focus {
-    border-bottom: solid var(--border-thickness) var(--theme-comlpementary-color);
+.dialog input[type="text"] {
+    --strength: 1.6vh;
+
+    border-bottom: solid var(--border-thickness) var(--theme-main-color);
 }
-.dialog label {
-    transform: none;
-    font-size: small;
+.dialog input[type="file"] {
+    margin: 1vh 0 3.5vh;
+    color: var(--theme-main-color);
+}
+.dialog .recipient:focus {
+    border-bottom: solid var(--border-thickness) var(--theme-complementary-color);
 }
 .dialog button {
     margin: 0;
 }
 .dialog .file-submit {
-    padding: 1.2vh 0 2.4vh 0;
+    padding: 1.2vh 0 2.4vh;
 }
 .dialog .file-submit::file-selector-button {
     color: blue;
+}
+
+.dialog.d-locat {
+    width: 80vh;
+}
+.dialog.d-locat .dialog-actions {
+    width: 67%;
+}
+.dialog #map-wrapper {
+    width: 87%;
+    height: 36.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dialog .leaflet-container { 
+    width: 97%;
+    height: 35.5vh;
+    border-radius: 1vh;
+    border: solid var(--border-thickness) var(--theme-complementary-color);
+    transition: var(--theme-transition);
+}
+.dialog .leaflet-container:hover {
+    width: 100%;
+    height: 36.5vh;
+    box-shadow: 0 0 10vh var(--theme-main-color-05);
+}
+.dialog .leaflet-container:active {
+    width: 100%;
+    height: 36.5vh;
+    animation: mappulse 2s linear infinite;
+}
+
+@keyframes mappulse {
+    0% {box-shadow: 0 0 10vh var(--theme-main-color-05)}
+    50% {box-shadow: 0 0 10vh var(--theme-main-color)}
+    100% {box-shadow: 0 0 10vh var(--theme-main-color-05)}
+}
+.dialog .leaflet-marker-icon {
+    animation: markerpulse 2s linear infinite;
+}
+
+@keyframes markerpulse {
+    0% {filter: drop-shadow(0 0 .5vh #D30302)}
+    20% {filter: drop-shadow(0 0 .5vh var(--theme-main-color))}
+    40% {filter: drop-shadow(0 0 .5vh #4003e6)}
+    60% {filter: drop-shadow(0 0 .5vh #00a3d5)}
+    80% {filter: drop-shadow(0 0 .5vh #02c435)}
+    100% {filter: drop-shadow(0 0 .5vh #D30302)}
+}
+.dialog-locat-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.dialog-locat-form .ta-wrapper {
+    margin: 3vh 0;
+}
+.ta-wrapper label {
+    margin-bottom: .5vh;
+}
+/* stylelint-disable no-descending-specificity */
+.dialog .input-wrapper label, .ta-wrapper label {
+    transform: none;
+}
+#standalone{
+    min-height: 3.3vh;
+    max-height: 15vh;
+    border-bottom: none;
+    outline: none;
+    overflow: hidden scroll;
+}
+#standalone:empty::before {
+    content: attr(placeholder);
+    color: #aaa;
+}
+#standalone::-webkit-scrollbar {
+    display: none;
+}
+.dialog-actions {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: -2vh;
+}
+.dialog-actions button {
+    width: 47%;
+    text-align: center;
+}
+.dialog #dialog-preview {
+    width: 80%;
+    height: auto;
+}
+
+.dialog-wrapper.fatal  {
+    --blur: blur(10px);
+
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+}
+.fatal-dialog {
+    width: 45vh;
+
+    background: var(--theme);
+    padding: calc(1.8vh - .1vh) 1.8vh;
+    border-radius: 2vh;
+
+    box-shadow: 
+        0 0 .1vh var(--theme), 
+        0 0 .2vh var(--theme), 
+        0 0 .3vh var(--theme), 
+        0 0 .4vh var(--theme), 
+
+        0 0 .5vh var(--theme), 
+        
+        0 0 .6vh var(--theme), 
+        0 0 .7vh var(--theme), 
+        0 0 .8vh var(--theme), 
+        0 0 .9vh var(--theme), 
+        
+        0 0 1vh var(--theme), 
+        0 0 1.5vh var(--theme), 
+        0 0 2vh var(--theme);
+}
+.fatal-dialog h3 {
+    font-weight: 400;
+}
+.fatal-dialog #mm {
+    margin: 2vh 0 1vh 0;
+}
+.fatal-dialog #et {
+    font-size: smaller;
+    color: gray;
+    text-decoration: underline;
+}
+.fd-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: .6vw;
+
+    width: 100%;
+    margin-top: 1.8vh;
 }

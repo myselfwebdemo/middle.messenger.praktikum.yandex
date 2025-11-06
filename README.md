@@ -1,4 +1,6 @@
-# Middle Messenger (Sprint 1)
+# Middle Messenger (Sprint 2)
+
+## Project Overview:
 
 The project is a starter layout for a messenger-style web application.
 It includes several static pages and Handlebars templates, uses TypeScript modules for better code structure, and PostCSS with autoprefixer alongside CSSnano for optimized styling. The build is configured with Vite for fast development and bundling.
@@ -17,3 +19,57 @@ Link: https://middle-messenger-yandex-praktikum.netlify.app/
 
 ## Figma Prototype Of The App
 https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?node-id=0-1&t=YNX3VAGORjhamOaX-1
+<<<<<<< HEAD
+=======
+
+## What's New? New Functionality
+- Added full component system using custom `Block` class built on top of `EventBus`.  
+- Implemented reactive props via `Proxy` – components re-render automatically when props change.  
+- Created base UI components:  
+    - (+) `Button`, `Input`, `ChatItem`, etc.  
+- Implemented pages:  
+    - (+) Login, Registration, Chats, Profile.  
+- Added form data collection and console output of form data.  
+- Added form validation with unified mechanism and regex rules for:  
+    - (+) first_name, second_name, login, email, password, phone, message.  
+- Implemented `HTTPTransport` class for XHR requests with:  
+    - (+) GET (with query string)  
+    - (+) POST, PUT, DELETE (with JSON body)  
+    - (+) Timeout, headers, and error handling.  
+
+## Tech Stack
+- **TypeScript** — static typing and safer architecture.  
+- **Vite** — fast build and development server.  
+- **Handlebars** — templating for rendering UI blocks.  
+- **ESLint**, **Stylelint**, **EditorConfig** — code quality and consistency.  
+- **Custom EventBus + Block system** — component-based architecture.  
+
+## Input Fields Validation Rules
+### Registration Form
+| Field | Rules |
+|-------|-------|
+| **first_name / second_name** | Must start with a capital letter (Latin or Cyrillic). No spaces, digits, or special characters except dash `-`. Cannot be blank. |
+| **login** | 3–20 characters, must contain at least one letter, may include numbers, dash `-`, or underscore `_`. Cannot contain spaces. |
+| **email** | Must contain `@` and a dot after it. Local part may include letters, numbers, `-`, `_`, or `.`. Domain must include letters before the dot. TLD must have at least 2 letters. |
+| **password** | 8–40 characters, must include at least one uppercase letter and one number. Cannot be blank. |
+| **password-rep** | Must match `password`. Cannot be blank. |
+| **phone** | 10–15 digits, must start with `+`. Only numbers allowed. Cannot be blank. |
+| **message** | Cannot be blank. |
+
+### Login Form
+| Field | Rules |
+|-------|-------|
+| **login** | Cannot be blank on submit. Optional otherwise. |
+| **password** | Cannot be blank on submit. Optional otherwise. |
+
+## Utilities & Tips
+### Cloc: find out number of lines in your project
+To count lines of code use ```cloc```  
+#### By default ```cloc``` traverses whole directory!  
+If you want to specify directory, write ```cloc ./directory-name```  
+Same way you can specify file: ```cloc ./directory-name/file-name.ext```  
+You can exclude directory or file by using ```clocl --exclude-dir=dir-name1,dir-name2``` or ```cloc --exclude-list-file=file-name.ext```  
+Exclude files by extension(s): ```cloc --exclude-ext=extensions```
+### Stylelint: check your styles
+To run stylelint use command ``` npx stylelint "**/*.css" ```
+>>>>>>> sprint_3

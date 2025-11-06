@@ -4,14 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/mascot.png"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <title>middle.messenger.praktikum.yandex</title>
   </head>
   <body>
-    <img class="mouse" src="/cursor.png"></img>
-    <div id="app"></div>
+    <!-- <div class="switch-theme">
+      <img name="darkTheme" src="/assets/theme-dark.png">
+      <img class="disabled" name="lightTheme" src="/assets/theme-light.png">
+    </div>
+    <script type="module" src="/src/theme.ts"></script> -->
+    
+    <div id="app">
+      <!-- <ul id='nav'>
+        <li><a href="login" page="login">Login form page</a></li>
+        <li><a href="signup" page="signup">Signup form page</a></li>
+        <li><a href="messenger" page="chatapp">Chatapp page</a></li>
+        <li><a href="settings" page="usp">User profile page</a></li>
+        <li><a href="settings/edit-profile" page="eusp">Edit User profile page</a></li>
+        <li><a href="settings/edit-password" page="chp">Change password page</a></li>
+        <li><a href="" page="404">Error 404 page</a></li>
+        <li><a href="" page="500">Error 500 page</a></li>
+      </ul> -->
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
     
+    <!-- <img class="mouse" src="/cursor.png"></img>
     <script>
       const mouse = document.querySelector('.mouse');
       document.addEventListener('mousemove', e => {
@@ -24,6 +42,6 @@
 
         mouse.style.transform = `translate3d(${x-7}px,${y-7}px,0)`;
       });
-    </script>
+    </script> -->
   </body>
 </html>
