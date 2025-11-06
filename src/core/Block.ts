@@ -1,5 +1,5 @@
 // @ts-nocheck
-import EventBus from "./eventBus";
+import EventBus from "./EventBus";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
 import { clg } from "../main";
