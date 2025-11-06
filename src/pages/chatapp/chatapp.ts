@@ -149,7 +149,8 @@ class Messenger extends Block {
                     input: () => {
                         const xhr = new transport('user');
 
-                        xhr.get('/search', { login: search_user.value }).then((res) => alert(res.status))
+                        clg(search_user.value, xhr);
+                        xhr.post('/search', { login: search_user.value }).then((res) => clg(res.status)).catch((e) => clg(e.status, e.response.reason))
                     }
                 }
             }),
