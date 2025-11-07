@@ -1,3 +1,5 @@
+import { clg } from "main";
+
 enum METHOD {
     GET = "GET",
     POST = "POST",
@@ -19,7 +21,8 @@ export default class transport {
     private baseURL: string = '';
 
     constructor(path: string) {
-        this.baseURL = `https://ya-praktikum.tech/api/v2/${path}`;
+        this.baseURL = `/api/${path}`;
+        // this.baseURL = `https://ya-praktikum.tech/api/v2/${path}`;
     }
 
     get<TResponse>(url: string, inRequestData: RequestWithoutMethod = {}): Promise<TResponse> {
@@ -55,7 +58,14 @@ export default class transport {
                 }
             };
 
-            xhr.onerror = () => reject(xhr);
+            xhr.onloadend = () => {
+                if (xhr.status === 200) {
+                    clg("Supposed success", xhr.status, "Response body:", xhr.response);
+                } else {
+                    clg("Failed", xhr.status, xhr?.response?.reason);
+                }
+            };
+            xhr.onerror = () => reject();
 
             if (!data) {
                 xhr.send();

@@ -56,9 +56,16 @@ export default class AuthRequests {
     }
     async validate(data: TLogin): Promise<void> {
         clg('Final step before sending data, data: ',data)
-        return xhrAuth.post("/signin", { data });
+        return xhrAuth.post("/signin", { data })
+            // .then((res) => {
+            //     clg(res.status, "statred retrivation of data")
+            //     if (res.status === 200) {
+            //         xhrAuth.get('/user');
+            //     }
+            // });
     }    
     async self(): Promise<TUser | TReqError> {
+        clg('Started retrivation of self data');
         return xhrAuth.get("/user");
     }
     async withdraw(): Promise<void | TReqError> {

@@ -15,5 +15,25 @@ export default defineConfig({
       'utils': path.resolve(__dirname, 'src/utils'),
       'main': path.resolve(__dirname, 'src/main.ts')
     }
-  }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://ya-praktikum.tech/api/v2',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyRes', (proxyRes) => {
+            const cookies = proxyRes.headers['set-cookie'];
+            if (cookies) {
+              proxyRes.headers['set-cookie'] = cookies.map(cookie =>
+                cookie.replace(/Domain=ya-praktikum\.tech/i, 'Domain=middle-messenger-yandex-praktikum.netlify.app')
+              );
+            }
+          });
+        },
+      },
+    },
+  },
 });

@@ -7,6 +7,7 @@ interface Props {
     mainMessage: string
     finalAction: string
     extratip?: string
+    finalEvent?: Record<string, () => void>
 }
 export default class Fatal extends Block {
     constructor(props: Props) {
@@ -31,6 +32,7 @@ export default class Fatal extends Block {
                 classTypeOfButton: 'fatal-primary small',
                 buttonType: 'button',
                 clientAction: props.finalAction,
+                events: props.finalEvent
             }),
         })
     }
