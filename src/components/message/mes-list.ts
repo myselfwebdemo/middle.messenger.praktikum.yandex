@@ -1,5 +1,5 @@
 import Block from 'core/Block';
-import Message from './message';
+// import Message from './message';
 import './message.css';
 
 export default class MessageList extends Block {

@@ -1,5 +1,5 @@
 import Block from 'core/Block';
-import ChatCard from 'components/chat-card/chat-card';
+// import ChatCard from 'components/chat-card/chat-card';
 import './chatapp.css';
 
 export default class ChatList extends Block {
