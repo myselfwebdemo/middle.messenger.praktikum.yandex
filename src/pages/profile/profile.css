@@ -18,7 +18,7 @@
     content: 'Change avatar';
     inset: 0;
 
-    --size: 10vh;
+    --size: 15vh;
     --blur: blur(10px);
 
     width: var(--size);
@@ -38,6 +38,9 @@
     z-index: 10;
 }
 .u-profile-icon {
+    --size: 15vh;
+    width: var(--size);
+    height: var(--size);
     z-index: 0;
 }
 .profile h1:nth-child(3) {
@@ -46,10 +49,10 @@
     font-weight: 900;
     font-size: x-large;
     text-transform: capitalize;
-    margin-top: 3vh;
+    margin-top: 2vh;
 }
 .profile .ps-lines {
-    padding: var(--sg) 0;
+    padding: 8vh 0 var(--sg) 0;
 }
 .profile-action {
     height: 15vh;

@@ -17,7 +17,7 @@ import transport from 'core/APIs/api';
 class Messenger extends Block {
     constructor(props) {
         super('main', {
-            nameOCR: props.nameOCR | 'Petya',
+            nameOCR: props.nameOCR || 'Petya',
             ...props,
             events: {
                 input: (e: Event) => {
@@ -48,9 +48,7 @@ class Messenger extends Block {
                     }
                 },
                 click: (e: Event) => {
-                    const ATRChoice = document.querySelector('.atr-choice');
                     const ABCChoice = document.querySelector('.abc-choice');
-                    const dropdowns = [ATRChoice, ABCChoice];
 
                     if (e.target.className.includes('action-to-recipient')) {
                         ABCChoice.style.display = 'none';
@@ -86,23 +84,17 @@ class Messenger extends Block {
 
                         return;
                     } else if (e.target.className.includes('u-add-btn')) {
-                        ATRChoice.style.display = 'none';
                         ABCChoice.style.display = ABCChoice.style.display === 'block' ? 'none' : 'block';
                         return;
                     } 
 
                     if (e.target.closest('.atr-choice') || e.target.closest('.abc-choice')) {
-                        if (e.target.children[0].className.includes('u-atr-choice')) {
-                            this.children.AddRecipientDialog.show();
-                        } else if (e.target.children[0].className.includes('abc-choice')) {
+                        if (e.target.children[0].className.includes('abc-choice')) {
                             const attachChoice = e.target.children[0].className.split(' ')[2];
                             if (attachChoice === 'AttachLocation') MapInit();
                             this.children[`${attachChoice}Dialog`].show();
                         }
-                    }
-                    dropdowns.forEach(el => {
-                        el.style.display = 'none';
-                    })                    
+                    }              
                 },
             },
 
@@ -148,8 +140,7 @@ class Messenger extends Block {
                 events: {
                     input: () => {
                         const xhr = new transport('user');
-
-                        xhr.get('/search', { login: search_user.value }).then((res) => alert(res.status))
+                        xhr.post('/search', { login: search_user.value }).then((res) => alert(res.status)).catch((e) => clg(e))
                     }
                 }
             }),
@@ -214,7 +205,7 @@ class Messenger extends Block {
             ConfirmDeletionDialog: new Fatal({
                 title: `Delete contact?`,
                 mainMessage: `This will delete ${props.nameOCR} from your contacts. You will be able to add this user again later.`,
-                extratip: `This action erases all messages ever sent to ${props.nameOCR}`,
+                extratip: `This action erases all messages ever sent to ${props.nameOCR}.`,
                 finalAction: 'Delete'
             }),
             AttachMediaDialog: new DialogWindow({

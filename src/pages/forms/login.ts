@@ -10,7 +10,7 @@ import SignupPage from "./signup";
 import renderDOM from "core/renderDOM";
 import { injectRouter } from "utils/injectRouter";
 import transport from "core/APIs/api";
-import { checkLogin, login } from "../../services/auth-service";
+import { login } from "../../services/auth-service";
 import { linkStorage } from "utils/link-storage";
 
 interface loginProps {
@@ -90,6 +90,8 @@ class LoginPage extends Block {
                 name: 'login',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch login',
+
+                value: 'Drot'
             }),
             Password: new Input({
                 class: 'form-input',
@@ -99,6 +101,8 @@ class LoginPage extends Block {
                 name: 'password',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch password',
+
+                value: 'Password1'
             }),
 
             Submit: new Button({

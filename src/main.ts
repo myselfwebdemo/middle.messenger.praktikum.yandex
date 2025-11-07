@@ -105,10 +105,10 @@ window.storage = new Storage({
     eAPI: null
 })
 
-window.storage.on(StoreEvents.Updated, (prevState, newState) => {
-    clg("previous state", prevState);
-    clg("new state", newState);
-});
+// window.storage.on(StoreEvents.Updated, (prevState, newState) => {
+//     clg("previous state", prevState);
+//     clg("new state", newState);
+// });
 
 window.router = new Router('#app');
 

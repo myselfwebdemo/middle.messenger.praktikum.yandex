@@ -6,8 +6,8 @@ import DialogWindow from 'components/dialog/dialog';
 import Image from 'components/image/image';
 import PSL from 'components/profile-info/psl';
 import type Router from "core/router";
-import transport from "core/APIs/api";
-import { clg } from "main";
+import Fatal from "components/dialog/fatal";
+import { logout } from "../../services/auth-service";
 
 interface Level { level: number }
 
@@ -130,16 +130,8 @@ class ProfileLanding extends Block {
                 clientAction: 'Log out',
                 events: {
                     click: () => {
-                        const xhr = new transport('auth');
-
-                        xhr.post('/logout').then((res) => {
-                            clg(res);
-
-                            // if (res.status === 200) {
-                            //     this.props.router.go('/login');
-                            // }
-
-                        }).catch((e) => clg(e));
+                        // @ts-ignore
+                        this.children.ConfirmLogOut.show();
                     }
                 }
             }),
@@ -154,6 +146,17 @@ class ProfileLanding extends Block {
                 label: 'New avatar',
 
                 executiveAction: 'Change'
+            }),
+            ConfirmLogOut: new Fatal({
+                title: 'Log Out?',
+                mainMessage: 'Logging out will end your current session. You’ll need to sign in again to restore access.',
+                extratip: 'All your messages and account data remain securely stored on our servers.',
+                finalAction: 'Log Out',
+                finalEvent: {
+                    click: () => {
+                        logout();
+                    }
+                }
             }),
         })
     }
@@ -176,6 +179,7 @@ class ProfileLanding extends Block {
                 </div>
             </div>
             {{{ dialog }}}
+            {{{ ConfirmLogOut }}}
         `
     }
 }
