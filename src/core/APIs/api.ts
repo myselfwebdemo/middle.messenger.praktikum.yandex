@@ -21,8 +21,8 @@ export default class transport {
     private baseURL: string = '';
 
     constructor(path: string) {
-        this.baseURL = `/api/${path}`;
-        // this.baseURL = `https://ya-praktikum.tech/api/v2/${path}`;
+        // this.baseURL = `/api/${path}`;
+        this.baseURL = `https://ya-praktikum.tech/api/v2/${path}`;
     }
 
     get<TResponse>(url: string, inRequestData: RequestWithoutMethod = {}): Promise<TResponse> {
