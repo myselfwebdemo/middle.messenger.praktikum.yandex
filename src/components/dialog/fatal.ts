@@ -17,7 +17,7 @@ export default class Fatal extends Block {
             events: {
                 click: (e: Event) => {
                     // @ts-ignore
-                    if (!e.target.closest('.fatal-dialog') || e.target.closest('.button.u-secondary')) {
+                    if (!e.target.closest('.fatal-dialog') || e.target.closest('.fatal-dialog .button')) {
                         this.close();
                     }
                 }

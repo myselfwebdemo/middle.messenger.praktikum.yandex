@@ -8,7 +8,7 @@ interface localProps {
     inlineStyle?: string
     typeIMG?: boolean
     src?: string
-    events?: Record<string, () => void>
+    events?: Record<string, (e: Event) => void>
 }
 export default class Button extends Block {
     constructor(props: localProps) {

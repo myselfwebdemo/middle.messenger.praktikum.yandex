@@ -2,6 +2,7 @@
 import Block from 'core/Block';
 import Input from '../input/input';
 import './psl.css';
+import { clg } from 'main';
 
 interface PSLProps {
     trait: string
@@ -42,7 +43,7 @@ export default class PSL extends Block {
     public render(): string {
         return `
             <p>{{trait}}</p>
-            {{#if traitValue}} <p>{{traitValue}}</p> {{/if}}
+            {{#if traitValue}} <p id="psl-data">{{traitValue}}</p> {{/if}}
             {{#if reqInput}}
                 {{{ Input }}}
             {{/if}}

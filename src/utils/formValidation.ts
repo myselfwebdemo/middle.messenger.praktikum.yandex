@@ -55,11 +55,6 @@ export default function formValidationHandler(
                             return validate(true);
                         } 
                         case 'login': {
-                
-                            ////////////////////////////////////////////////////
-                            // fetch "login" to get whether username is taken //
-                            ////////////////////////////////////////////////////
-                
                             if (value.length === 0) {
                                 return validate(true)
                             }
@@ -149,31 +144,19 @@ export default function formValidationHandler(
                 case 'login': {
                     switch (field) {
                         case 'login': {
-        
-                            ////////////////////////////////////////
-                            // fetch "login" to retrive user data //
-                            ////////////////////////////////////////
-        
                             if (value.trim().length === 0 && submitEvent) {
                                 return validate(false, caseBlankSpace);
                             } else if (value.trim().length === 0) {
                                 return validate(true)
                             }
-                            // return validate(false,'Error');
                             return validate(true);
                         }
                         case 'password': {
-                            
-                            ///////////////////////////////////////
-                            // fetch "login" to retrive password //
-                            ///////////////////////////////////////
-                            
                             if (value.trim().length === 0 && submitEvent) {
                                 return validate(false, caseBlankSpace);
                             } else if (value.trim().length === 0) {
                                 return validate(true)
                             }
-                            // return validate(false,'Error');
                             return validate(true);
                         }
                         default: {

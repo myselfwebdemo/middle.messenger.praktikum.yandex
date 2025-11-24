@@ -8,7 +8,6 @@ button {
     text-transform: capitalize;
     text-align: center;
     font-weight: 400;
-    font-size: var(--regular-font-size);
     text-shadow: none;
     height: 5vh;
     width: 80%;
@@ -33,7 +32,7 @@ button {
     transition: var(--theme-transition);
     border: solid var(--border-thickness) var(--primary-text-color);
 }
-.u-secondary:hover {
+.u-secondary:hover, .button.u-secondary.small:hover {
     background: var(--theme-main-color-01);
     color: var(--theme-complementary-color);
     border-color: var(--theme-complementary-color);
@@ -70,4 +69,20 @@ button {
     height: 3.4vh;
     border-radius: 2vh;
     padding: 0 1vw;
+}
+.button.u-secondary.small {
+    border-color: var(--secondary-text-color);
+}
+
+.button.u-secondary.small.complex {
+    height: fit-content;
+    font-size: smaller;
+    border-color: var(--lightgray);
+    padding: .4vh 1vw .6vh 1vw;
+
+    box-shadow: 0 0 2vh lightgray;
+}
+.button.u-secondary.small.complex:hover {
+    background: var(--lightergray);
+    color: unset;
 }

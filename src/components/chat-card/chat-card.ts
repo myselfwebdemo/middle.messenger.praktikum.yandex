@@ -9,20 +9,21 @@ interface CardInterface {
     time?: string
     lastTextYou?: boolean
     unread?: number
+    class?: string
 }
 
 export default class ChatCard extends Block {
     constructor(props: CardInterface) {
         super('div', {
             ...props,
-            className: 'on-hover chat-card',
+            className: props.class || 'on-hover chat-card',
             attrs: {
                 'data-recipient': props.recipientName,
                 'data-last-message': props.lastMessage,
             },
             image: new Image({
                 class: 'chat-list-recipient',
-                src: props.src || 'profile/example.png',
+                src: props.src || 'profile/default.png',
                 alt: 'recipient image in chat list'
             })
         })

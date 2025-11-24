@@ -24,7 +24,7 @@ input,textarea {
 }
 label {
     width: var(--form-header-width);
-    color: gray;
+    color: var(--secondary-text-color);
     font-size: var(--regular-font-size);
     transform: translateY(2.4vh);
     transition: var(--theme-transition);

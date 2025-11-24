@@ -53,7 +53,7 @@ export default class Router {
         route.render();
     }
     go(pathname: string) {
-        this.history.pushState({}, "", pathname);
+        this.history.pushState({}, `${pathname}`, pathname);
         this._onRoute(pathname);
     }
     back() {

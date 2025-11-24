@@ -1,6 +1,7 @@
 import Block from 'core/Block';
-import Message from './message';
+// import Message from './message';
 import './message.css';
+import Button from 'components/button/button';
 
 export default class MessageList extends Block {
     constructor() {
@@ -39,10 +40,16 @@ export default class MessageList extends Block {
             //     src: '/image.png',
             //     time: '2:33'
             // }),
+
+            SayHI: new Button({
+                classTypeOfButton: 'secondary small complex',
+                buttonType: 'button',
+                clientAction: 'Say 👋 Hello'
+            })
         })
     }
     public render(): string {
-        if (Object.keys(this.children).length !== 0) {
+        if (Object.keys(this.children).length > 1) {
             const children_names = Object.keys(this.children);
             const line = [];
             
@@ -53,8 +60,10 @@ export default class MessageList extends Block {
             return line.join(' ');
         } else {
             return `
-                <div class="chatlist-cork">
-                    <h5>Here your messages will appear</h5>
+                <div class="meslist-cork">
+                    <h3>This chat is empty</h3>
+                    <h5>You can start talking by typing message in the input field below or press the button beneath</h5>
+                    {{{ SayHI }}}
                 </div>
             `
         }

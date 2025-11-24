@@ -6,12 +6,12 @@
 .on-hover:hover {
     background: linear-gradient(to top, transparent 5%, var(--theme-main-color-01) 5% 95%, transparent 95%);
 }
-.on-hover:hover .u-chat-list-recipient {
-    filter: drop-shadow(0 0 1vh white);
-}
 
 /* when chat is selected; chat selection feature hasnt been released yet */
-.u-selected {
+.selected-card {
+    background: linear-gradient(to top, transparent 5%, var(--theme-main-color-025) 5% 95%, transparent 95%);
+}
+.chat-card.selected-card:hover {
     background: linear-gradient(to top, transparent 5%, var(--theme-main-color-025) 5% 95%, transparent 95%);
 }
 .on-hover:hover.u-selected {

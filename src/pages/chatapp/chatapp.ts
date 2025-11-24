@@ -11,13 +11,20 @@ import ChatList from './chat-list';
 import { injectRouter } from 'utils/injectRouter';
 import './chatapp.css';
 import Fatal from 'components/dialog/fatal';
-import FoundUsersList from './list';
-import transport from 'core/APIs/api';
+import FoundUsersList from './searched-users-list';
+import endPointAPI from 'core/APIs/api';
+import { addUserToChat, delChat, getChatToken, newChat, searchUser } from 'services/service';
+import FUUser from './searched-user-component';
+import Chat from './chat';
+import ChatCard from 'components/chat-card/chat-card';
+import { linkStorage } from 'utils/link-storage';
+import Warning from 'components/dialog/warning';
+import chatList from './chat-list';
+import { connectChat } from 'core/websocket';
 
 class Messenger extends Block {
     constructor(props) {
         super('main', {
-            nameOCR: props.nameOCR || 'Petya',
             ...props,
             events: {
                 input: (e: Event) => {
@@ -47,55 +54,143 @@ class Messenger extends Block {
                         }
                     }
                 },
-                click: (e: Event) => {
-                    const ABCChoice = document.querySelector('.abc-choice');
+                click: async (e: Event) => {
+                    const userSearch = document.querySelector('.user-search') as HTMLElement;
+                    if (userSearch && !e.target.closest('.user-search') && userSearch.classList.contains('u-s-opened')) {
+                        search_user.value = '';
+                        Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
+                            this.children.FoundUsersList.removeChildren(childName);
+                        });
+                        userSearch.classList.remove('u-s-opened');
+                    }
 
-                    if (e.target.className.includes('action-to-recipient')) {
-                        ABCChoice.style.display = 'none';
+                    if (e.target.closest('.chat-card')) {
+                        const card = e.target.closest('.chat-card');
 
-                        const atr = document.querySelector('.action-to-recipient');
+                        document.querySelectorAll('.chat-card.selected-card').forEach(card => {
+                            card.classList.remove('selected-card');
+                        })
 
-                        const cancel = new Button({
-                                            classTypeOfButton: 'tetriary small',
-                                            buttonType: 'button',
-                                            clientAction: 'Cancel',
-                                            events: {
-                                                click: () => {
-                                                    atr.innerHTML = '';
-                                                    atr.appendChild(this.children.ActionToRecipient.getContent());
-                                                }
-                                            }
-                                        });
-                        const confirm = new Button({
-                                            classTypeOfButton: 'fatal-primary small',
-                                            buttonType: 'button',
-                                            clientAction: 'Delete',
-                                            events: {
-                                                click: () => {
-                                                    this.children.ConfirmDeletionDialog.show()
-                                                    atr.innerHTML = '';
-                                                    atr.appendChild(this.children.ActionToRecipient.getContent());
-                                                }
-                                            }
-                                        });
+                        card.classList.add('selected-card');
 
-                        atr.innerHTML = '';
-                        atr.append(cancel.getContent(), confirm.getContent())
+                        const onCardUsername = card.textContent.trim().split(' ')[0];
+                        let onCardChatId: number;
 
-                        return;
-                    } else if (e.target.className.includes('u-add-btn')) {
-                        ABCChoice.style.display = ABCChoice.style.display === 'block' ? 'none' : 'block';
-                        return;
-                    } 
+                        const memChats = window.memory.take().chats;
 
-                    if (e.target.closest('.atr-choice') || e.target.closest('.abc-choice')) {
-                        if (e.target.children[0].className.includes('abc-choice')) {
-                            const attachChoice = e.target.children[0].className.split(' ')[2];
-                            if (attachChoice === 'AttachLocation') MapInit();
-                            this.children[`${attachChoice}Dialog`].show();
+                        Object.entries(memChats).forEach(([chatId, chat]) => {
+                            chat['users'].forEach(user => {
+                                if (onCardUsername === user.login) {
+                                    onCardChatId = chatId;
+                                }
+                            })
+                        })
+
+                        if (this.children.Chat) {
+                            this.removeChildren('Chat');
                         }
-                    }              
-                },
+                        this.addChildren(new Chat({ 
+                            nameOCR: card.dataset.recipient, 
+                            chatId: onCardChatId,
+                            onChatDeleteConfirmed: async (id) => {
+                                memChats[id]['users'].forEach(user => {
+                                    if (user.id === window.memory.take().user.id) {
+                                        if (user.role === 'admin') {
+                                            const delChatRes = delChat({ chatId: id });
+                                            this.children.ChatList.removeChildren(`chat_${id}`);
+                                            this.removeChildren('Chat');
+                                            
+                                            const { [id]: remData, ...updatedChats } = window.memory.take().chats;
+                                            window.memory.give({ chats: updatedChats });
+                                        } else {
+                                            clg(this.children.WarningDialog);
+                                            if (this.children.WarningDialog) {
+                                                this.children.WarningDialog.show();
+                                            } else {
+                                                this.addChildren(new Warning({mesWarning: 'You cannot perform this action. Only admin of this chat can delete it'}), 'WarningDialog');
+                                                this.children.WarningDialog.show();
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }), 'Chat');
+
+                        // const {token} = await getChatToken(onCardChatId);
+
+                        if (this.wccc) this.wccc.close();
+
+                        const socketParams = {
+                            userId: window.memory.take().user.id,
+                            chatId: onCardChatId,
+                        }
+                        connectChat(socketParams);
+                        // this.wccc = new ChatConnection(
+                        //     socketParams,
+                        //     (e) => {clg('message sent!',e)}
+                        // );
+                    }
+
+                    if (e.target.closest('.fu-user')) {
+                        const clicked_user_name = e.target.textContent.trim();
+                        let fuId;
+
+                        Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
+                            if (clicked_user_name === this.children.FoundUsersList.children[`${childName}`].props.name) {
+                                fuId = childName;
+                            }
+                        });
+                        
+                        const nct = {
+                            title: `${window.memory.take().user.id}_and_${fuId}`
+                        };
+                        const newChatResult = await newChat(nct);
+
+                        const newUser = {
+                            users: [Number(fuId)],
+                            chatId: newChatResult
+                        }
+                        await addUserToChat(newUser);
+                        
+                        
+                        if (Object.keys(this.children.ChatList.children).length !== 0) {
+                            document.querySelectorAll('.chat-card.selected-card').forEach(card => {
+                                card.classList.remove('selected-card');
+                            })
+                        }
+                        this.children.ChatList.addChildren(new ChatCard({ recipientName: clicked_user_name, class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
+
+                        search_user.value = '';
+                        Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
+                            this.children.FoundUsersList.removeChildren(childName);
+                        });
+                        userSearch.classList.remove('u-s-opened');
+                        
+                        if (this.children.Chat) {
+                            this.children.Chat.setProps({nameOCR: clicked_user_name});
+                        } else {
+                            let cn = 'Chat'
+                            this.addChildren(new Chat({ 
+                                nameOCR: clicked_user_name, 
+                                chatId: newChatResult,
+                                onChatDeleteConfirmed: async (id) => {
+                                    const delChatRes = await delChat({ chatId: id });
+                                    this.children.ChatList.removeChildren(`chat_${id}`);
+                                    this.removeChildren('Chat');
+                                }
+                            }), cn);
+                        }
+                    }
+
+                    // if (e.target.closest('.button.u-send')) {
+                    //     if (message.value !== '') {
+                    //         clg('want to send a message?')
+                    //     } else {
+                    //         clg('message input is empty');
+                    //         return
+                    //     }
+                    // }
+                }
             },
 
             OpenProfile: new Button({
@@ -118,17 +213,14 @@ class Messenger extends Block {
                 typeIMG: true,
                 src: 'search.png'
             }),
-            ChatList: new ChatList(),
+            ChatList: new chatList(),
             OpenUserSearch: new Button({
                 classTypeOfButton: 'tetriary-nt ous',
                 buttonType: 'button',
-                clientAction: 'Open user search',
-                typeIMG: true,
-                src: 'to.png',
+                clientAction: 'Lookup People.',
                 events: {
                     click: () => {
                         document.querySelector('.user-search').classList.toggle('u-s-opened');
-                        document.querySelector('.ous').children[1].style.transform = document.querySelector('.ous').children[1].style.transform === 'rotate(270deg)' ? 'rotate(90deg)' : 'rotate(270deg)';
                     }
                 }
             }),
@@ -139,162 +231,86 @@ class Messenger extends Block {
                 placeholder: '...search by username',
                 events: {
                     input: () => {
-                        const xhr = new transport('user');
-                        xhr.post('/search', { login: search_user.value }).then((res) => alert(res.status)).catch((e) => clg(e))
+                        searchUser({ login: document.activeElement.value }).then(() => {
+                            Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
+                                this.children.FoundUsersList.removeChildren(childName);
+                            });
+                            
+                            for (const user of window.memory.take().search) {
+                                this.children.FoundUsersList.addChildren(new FUUser({ name: user.login }), user.id);
+                            }
+                            
+                            if (document.activeElement.value === '') {
+                                Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
+                                    this.children.FoundUsersList.removeChildren(childName);
+                                });
+                            }
+                        });
                     }
                 }
             }),
             FoundUsersList: new FoundUsersList(),
 
-            CurrentRecipient: new Image({
-                class: 'chat-recipient',
-                src: 'profile/example.png',
-                alt: 'current recipient profile picture',
-            }),
-            ActionToRecipient: new Image({
-                class: 'action-to-recipient drop-btn',
-                src: 'atr.png',
-                alt: 'button that opens list of action that can be done to current recipient',
-            }),
+            // Chat: new Chat({
+            //     nameOCR: 'Unknown'
+            // })
+        });
 
-            Messages: new MessageList(),
-
-            Attach: new Image({
-                class: 'add-btn drop-btn',
-                src: 'add.png',
-                alt: 'button that opens options of files to be sent'
-            }),
-            AddMedia: new Image({
-                class: 'abc-choice AttachMedia',
-                src: 'attach-media.png',
-                alt: 'action representation image: add photo or video',
-            }),
-            AddFiles: new Image({
-                class: 'abc-choice AttachFile',
-                src: 'attach-files.png',
-                alt: 'action representation image: add file',
-            }),
-            AddLocation: new Image({
-                class: 'abc-choice AttachLocation',
-                src: 'pin.png',
-                alt: 'action representation image: add location',
-            }),
-            Message: new Input({
-                id: 'message',
-                name: 'message',
-                type: 'text',
-                placeholder: 'Communicate...'
-            }),
-            SendBtn: new Button({
-                classTypeOfButton: 'send',
-                buttonType: 'submit',
-                typeIMG: true,
-                src: 'send.png',
-                events: {
-                    click: (e: Event) => {
-                        e.preventDefault();
-                        e.stopImmediatePropagation()
-
-                        if (document.getElementById('message').value !== '') {
-                            e.target.closest('form').submit()
-                        }
-                    }
-                }
-            }),
-
-            ConfirmDeletionDialog: new Fatal({
-                title: `Delete contact?`,
-                mainMessage: `This will delete ${props.nameOCR} from your contacts. You will be able to add this user again later.`,
-                extratip: `This action erases all messages ever sent to ${props.nameOCR}.`,
-                finalAction: 'Delete'
-            }),
-            AttachMediaDialog: new DialogWindow({
-                title: 'Choose image or video',
-                class: 'dialog-simple-input',
-
-                id: 'dialog_media',
-                name: 'dialog_media',
-                type: 'file',
-                label: 'Selection',
-                
-                executiveAction: 'Confirm Selection',
-            }),
-            AttachFileDialog: new DialogWindow({
-                title: 'Choose a file',
-                class: 'dialog-simple-input',
-                
-                id: 'dialog_file',
-                name: 'dialog_file',
-                type: 'file',
-                label: 'Selection',
-                
-                executiveAction: 'Confirm Selection',
-            }),
-            AttachLocationDialog: new DialogWindow({
-                title: 'Share location',
-                locat: true,
-                executiveAction: 'Share',
-            }),
-        })
     }
     public render(): string {
-        const children_names = Object.keys(this.children);
-        const line = [];
-
-        for(const name of children_names) {
-            if (name.toLowerCase().includes('dialog')) {
-                line.push(`{{{ ${name} }}}`)
-            }
-        }
-
         return `
-            <main>
-                <div class="chatapp-container">
-                    <div class="sidebar">
-                        <div class="explore">
-                            {{{ OpenProfile }}}
-                            <span id="search-container"> {{{ SearchBar }}} </span>
-                        </div>
-                        {{{ ChatList }}}
-                        <div class="user-search">
-                            <div>
-                                <div id="u-s-title-img"></div>
-                                {{{ OpenUserSearch }}}
-                                <h2>Find people</h2>
-                                {{{ SearchUser }}}
-                                {{{ FoundUsersList }}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat">
-                        <span class="chat-header">
-                            <span>
-                                {{{ CurrentRecipient }}}
-                                <h3>{{ nameOCR }}</h3>
-                            </span>
-                            <div class="action-to-recipient">
-                                {{{ ActionToRecipient }}}
-                            </div>
-                        </span>
-                        {{{ Messages }}}
-                        <span class="prompt">
-                            <span class="add-btn-container">
-                                {{{ Attach }}} 
-                                <ul class="abc-choice">
-                                    <li> {{{ AddMedia }}} Photo or Video </li>
-                                    <li> {{{ AddFiles }}} Files </li>
-                                    <li> {{{ AddLocation }}} Location </li>
-                                </ul>
-                            </span>
-                            <form id="chat-send-form">
-                                {{{ Message }}}
-                                {{{ SendBtn }}}
-                            </form>
-                        </span>
-                    </div>
+            <div class="user-search">
+                <div>
+                    <div id="u-s-title-img"></div>
+                    {{{ OpenUserSearch }}}
+                    <h2>Find people</h2>
+                    {{{ SearchUser }}}
+                    {{{ FoundUsersList }}}
+                    <h5 style="margin-top:1.4vh;text-decoration:underline;">Usernames are case-sensitive. Type them exactly as they are. Capital letters must match.</h5>
                 </div>
-            </main>
-            ${line.join(' ')}
+            </div>
+
+            <div class="chatapp-container">
+                <div class="sidebar">
+                    <div class="explore">
+                        {{{ OpenProfile }}}
+                        <span id="search-container"> {{{ SearchBar }}} </span>
+                    </div>
+                    {{{ ChatList }}}
+                </div>
+                
+                <div class="chat-wrapper">
+                    {{#if Chat}}
+                        {{{ Chat }}}
+                    {{else}}
+                        <div class="chat-cork">
+                            <div class="cc-ec"></div>
+                            <div class="cc-ec"></div>
+                            <div class="cc-fc"></div>
+                            <div class="cc-fc"></div>
+                            <div class="cc-s"></div>
+                            <div class="cc-s"></div>
+                            <div class="cc-s"></div>
+                            
+                            <div class="cc-"></div>
+
+                            <div class="cc-box-wrapper">
+                                <div class="cc-box">
+                                    <div class="cc-line"></div>
+                                </div>
+                                <div class="cc-box">
+                                    <div class="cc-line"></div>
+                                    <div class="cc-line"></div>
+                                </div>
+                            </div>
+                            <h3>Pick a chat to begin</h3>
+                            <h5>Select a chat from the list to get started or create new chat by searching the user</h5>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{{ WarningDialog }}}
         `
     }
 }

@@ -1,27 +1,25 @@
-import { clg } from "main";
-import transport from "./api";
+import endPointAPI from "./api";
 
 interface TReqError {
-    reason: string;
+    reason: string
 }
 interface TSignupRes {
     id: number
 }
 interface TUser {
-    id: number;
-    login: string;
-    first_name: string;
-    second_name: string;
-    display_name: string;
-    avatar: string;
-    phone: string;
-    email: string;
+    login: string
+    first_name: string
+    second_name: string
+    display_name: string
+    avatar: string
+    phone: string
+    email: string
 }
 type TSignup = Omit<TUser, 'avatar' | 'display_name' | 'id'>  & {
     password: string
 }
 interface TLogin {
-    login: string,
+    login: string
     password: string
 }
 // interface TLastMessage {
@@ -37,7 +35,7 @@ interface TLogin {
 //     last_message: TLastMessage | null
 // }
 
-const xhrAuth = new transport('auth');
+const xhrAuth = new endPointAPI('auth');
 
 export default class AuthRequests {
     private static _instance: AuthRequests;
@@ -51,21 +49,12 @@ export default class AuthRequests {
     }
 
     async bindUser(data: TSignup): Promise<TSignupRes> {
-        clg('Final step before sending data, data: ',data)
         return xhrAuth.post<TSignupRes>("/signup", { data });
     }
     async validate(data: TLogin): Promise<void> {
-        clg('Final step before sending data, data: ',data)
         return xhrAuth.post("/signin", { data })
-            // .then((res) => {
-            //     clg(res.status, "statred retrivation of data")
-            //     if (res.status === 200) {
-            //         xhrAuth.get('/user');
-            //     }
-            // });
     }    
     async self(): Promise<TUser | TReqError> {
-        clg('Started retrivation of self data');
         return xhrAuth.get("/user");
     }
     async withdraw(): Promise<void | TReqError> {

@@ -1,13 +1,11 @@
-import { clg } from "main";
-
 enum METHOD {
     GET = "GET",
     POST = "POST",
+    PUT = "PUT",
+    DELETE = "DELETE",
 
     // other methods (UNREALIZED)
-    PUT = "PUT",
     PATCH = "PATCH",
-    DELETE = "DELETE",
 }
 
 interface RequestType {
@@ -17,23 +15,27 @@ interface RequestType {
 
 type RequestWithoutMethod = Omit<RequestType, 'method'>;
 
-export default class transport {
+export default class endPointAPI {
     private baseURL: string = '';
 
     constructor(path: string) {
-        this.baseURL = `/api/${path}`;
-        // this.baseURL = `https://ya-praktikum.tech/api/v2/${path}`;
+        this.baseURL = `/online/${path}`;
     }
 
     get<TResponse>(url: string, inRequestData: RequestWithoutMethod = {}): Promise<TResponse> {
-        return this.request<TResponse>(`${this.baseURL}${url}`, { 
-            ...inRequestData,
-            method: METHOD.GET
-        });
+        return this.request<TResponse>(`${this.baseURL}${url}`, { ...inRequestData, method: METHOD.GET });
     }
     
     post<TResponse>(url: string, inRequestData: RequestWithoutMethod = {}): Promise<TResponse> {
         return this.request<TResponse>(`${this.baseURL}${url}`, { ...inRequestData, method: METHOD.POST });
+    }
+    
+    put<TResponse>(url: string, inRequestData: RequestWithoutMethod = {}): Promise<TResponse> {
+        return this.request<TResponse>(`${this.baseURL}${url}`, { ...inRequestData, method: METHOD.PUT });
+    }
+
+    delete<TResponse>(url: string, inRequestData: RequestWithoutMethod = {}): Promise<TResponse> {
+        return this.request<TResponse>(`${this.baseURL}${url}`, { ...inRequestData, method: METHOD.DELETE });
     }
 
     async request<TResponse> (
@@ -48,8 +50,7 @@ export default class transport {
             xhr.open(method, url);
             xhr.withCredentials = true;
             xhr.responseType = "json";
-            xhr.setRequestHeader('Content-Type', 'application/json');
-
+            
             xhr.onload = () => {
                 if (xhr.status >= 200 && xhr.status <= 300) {
                     resolve(xhr.response as TResponse);
@@ -57,20 +58,16 @@ export default class transport {
                     reject(xhr);
                 }
             };
-
-            xhr.onloadend = () => {
-                if (xhr.status === 200) {
-                    clg("Supposed success", xhr.status, "Response body:", xhr.response);
-                } else {
-                    clg("Failed", xhr.status, xhr?.response?.reason);
-                }
-            };
+            
             xhr.onerror = () => reject();
-
-            if (!data) {
-                xhr.send();
-            } else {
+            
+            if (data instanceof FormData) {
+                xhr.send(data)
+            } else if (data) {
+                xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.send(JSON.stringify(data));
+            } else {
+                xhr.send();
             }
         });
     }
