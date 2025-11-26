@@ -3,9 +3,6 @@ enum METHOD {
     POST = "POST",
     PUT = "PUT",
     DELETE = "DELETE",
-
-    // other methods (UNREALIZED)
-    PATCH = "PATCH",
 }
 
 interface RequestType {
@@ -16,10 +13,10 @@ interface RequestType {
 type RequestWithoutMethod = Omit<RequestType, 'method'>;
 
 export default class endPointAPI {
-    private baseURL: string = '';
+    private baseURL: string = 'https://ya-praktikum.tech/api/v2/';
 
     constructor(path: string) {
-        this.baseURL = `/online/${path}`;
+        this.baseURL += path;
     }
 
     get<TResponse>(url: string, inRequestData: RequestWithoutMethod = {}): Promise<TResponse> {

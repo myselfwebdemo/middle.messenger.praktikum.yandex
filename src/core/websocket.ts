@@ -1,160 +1,115 @@
-import { clg } from 'main';
 import { getChatToken } from 'services/service';
+// import { clg } from 'main';
 
 interface SocketParams {
-    userId: number
-    chatId: number
+    userId: number;
+    chatId: number;
 }
-// export default class ChatConnection {
-//     private baseURL = 'wss://ya-praktikum.tech/ws';
-//     // private baseURL = ' https://ya-praktikum.tech/api/v2';
 
-//     private socket: WebSocket | null = null;
-//     private url: string;
-//     private pingInterval: any = null;
-//     private reconnectTimeout: any = null;
-//     private onMessageHandler: (data: any) => void;
-//     private isManualClose = false;
-//     private chatId: number;
-//     private userId: number;
+export default class ChatConnection {
+    private socket: WebSocket | null = null;
+    private pingInterval: any = null;
+    private reconnectTimeout: any = null;
 
-//     constructor(params: SocketParams, onMessage: (data: any) => void) {
-//         this.chatId = params.chatId;
-//         this.userId = params.userId;
+    private readonly userId: number;
+    private readonly chatId: number;
 
-//         this.onMessageHandler = onMessage;
-//         this.connect();
-//     }
-    
-//     private async connect() {
-//         // @ts-ignore
-//         const { token } = await getChatToken(this.chatId);
-//         this.url = `${this.baseURL}/chats/${this.userId}/${this.chatId}/${token}`;
-//         this.socket = new WebSocket(this.url);
+    private isManualClose = false;
+    private url = '';
 
-//         this.socket.addEventListener('open', () => {
-//             clg('[Socket] open:', this.url);
+    private onMessageHandler: (data: any) => void;
 
-//             this.requestHistory();
-            
-//             this.pingInterval = setInterval(() => {
-
-//                 this.send({ type: 'ping' });
-//             }, 15000);
-//         });
-
-//         this.socket.addEventListener('message', (e) => {
-//             try {
-//                 const data = JSON.parse(e.data);
-//                 clg(data)
-//                 this.onMessageHandler(data);
-//             } catch {
-//                 console.warn('Socket message parse fail:', e.data);
-//             }
-//         });
-
-//         this.socket.addEventListener('close', (e) => {
-//             clg('close event',e);
-//             // clearInterval(this.pingInterval);
-//             // this.pingInterval = null;
-
-//             if (!this.isManualClose) {
-//                 console.warn('[Socket] unexpected close, reconnecting...');
-//                 // this.reconnect();
-//             }
-//         });
-
-//         this.socket.addEventListener('error', (err) => {
-//             console.error('[Socket] error:', err);
-//         });
-//     }
-//     private reconnect() {
-//         clearTimeout(this.reconnectTimeout);
-//         this.reconnectTimeout = setTimeout(() => {
-//             this.connect();
-//         }, 2000);
-//     }
-//     private send(obj: any) {
-//         if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
-//         this.socket.send(JSON.stringify(obj));
-//     }
-//     public sendMessage(text: string) {
-//         this.send({
-//             type: 'message',
-//             content: text,
-//         });
-//     }
-//     public requestHistory() {
-//         this.send({
-//             content: '0',
-//             type: 'get old',
-//         });
-//     }
-//     public close() {
-//         this.isManualClose = true;
-//         clearInterval(this.pingInterval);
-//         if (this.socket) this.socket.close();
-//     }
-// }
-
-export const connectChat = async (params: SocketParams) => {
-    const { token } = await getChatToken(params.chatId);
-    const socket = new WebSocket(`wss://ya-praktikum.tech/ws/chats/${params.userId}/${params.chatId}/${token}`);
-
-    socket.addEventListener('open', () => {
-        clg('[Socket] opened');
-
-        setInterval(() => {
-            send({type: 'ping'});
-        }, 5000);
+    constructor(params: SocketParams, onMessage: (data: any) => void) {
+        if (window.__socket) window.__socket.close();
         
-        requestHistory(0);
+        this.userId = params.userId;
+        this.chatId = params.chatId;
+        this.onMessageHandler = onMessage;
 
-        const sendBtn = document.querySelector('.button.u-send');
+        this.connect();
+    }
+    private async connect() {
         // @ts-ignore
-        sendBtn.addEventListener('click', () => {
-            if (message.value !== '') {
-                clg('send a message',message.value);
-                send({
-                    // @ts-ignore
-                    content: message.value,
-                    type: 'message'
-                });
+        const { token } = await getChatToken(this.chatId);
+        this.url = `wss://ya-praktikum.tech/ws/chats/${this.userId}/${this.chatId}/${token}`;
+        this.socket = new WebSocket(this.url);
+        window.__socket = this.socket;
 
-                message.value = '';
-            } else {
-                clg('message input is empty');
-                return
+        this.socket.addEventListener('open', () => this.onOpen());
+        this.socket.addEventListener('message', (e) => this.onMessage(e));
+        this.socket.addEventListener('error', (e) => this.onError(e));
+        this.socket.addEventListener('close', (e) => this.onClose(e));
+    }
+
+    private onOpen() {
+        // clg('[WS] Opened');
+
+        this.requestHistory(0);
+        this.requestHistory(20);
+
+        this.pingInterval = setInterval(() => {
+            this.send({ type: 'ping' });
+        }, 10000);
+    }
+
+    private onMessage(e: MessageEvent) {
+        if (Array.isArray(e.data) && e.data.length === 0) {
+            return
+        } else {
+            try {
+                const data = JSON.parse(e.data);
+                this.onMessageHandler(data);
+            } catch {
+                this.onMessageHandler(e.data);
             }
-        })
-    });
-    
-    socket.addEventListener('close', (e) => {
-        clg('[Socket] closed',e.wasClean,e.code,e.reason);
-    });
-    
-    socket.addEventListener('message', (e) => {
-        clg('[Socket] data received', e);
-    });
-    
-    socket.addEventListener('error', (e) => {
-        clg('[Socket] error', e);
-    }); 
+        }
+    }
 
-    function requestHistory (contentFromN: number) {
-        clg('[Socket] requested chat history');
+    private onError(e: Event) {
+        console.error('[WS] Error:', e);
+    }
 
-        send({
-            content: contentFromN.toString(),
+    private onClose(e: CloseEvent) {
+        clearInterval(this.pingInterval);
+        this.pingInterval = null;
+
+        if (!this.isManualClose) {
+            // clg('[WS] Unexpected close', e.code);
+            this.reconnect();
+        }
+    }
+    private reconnect() {
+        clearTimeout(this.reconnectTimeout);
+
+        this.reconnectTimeout = setTimeout(() => {
+            this.connect();
+        }, 2000);
+    }
+    private send(obj: Record<string, any>) {
+        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+            return;
+        }
+
+        this.socket.send(JSON.stringify(obj));
+    }
+    public sendMessage(text: string) {
+        this.send({
+            type: 'message',
+            content: text,
+        });
+    }
+    public requestHistory(from: number) {
+        this.send({
+            content: from.toString(),
             type: 'get old',
         });
     }
-    function send (obj: Record<string, any>) {
-        clg('[Socket] sent data');
+    public close() {
+        this.isManualClose = true;
+        clearInterval(this.pingInterval);
 
-        if (!socket || socket.readyState !== WebSocket.OPEN) return;
-
-        const stringified = JSON.stringify(obj);
-        socket.send(stringified);
+        if (this.socket) {
+            this.socket.close();
+        }
     }
 }

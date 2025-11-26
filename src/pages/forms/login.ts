@@ -25,7 +25,6 @@ class LoginPage extends Block {
                 login: '',
                 password: '',
             },
-            // className: 'form',
             attrs: {
                 method: props.method,
                 novalidate: true
@@ -64,8 +63,9 @@ class LoginPage extends Block {
                             }
                         })
     
-                        login(this.props.formState);
-                        return
+                        document.querySelectorAll('input').forEach(i => {i.value = ''; i.style.margin = '0 0 .2vh 0'});
+                        document.querySelectorAll('label').forEach(l => {l.style.transform = 'translateY(2.4vh)'; l.style.fontSize = 'var(--regular-font-size)'});
+                        await login(this.props.formState);
                     }
                 }
             },

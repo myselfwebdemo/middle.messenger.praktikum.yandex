@@ -124,9 +124,6 @@ export default function formValidationHandler(
                             if (!value.includes("+")) {
                                 return validate(false, 'Must start with "+"');
                             }
-                            // if (!/[0-9+]/.test(value)) {
-                            //     return validate(false, 'Must contian only numbers.');
-                            // }
                             if (/[A-Za-z]/.test(value)) {
                                 return validate(false, 'Must contian only numbers');
                             }

@@ -11,7 +11,6 @@ interface TCDel {
 }
 interface TNewUser {
     users: Array<number>
-    // users: Array<Record<string, any>>
     chatId: number
 }
 

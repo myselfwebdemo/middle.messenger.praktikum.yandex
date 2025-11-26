@@ -22,18 +22,6 @@ interface TLogin {
     login: string
     password: string
 }
-// interface TLastMessage {
-//     user: TUser,
-//     time: string,
-//     content: string
-// }
-// interface TChat {
-//     id: number,
-//     title: string,
-//     avatar: string | null,
-//     unread_count: number,
-//     last_message: TLastMessage | null
-// }
 
 const xhrAuth = new endPointAPI('auth');
 

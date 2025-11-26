@@ -49,7 +49,6 @@ export async function MapInit() {
     getLocByCoords(lat, lng).then(userLoc => {
       document.getElementById('standalone').textContent = userLoc;
     });
-    // pinloc(lat,lng);
   });
 
   setTimeout(() => map.invalidateSize(), 0);

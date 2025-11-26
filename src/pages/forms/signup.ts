@@ -74,14 +74,9 @@ class SignupPage extends Block {
                             }
                         });
 
+                        document.querySelectorAll('input').forEach(i => {i.value = ''; i.style.margin = '0 0 .2vh 0'});
+                        document.querySelectorAll('label').forEach(l => {l.style.transform = 'translateY(2.4vh)'; l.style.fontSize = 'var(--regular-font-size)'});
                         await signup(this.props.formState);
-
-                        // const mem = window.memory.take();
-                        
-                        // if (Object.keys(mem.user).length !== 0) {
-                        //     this.children.SuggestAutoLogin.show();
-                        // }
-                        return
                     }
                 }
             },
@@ -178,23 +173,6 @@ class SignupPage extends Block {
                 classTypeOfButton: 'primary', 
                 buttonType: 'submit', 
                 clientAction: 'Get Started'
-            }),
-
-            SuggestAutoLogin: new Fatal({
-                title: 'Signup Successful! Login?',
-                mainMessage: 'Your account has been created successfully. You can now log in to access your account.',
-                extratip: 'You will be automatically logged in.',
-                finalAction: 'log in',
-                finalEvent: {
-                    click: () => {
-                        const mem = window.memory.take();
-
-                        login({
-                            login: mem.user.login, 
-                            password: mem.user.password
-                        });
-                    }
-                }
             }),
         })
     }

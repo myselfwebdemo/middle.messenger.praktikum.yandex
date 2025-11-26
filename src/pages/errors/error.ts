@@ -21,7 +21,12 @@ export default class E extends Block {
             ReturnBack: new Button({
                 classTypeOfButton: 'tetriary',
                 buttonType: 'button',
-                clientAction: 'Back to chats'
+                clientAction: 'Return back',
+                events: {
+                    click: () => {
+                        window.history.back();
+                    }
+                }
             })
         })
     }

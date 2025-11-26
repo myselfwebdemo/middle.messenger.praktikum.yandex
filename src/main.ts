@@ -96,18 +96,9 @@ window.memory = new Storage({
     loading: false,
     user: {},
     chats: [],
-    currentChat: {},
     eAPI: null,
     sAPI: null,
-
-    // selectedChat: null,
-    // selectedChat: index,
-    // messages: [],
 })
-
-// window.memory.on(StoreEvents.Updated, (prevState, newState) => {
-//     clg('Memory state update', newState);
-// });
 
 window.router = new Router('#app');
 
@@ -116,8 +107,8 @@ window.router.use('/', Home)
              .use('/login', LoginPage, {method: 'get'})
              .use('/signup', SignupPage, {method: 'post'})
              .use('/settings', Profile, ({ level: 0 }))
-             .use('/not-found', E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
-             .use('/internal-error', E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
+             .use('/404', E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
+             .use('/500', E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
 window.router.start();
 
 await checkLogin();

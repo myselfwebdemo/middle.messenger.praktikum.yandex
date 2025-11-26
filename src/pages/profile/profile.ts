@@ -148,7 +148,7 @@ class ProfileLanding extends Block {
                 profAvatar: true,
                 class: 'profile-icon',
                 src: props.user.avatar
-                    ? `online/resources${props.user.avatar}`
+                    ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`
                     :  'assets/profile/default.png',
                 alt: 'profile picture'
             }),
@@ -254,7 +254,7 @@ class ProfileLanding extends Block {
         super.setProps(newProps);
 
         this.children.ProfileIcon.setProps({
-            src: `online/resources${this.props.user.avatar}`
+            src: `https:ya-praktikum.tech/api/v2/resources${this.props.user.avatar}`
         })
     }
     public render(): string {
@@ -285,7 +285,6 @@ class ProfileLanding extends Block {
     }
 }
 
-// field validation for both classes ???
 class EditProfile extends Block {
     constructor(props: ProfilePagesProps) {
         super('form', {
@@ -309,7 +308,7 @@ class EditProfile extends Block {
                 profAvatar: true,
                 class: 'profile-icon',
                 src: props.user.avatar
-                    ? `online/resources${props.user.avatar}`
+                    ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`
                     :  '/profile/default.png',
                 alt: 'profile picture'
             }),
@@ -478,7 +477,7 @@ class SetNewPassword extends Block {
                 profAvatar: true,
                 class: 'profile-icon',
                 src: props.user.avatar
-                    ? `online/resources${props.user.avatar}`
+                    ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`
                     :  '/profile/default.png',
                 alt: 'profile picture'
             }),

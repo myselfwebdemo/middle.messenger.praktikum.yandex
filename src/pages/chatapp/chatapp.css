@@ -88,9 +88,11 @@
     justify-content: center;
 }
 #search {
-    width: 4vw;
+    width: 6.7vw;
     height: inherit;
     text-align: center;
+    margin-left: 2.5%;
+    transition: none;
 }
 #search-container img {
     --size: 1.5vh;
@@ -98,11 +100,11 @@
     width: var(--size);
     height: var(--size);
     filter: invert(60%);
+    transition: none;
 }
 #search:focus {
     width: 100%;
     text-align: left;
-    margin-left: 2.5%;
 }
 .chat-list {
     box-sizing: border-box;
@@ -167,7 +169,6 @@
     display: none;
 }
 .user-search.u-s-opened {
-    /* position: relative; */
     width: 30%;
     height: 55%;
     padding-top: 4%;
@@ -432,7 +433,7 @@
     color: var(--primary-text-color);
 }
 .chat-header, .prompt {
-    --blur: blur(50px);
+    --blur: blur(8px);
 
     position: absolute;
     box-sizing: border-box;
@@ -578,7 +579,7 @@
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    padding: 8vh 2%;
+    padding: 8vh 5.3%;
     z-index: var(--z-i-lvl-1);
 }
 .messages::-webkit-scrollbar { display: none; }
@@ -592,18 +593,18 @@
     margin: auto;
     z-index: var(--z-i-lvl-2);
 }
-.prompt form {
+.chat-send-form {
     width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 /* stylelint-disable-next-line no-descending-specificity */
-.prompt .input-wrapper {
+.chat-send-form .input-wrapper {
     box-sizing: border-box;
     width: 100%;
 }
-#message {
+#messageInput {
     margin: 0 2vh;
     padding: .3vh 2.5vh;
     background: var(--lightgray);

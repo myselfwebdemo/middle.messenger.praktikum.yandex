@@ -17,7 +17,6 @@ interface ChatProps {
 }
 
 export default class Chat extends Block {
-// class Chat extends Block {
     constructor(props: ChatProps) {
         super('div', { 
             ...props,
@@ -120,10 +119,26 @@ export default class Chat extends Block {
                 alt: 'action representation image: add location',
             }),
             Message: new Input({
-                id: 'message',
-                name: 'message',
+                id: 'messageInput',
+                name: 'messageInput',
                 type: 'text',
-                placeholder: 'Communicate...'
+                placeholder: 'Communicate...',
+                events: {
+                    keydown: (e: Event) => {
+                        if (e.key === 'Enter') {
+                            if (messageInput.value !== '') {
+                                window.__socket.send(JSON.stringify({
+                                    content: messageInput.value,
+                                    type: 'message'
+                                }));
+
+                                messageInput.value = '';
+                            } else {
+                                return
+                            }
+                        }
+                    }
+                }
             }),
             SendBtn: new Button({
                 classTypeOfButton: 'send',
@@ -139,7 +154,6 @@ export default class Chat extends Block {
                 finalAction: 'Delete',
                 finalEvent: {
                     click: () => {
-                        clg(this.props.chatId);
                         this.props.onChatDeleteConfirmed(this.props.chatId)
                     }
                 }
@@ -216,20 +230,12 @@ export default class Chat extends Block {
                         <li> {{{ AddLocation }}} Location </li>
                     </ul>
                 </span>
-                <form id="chat-send-form">
+                <div class="chat-send-form">
                     {{{ Message }}}
                     {{{ SendBtn }}}
-                </form>
+                </div>
             </span>
             ${line.join(' ')}
         `
     }
 }
-
-const props = (wm) => {
-    return {
-        reqFail: wm.eAPI,
-        reqSuccess: wm.sAPI,
-    }
-}
-// export default linkStorage(props)(Chat);

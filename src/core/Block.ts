@@ -214,16 +214,27 @@ export default class Block<T extends Record<string, any> = any> {
     this.getContent().style.display = "none";
   }
   addChildren(block, name) {
-    if (!(block instanceof Block)) throw new Error(`block arg: ${block} must an instance of class Block.`);
+    if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);
     this.children[name] = block;
     this._render();
-    // this.children[name]._element.scrollIntoView({behavior: 'smooth'});
-  }    
+    this.children[name]._element.scrollIntoView({behavior: 'smooth'});
+  }
+  prependChildren(block, name) {
+    if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);
+    this.children = { [name]: block, ...this.children };
+    this._render();
+    
+    const keys = Object.keys(this.children);
+    const lastMes = keys.length > 1 ? keys[keys.length - 2] : keys[0];
+
+    if (lastMes && this.children[lastMes]._element) {
+      this.children[lastMes]._element.scrollIntoView();
+    }
+  }
   removeChildren(name) {
     if (!this.children[name]) throw new Error(`${name} is either not a child of ${this} or doesn't exist.`);
     const remObj = Object.keys(this.children).indexOf(name);
     delete this.children[name];
     this._render();
-    // this.children[Object.keys(this.children)[remObj-1]]._element.scrollIntoView({behavior: 'smooth'});
   }    
 }

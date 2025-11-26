@@ -23,9 +23,9 @@ export const signup = async (data) => {
 
         window.router.go('/messenger');
     } catch (e) {
-        if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
             err = null;
-        } else if (e.response.reason) {
+        } else if (e.response?.reason) {
             err = e.response?.reason;
         } else {
             err = 'Unknown error';
@@ -46,11 +46,11 @@ export const login = async (data) => {
 
         window.router.go('/messenger');
     } catch (e) {
-        if (e.response.reason) {
-            if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason) {
+            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response.reason;
+                err = e.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -69,11 +69,11 @@ export const searchUser = async (data) => {
             window.memory.give({ search: res });
         });
     } catch (e) {
-        if (e.response.reason) {
-            if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason) {
+            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response.reason;
+                err = e.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -92,18 +92,17 @@ export const editUser = async (data) => {
         await profileRequests.changeUserData(data);
         await self();
     } catch (e) {
-        if (e.response.reason) {
-            if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason) {
+            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response.reason;
+                err = e.response?.reason;
             }
         } else {
             err = 'Unknown error';
         }
     } finally {
         if (!err) suc=true;
-        clg(err,suc);
         window.memory.give({loading: false, eAPI: err, sAPI: suc});
         err=null;
         suc=false;
@@ -117,11 +116,11 @@ export const editPass = async (data) => {
     try {
         await profileRequests.changePass(data);
     } catch (e) {
-        if (e.response.reason) {
-            if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason) {
+            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response.reason;
+                err = e.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -144,11 +143,11 @@ export const changeAvatar= async (data) => {
         await profileRequests.newAvatar(data);
         await self();
     } catch (e) {
-        if (e.response.reason) {
-            if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason) {
+            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response.reason;
+                err = e.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -178,14 +177,12 @@ export const delChat = async (data) => {
     window.memory.give({loading: true, eAPI: null, sAPI: false});
     
     try {
-        await chatsRequests.del(data).then(res => {
-            clg(res.status);
-        });
+        await chatsRequests.del(data);
     } catch (e) {
-        if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
             err = null;
-        } else if (e.response.reason.toLowerCase() === 'isnt permitted or smt') {} else if (e.response.reason) {
-            err = e.response.reason;
+        } else if (e.response?.reason.toLowerCase() === 'isnt permitted or smt') {} else if (e.response?.reason) {
+            err = e.response?.reason;
         } else {
             err = 'Unknown error';
         }
@@ -200,7 +197,7 @@ export const addUserToChat = async (data) => {
     try {
         await chatsRequests.addUser(data);
     } catch (e) {
-        clg(e);   
+        clg(e);
     }
 }
 
@@ -221,7 +218,7 @@ export const getChatToken = async (id) => {
 
 
 export const self = async () => {
-    let err,suc;
+    let err;
     window.memory.give({loading: true, eAPI: null});
 
     try {
@@ -260,25 +257,74 @@ export const self = async () => {
             window.router.go('/messenger');
         }
     } catch (e) {
-        if (e.response.reason) {
-            if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason) {
+            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response.reason;
+                err = e.response?.reason;
             }
         } else {
             err = 'Unknown error';
         }
 
-        if (window.location.pathname !== '/') {
+        const est = e.status;
+
+        if (est === 401) {
             window.router.go('/login');
+        } else if (est === 404) {
+            window.router.go('/404');
+        } else if (est === 500) {
+            window.router.go('/500');
         }
     } finally {
-        if (!err) suc=true;
         window.memory.give({loading: false, eAPI: err});
-        // window.memory.give({loading: false, eAPI: err, sAPI: suc});
         err=null;
-        suc=false;
+    }
+}
+
+export const chatsUpdate = async () => {
+    try {
+        await chatsRequests.get().then(async chats => {
+            const memChats = window.memory.take().chats;
+
+            let mcID = [];
+            let fetcID = [];
+
+            Object.keys(memChats).forEach(cID => {
+                mcID.push(Number(cID));
+                mcID.sort();
+            });
+            chats.forEach(chat => {
+                fetcID.push(chat.id);
+                fetcID.sort();
+            });
+
+            if (fetcID.toString() !== mcID.toString()) {
+                let chats_temp = {};
+    
+                const promises = chats.map(chat => chatsRequests.getUsers(chat.id)
+                    .then(chat_users => {
+                        let singleChat = {
+                            'chat': chat,
+                            'users': []
+                        }
+                        chat_users.forEach(user => {
+                            singleChat['users'][user.id] = user;
+                        })
+    
+                        chats_temp[chat.id] = singleChat;
+                    })
+                );
+                
+                await Promise.all(promises);
+    
+                window.memory.give({chats: chats_temp});
+            } else {
+                return
+            }
+        });
+    } catch (e) {
+        return
     }
 }
 
@@ -303,11 +349,11 @@ export const logout = async () => {
         
         window.router.go('/login');
     } catch (e) {
-        if (e.response.reason) {
-            if (e.response.reason.toLowerCase() === 'cookie is not valid') {
+        if (e.response?.reason) {
+            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response.reason;
+                err = e.response?.reason;
             }
         } else {
             err = 'Unknown error';
