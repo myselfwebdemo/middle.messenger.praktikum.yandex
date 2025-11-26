@@ -98,8 +98,8 @@ window.router = new Router('#app');
 
 window.router.use('/', Home)
              .use('/messenger', ChatAPP)
-             .use('/login', LoginPage, {method: 'get'})
-             .use('/signup', SignupPage, {method: 'post'})
+             .use('/log-in', LoginPage, {method: 'get'})
+             .use('/sign-up', SignupPage, {method: 'post'})
              .use('/settings', Profile, ({ level: 0 }))
              .use('/404', E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
              .use('/500', E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})

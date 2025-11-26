@@ -42,7 +42,7 @@ export default class Router {
     _onRoute(pathname: string) {
         const route = this.getRoute(pathname);
         if (!route) {
-            return this.go('/not-found');
+            return this.go('/404');
         }
     
         if (this._currentRoute) {

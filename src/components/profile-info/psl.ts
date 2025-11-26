@@ -2,7 +2,6 @@
 import Block from 'core/Block';
 import Input from '../input/input';
 import './psl.css';
-import { clg } from 'main';
 
 interface PSLProps {
     trait: string

@@ -85,7 +85,7 @@ class SignupPage extends Block {
                     click: () => {
                         window.memory.give({eAPI:null});
                         resetForm();
-                        this.props.router.go('/login');
+                        this.props.router.go('/log-in');
                     }
                 }
             }),
@@ -97,8 +97,6 @@ class SignupPage extends Block {
                 name: 'email',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch email',
-
-                value: 'example@gmail.com'
             }),
             Username: new Input({
                 class: 'form-input',
@@ -117,8 +115,6 @@ class SignupPage extends Block {
                 name: 'first_name',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch first_name',
-
-                value: 'ExampleName'
             }),
             SecondName: new Input({
                 class: 'form-input',
@@ -128,8 +124,7 @@ class SignupPage extends Block {
                 name: 'second_name',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch second_name',
-                
-                value: 'ExampleSurname'
+            
             }),
             Phone: new Input({
                 class: 'form-input',
@@ -139,8 +134,6 @@ class SignupPage extends Block {
                 name: 'phone',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch phone',
-
-                value: '+7-916-111-11-11'
             }),
             Password: new Input({
                 class: 'form-input',
@@ -150,8 +143,6 @@ class SignupPage extends Block {
                 name: 'password',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch password',
-
-                value: 'Password1'
             }),
             PasswordRep: new Input({
                 class: 'form-input',
@@ -161,8 +152,6 @@ class SignupPage extends Block {
                 name: 'password-rep',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch password-rep',
-
-                value: 'Password1'
             }),
 
             Submit: new Button({

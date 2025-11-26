@@ -19,7 +19,7 @@ class Home extends Block {
                 events: {
                     click: () => {
                         checkLogin();
-                        this.props.router.go('/login');
+                        this.props.router.go('/log-in');
                     }
                 },
             })

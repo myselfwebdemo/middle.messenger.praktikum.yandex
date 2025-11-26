@@ -75,7 +75,7 @@ class LoginPage extends Block {
                     click: () => {
                         window.memory.give({eAPI:null});
                         resetForm();
-                        this.props.router.go('/signup');
+                        this.props.router.go('/sign-up');
                     }
                 }
             }),

@@ -2,7 +2,6 @@
 import Block from 'core/Block';
 import Button from '../button/button';
 import Input from '../input/input';
-import { clg } from 'main';
 import { getLocByQuery } from 'utils/locationAPI';
 import SelfSearch from '../input/selfsearch';
 import './dialog.css';

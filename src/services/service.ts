@@ -251,7 +251,7 @@ export const self = async () => {
             // })
         });
         
-        if (window.location.pathname !== '/messnger' && window.location.pathname !== '/settings') {
+        if (window.location.pathname !== '/messenger' && window.location.pathname !== '/settings') {
             window.router.go('/messenger');
         }
     } catch (e) {
@@ -268,7 +268,9 @@ export const self = async () => {
         const est = e.status;
 
         if (est === 401) {
-            window.router.go('/login');
+            if (window.location.pathname !== '/' && window.location.pathname !== '/sign-up') {
+                window.router.go('/log-in');
+            }
         } else if (est === 404) {
             window.router.go('/404');
         } else if (est === 500) {
@@ -345,7 +347,7 @@ export const logout = async () => {
     try {
         await requests.withdraw();
         
-        window.router.go('/login');
+        window.router.go('/');
     } catch (e) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {

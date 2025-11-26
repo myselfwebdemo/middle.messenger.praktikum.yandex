@@ -2,7 +2,6 @@
 import EventBus from "./EventBus";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
-import { clg } from "../main";
 export default class Block<T extends Record<string, any> = any> {
   props!: T;
   children!: Record<string, Block | Block[]>;

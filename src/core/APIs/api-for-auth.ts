@@ -37,7 +37,7 @@ export default class AuthRequests {
     }
 
     async bindUser(data: TSignup): Promise<TSignupRes> {
-        return xhrAuth.post<TSignupRes>("/signup", { data });
+        return xhrAuth.post<TSignupRes>("/sign-up", { data });
     }
     async validate(data: TLogin): Promise<void> {
         return xhrAuth.post("/signin", { data })
