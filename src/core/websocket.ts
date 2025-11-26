@@ -69,6 +69,7 @@ export default class ChatConnection {
         console.error('[WS] Error:', e);
     }
 
+    // @ts-ignore
     private onClose(e: CloseEvent) {
         clearInterval(this.pingInterval);
         this.pingInterval = null;
