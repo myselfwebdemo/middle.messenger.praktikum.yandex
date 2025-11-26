@@ -78,8 +78,7 @@ button {
     height: fit-content;
     font-size: smaller;
     border-color: var(--lightgray);
-    padding: .4vh 1vw .6vh 1vw;
-
+    padding: .4vh 1vw .6vh;
     box-shadow: 0 0 2vh lightgray;
 }
 .button.u-secondary.small.complex:hover {

@@ -125,30 +125,6 @@ class LoginPage extends Block {
                 </div>
             {{/if}}
 
-            <div style="position:absolute;top:50%;left:3%;transform:translateY(-50%);">
-                <h2 style="margin-bottom:1vh;">Users:</h2>
-                <table border="1" style="border:solid 1px blueviolet;width:25vw;height:20vh;text-align:center;">
-                    <tr>
-                        <td>Username</td>
-                        <td>Password</td>
-                        <td>Auto-Paste</td>
-                    </tr>
-                    <tr>
-                        <td>Warbu</td>
-                        <td rowspan="3">Password1</td>
-                        <td><button onclick="document.querySelectorAll('label').forEach(el => {el.style.fontSize='small';el.style.transform='unset';});login.value='Warbu';password.value='Password1';" style="background:blueviolet;text-decorations:none;padding:.5vw;width:4vw;border-radius:1vh;color:white;">Use</button></td>
-                    </tr>
-                    <tr>
-                        <td>Myskoi</td>
-                        <td><button onclick="document.querySelectorAll('label').forEach(el => {el.style.fontSize='small';el.style.transform='unset';});login.value='Myskoi';password.value='Password1';" style="background:blueviolet;text-decorations:none;padding:.5vw;width:4vw;border-radius:1vh;color:white;">Use</button></td>
-                    </tr>
-                    <tr>
-                        <td>my1000thusername</td>
-                        <td><button onclick="document.querySelectorAll('label').forEach(el => {el.style.fontSize='small';el.style.transform='unset';});login.value='my1000thusername';password.value='Password1';" style="background:blueviolet;text-decorations:none;padding:.5vw;width:4vw;border-radius:1vh;color:white;">Use</button></td>
-                    </tr>
-                </table>
-            </div>
-
             <form class="form">
                 <div class="header">
                     <h1 class="form-title">Login</h1>

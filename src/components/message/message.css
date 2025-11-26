@@ -2,7 +2,6 @@
     --rad: 1.4vh;
 
     position: relative;
-
     width: fit-content;
     max-width: 45%;
     height: fit-content;
@@ -51,9 +50,7 @@
     right: 0;
     bottom: 50%;
     transform: translate(140%,50%);
-    
     opacity: 0;
-    
     width: fit-content;
     height: fit-content;
     user-select: none;

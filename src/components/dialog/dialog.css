@@ -11,7 +11,6 @@
     justify-content: center;
     background: var(--theme-main-color-01);
     backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
     z-index: var(--z-i-priority-lvl-3);
     overflow: hidden;
     display: none;
@@ -170,17 +169,14 @@
 .dialog-wrapper.fatal, .dialog-wrapper.warning {
     --blur: blur(10px);
 
-    background: rgba(0, 0, 0, 0.15);
+    background: rgb(0 0 0 / 15%);
     backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
 }
 .fatal-dialog {
     width: 45vh;
-
     background: var(--theme);
     padding: calc(1.8vh - .1vh) 1.8vh;
     border-radius: 2vh;
-
     box-shadow: 
         0 0 .1vh var(--theme), 
         0 0 .2vh var(--theme), 
@@ -202,7 +198,7 @@
     font-weight: 400;
 }
 .fatal-dialog #mm, .warning-dialog #wp {
-    margin: 2vh 0 1vh 0;
+    margin: 2vh 0 1vh;
 }
 .fatal-dialog #et, .warning-dialog p:last-child {
     font-size: smaller;
@@ -214,7 +210,6 @@
     flex-direction: row;
     justify-content: end;
     gap: .6vw;
-
     width: 100%;
     margin-top: 1.8vh;
 }
@@ -223,10 +218,10 @@
     width: 35vh;
     
     --col: #FFF8CC;
+
     background: var(--col);
     padding: calc(1.8vh - .1vh) 1.8vh;
     border-radius: 2vh;
-
     box-shadow: 
         0 0 .1vh var(--col), 
         0 0 .2vh var(--col), 
@@ -250,6 +245,7 @@
 }
 .warning-dialog div img {
     --size: 2vh;
+
     width: var(--size);
     height: var(--size);
 }

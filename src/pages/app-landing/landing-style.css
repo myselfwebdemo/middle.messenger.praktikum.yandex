@@ -18,10 +18,12 @@
     left: -2vh;
 
     --size: 3.3vh;
+
     width: var(--size);
     height: var(--size);
     animation: rot 5s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
 }
+
 @keyframes rot {
     from {transform: rotate(0);}
     to {transform: rotate(360deg);}
@@ -30,12 +32,10 @@
     position: absolute;
     top: 0%;
     left: 0%;
-    
     content: '';
     background: var(--theme);
     width: inherit;
     height: inherit;
-    
     mask: url('/logo.png');
     mask-size: 100%;
     mask-position: .017px .25px;
@@ -46,7 +46,6 @@
     position: absolute;
     top: 0%;
     left: 0%;
-    
     content: '';
     background: url('/logo.png');
     background-size: cover;
@@ -88,7 +87,6 @@
     position: absolute;
     bottom: 3%;
     left: 50%;
-
     color: var(--secondary-text-color);
     transform: translateX(-50%);
 }

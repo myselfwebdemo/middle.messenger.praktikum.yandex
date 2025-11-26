@@ -8,35 +8,28 @@
 
 :root {
     --theme: #fff;
-
     --theme-main-color: blueviolet;
     --theme-main-color-075: rgb(137 43 226 / 75%);
     --theme-main-color-05: rgb(137 43 226 / 50%);
     --theme-main-color-025: rgb(137 43 226 / 25%);
     --theme-main-color-01: rgb(137 43 226 / 10%);
-    --theme-main-color-darker: rgb(101, 31, 166);
+    --theme-main-color-darker: rgb(101 31 166);
     --theme-complementary-color: violet;
-    
     --color-fatal: red;
     --color-fatal-darker: darkred;
-    
     --primary-text-color: #000;
     --secondary-text-color: gray;
     --complementary-text-color: #fff;
-
     --lightgray: rgb(230 230 230);
     --lightergray: #f5f5f5;
-
     --regular-font-size: medium;
     --small-font-size: small;
-
     --form-header-width: 77%;
     --theme-transition: .3s;
     --border-thickness: .2vh;
     --wrappers-rad: 1.8vh;
     --theme-sub1-color-filter: invert(70%) sepia(45%) saturate(1608%) hue-rotate(236deg) brightness(98%) contrast(91%);
     --theme-image-inversion: invert(0%);
-
     --z-i-priority-lvl-1: 9000; /* notifications */
     --z-i-priority-lvl-2: 8000; /* loader */
     --z-i-priority-lvl-3: 7000; /* pop-up dialog windows */
@@ -73,21 +66,18 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 100vw;
     height: 100vh;
     background: transparent;
     z-index: var(--z-i-priority-lvl-2);
-
     backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
 }
 .global-loader, .local-loader {
     --size: 4vh;
+
     width: var(--size);
     height: var(--size);
     background: var(--primary-text-color);
@@ -99,7 +89,6 @@ body {
 }
 .local-loader-wrapper {
     position: relative;
-
     width: 100%;
     height: 100%;
 }
@@ -110,7 +99,6 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-1vh,-1vh);
-
     background: var(--secondary-text-color);
 }
 .local-loader-wrapper h5 {
@@ -118,9 +106,9 @@ body {
     top: 56%;
     left: 50%;
     transform: translateX(-40%);
-
     color: var(--secondary-text-color);
 }
+
 @keyframes loaderPulse {
     0% {transform: scale(1);}
     50% {transform: scale(1.2);}
@@ -141,21 +129,17 @@ body {
     position: absolute;
     top: 2vh;
     right: 2vw;
-
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: var(--objgap);
-
     width: fit-content;
     margin: auto;
     margin-bottom: 2vh;
-    padding: .6vh .6vh .6vh calc(var(--objgap)+.15vw);
+    padding: .6vh .6vh .6vh calc(var(--objgap) + .15vw);
     border-radius: 3vh;
     overflow: hidden;
-    z-index: var(--z-i-ground);
-
     box-shadow: 
         0 0 .1vh var(--bg), 
         0 0 .2vh var(--bg), 
@@ -172,19 +156,21 @@ body {
         0 0 1vh var(--bg), 
         0 0 1.5vh var(--bg), 
         0 0 2vh var(--bg);
-
     animation: pop-up 4.3s linear both;
     transition: var(--theme-transition);
     z-index: var(--z-i-priority-lvl-1);
 }
 .api-req-res-notif.arrn-fail {
-    --bg: rgba(255,0,0,.07);
-    background: rgb(255,0,0,.3);
+    --bg: rgb(255 0 0 / 7%);
+
+    background: rgb(255 0 0 / 30%);
 }
 .api-req-res-notif.arrn-success {
-    --bg: rgba(0,255,0,.07);
-    background: rgb(0,255,0,.3);
+    --bg: rgb(0 255 0 / 7%);
+
+    background: rgb(0 255 0 / 30%);
 }
+
 /* .api-req-res-notif::before {
     position: absolute;
     top: -27%;
@@ -207,6 +193,7 @@ body {
 }
 .api-req-res-notif img {
     --size: 2.3vh;
+
     width: var(--size);
     height: var(--size);
     margin: 0;

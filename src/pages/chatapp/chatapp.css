@@ -12,7 +12,6 @@
     width: 100%;
     height: 100%;
     text-align: center;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -126,20 +125,15 @@
     top: 2%;
     left: 50%;
     position: absolute;
-
     width: 2.75%; 
     height: 4.2%;
     max-height: 96%;
     border-radius: 1.4vh;
-    transition: .5s cubic-bezier(0.075, 0.82, 0.165, 1);
     overflow: hidden;
     transition: var(--theme-transition);
     z-index: var(--z-i-lvl-3);
-    
     background: var(--theme-main-color-01);
     backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
-
     box-shadow: 0 0 2vh var(--theme-main-color-025);
     transform: translateX(-50%);
 }
@@ -152,6 +146,7 @@
 .user-search:hover .ous {
     animation: ouson 1s ease both;
 }
+
 @keyframes ouson {
     to {opacity: 1;}
 }
@@ -185,7 +180,13 @@
     display: flex;
 }
 .user-search.u-s-opened #u-s-title-img { 
-    top: -6vh; 
+    top: -6vh;
+    animation: ti 5s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+@keyframes ti {
+    0% {transform: rotate(0deg);}
+    50% {transform: rotate(360deg);}
+    100% {transform: rotate(0deg);}
 }
 .user-search.u-s-opened .button.u-tetriary-nt { 
     top: -5.7vh;
@@ -195,34 +196,22 @@
     position: absolute;
     top: .75vh;
     left: 0;
-
     width: var(--titleIMGsize);
     height: var(--titleIMGsize);
     margin-left: .58vw;
     z-index: var(--z-i-lvl-2);
-
-    background:  url(/assets/star.png);
+    background:  url("/assets/star.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-}
-.user-search.u-s-opened #u-s-title-img {
-    animation: ti 5s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
-}
-@keyframes ti {
-    0% {transform: rotate(0deg);}
-    50% {transform: rotate(360deg);}
-    100% {transform: rotate(0deg);}
 }
 .user-search .button.u-tetriary-nt {
     display: flex;
     flex-direction: row;
     align-items: center;
-
     position: absolute;
     top: 1vh;
     right: 0;
-
     min-width: 7vw;
     width: fit-content;
     margin-right: .8vw;
@@ -246,10 +235,10 @@
 }
 #search_user {
     box-sizing: border-box;
-
     width: 100%;
-    margin: 1vh 0 0 0;
+    margin: 1vh 0 0;
     padding: 0 .65vw;
+
     /* background: var(--theme-main-color-01); */
     border: solid .2vh white;
     border-radius: .8vh;
@@ -261,19 +250,17 @@
 .user-search .found-users-list {
     box-sizing: border-box;
     position: relative;
-    
     flex-direction: column;
     align-items: start;
-    
     height: 67.25%;
+
     /* height: 86.1%; */
     width: 90%;
     margin-top: 2vh;
     background: var(--theme-main-color-01);
     border: solid .2vh white;
     border-radius: 1vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: hidden scroll;
 }
 .user-search .found-users-list::-webkit-scrollbar { display: none; }
 .found-users-list h5 {
@@ -283,7 +270,6 @@
 }
 .found-users-list .fu-user {
     box-sizing: border-box;
-
     height: fit-content;
     margin: 0;
     padding: 1.7vh 0;
@@ -304,7 +290,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 100%;
     height: 100%;
 }
@@ -324,11 +309,10 @@
     display: flex;
     flex-direction: column;
     gap: 1.3vh;
-
     width: 100%;
     height: 13vh;
     background: var(--theme-main-color-01);
-    padding: 4vh 2.5vw 0 2.5vw;
+    padding: 4vh 2.5vw 0;
     border-radius: 2.6vh;
 }
 .chat-cork .cc-box:nth-child(2) {
@@ -363,7 +347,6 @@
     position: absolute;    
     top: 0;
     left: 0;
-
     width: var(--size);
     height: var(--size);
 }
@@ -378,48 +361,60 @@
 }
 .chat-cork .cc-s {
     background: var(--theme-main-color-05);
-    mask-image: url(/assets/star.png);
+    mask-image: url("/assets/star.png");
     mask-position: center;
     mask-size: contain;
 }
 .chat-cork .cc-ec:nth-child(1) {
     top: -10%;
     left: 65%;
+
     --size: 1.2vh;
+
     border: solid .3vh var(--theme-main-color-01);
 }
 .chat-cork .cc-ec:nth-child(2) {
     top: 7%;
     left: 25%;
+
     --size: .8vh;
+
     border: solid .3vh var(--theme-main-color-025);
 }
 .chat-cork .cc-fc:nth-child(3) {
     top: 30%;
     left: 27%;
+
     --size: 1.7vh;
+
     background: var(--theme-main-color-075);
 }
 .chat-cork .cc-fc:nth-child(4) {
     top: 55%;
     left: 75%;
+
     --size: 1.4vh;
+
     background: var(--theme-main-color-025);
 }
 .chat-cork .cc-s:nth-child(5) {
     top: 55%;
     left: 18%;
+
     --size: 1.5vh;
 }
 .chat-cork .cc-s:nth-child(6) {
     top: 0;
     left: 46%;
+
     --size: 1.8vh;
 }
 .chat-cork .cc-s:nth-child(7) {
     top: 20%;
     left: 80%;
+
     --size: 1.7vh;
+
     background: var(--theme-main-color-075);
 }
 

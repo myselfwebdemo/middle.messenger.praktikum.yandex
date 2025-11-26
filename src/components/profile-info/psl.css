@@ -6,6 +6,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: start;
+
     /* border-bottom: solid var(--border-thickness) var(--lightgray); */
 }
 .psl:first-child {
@@ -24,7 +25,6 @@
 }
 .psl #psl-data, .psl input{
     box-sizing: border-box;
-
     width: 100%;
     background: var(--lightgray);
     padding: 0 .7vw;
