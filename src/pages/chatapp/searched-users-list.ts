@@ -17,7 +17,6 @@ export default class FoundUsersList extends Block {
             return line.join(' ')
         } else {
             return `
-                <img src="/assets/star.png"/>
                 <h5>Results will display here</h5>
             `
         }

@@ -12,7 +12,7 @@
     background: var(--theme-main-color-01);
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
-    z-index: 9998;
+    z-index: var(--z-i-priority-lvl-3);
     overflow: hidden;
     display: none;
 }
@@ -160,11 +160,14 @@
     text-align: center;
 }
 .dialog #dialog-preview {
-    width: 80%;
+    width: auto;
     height: auto;
+    max-height: 25vh;
+    margin-bottom: 2vh;
+    border-radius: 1vh;
 }
 
-.dialog-wrapper.fatal  {
+.dialog-wrapper.fatal, .dialog-wrapper.warning {
     --blur: blur(10px);
 
     background: rgba(0, 0, 0, 0.15);
@@ -198,12 +201,12 @@
 .fatal-dialog h3 {
     font-weight: 400;
 }
-.fatal-dialog #mm {
+.fatal-dialog #mm, .warning-dialog #wp {
     margin: 2vh 0 1vh 0;
 }
-.fatal-dialog #et {
+.fatal-dialog #et, .warning-dialog p:last-child {
     font-size: smaller;
-    color: gray;
+    color: var(--secondary-text-color);
     text-decoration: underline;
 }
 .fd-actions {
@@ -214,4 +217,39 @@
 
     width: 100%;
     margin-top: 1.8vh;
+}
+
+.warning-dialog {
+    width: 35vh;
+    
+    --col: #FFF8CC;
+    background: var(--col);
+    padding: calc(1.8vh - .1vh) 1.8vh;
+    border-radius: 2vh;
+
+    box-shadow: 
+        0 0 .1vh var(--col), 
+        0 0 .2vh var(--col), 
+        0 0 .3vh var(--col), 
+        0 0 .4vh var(--col), 
+
+        0 0 .5vh var(--col), 
+        
+        0 0 .6vh var(--col), 
+        0 0 .7vh var(--col), 
+        0 0 .8vh var(--col), 
+        0 0 .9vh var(--col), 
+        
+        0 0 1vh var(--col), 
+        0 0 1.5vh var(--col), 
+        0 0 2vh var(--col);
+}
+.warning-dialog div {
+    display: flex;
+    flex-direction: row;
+}
+.warning-dialog div img {
+    --size: 2vh;
+    width: var(--size);
+    height: var(--size);
 }

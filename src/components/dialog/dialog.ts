@@ -11,12 +11,14 @@ import './dialog.css';
 interface DialogProps {
     title: string
     executiveAction: string
+    executiveEvent?: Record<string, () => void>
     id?: string
     name?: string
     type?: string
     class?: string
     label?: string
     placeholder?: string
+    inputAccept?: string
     recipientLogin?: string
     locat?: boolean
 }
@@ -93,12 +95,14 @@ export default class DialogWindow extends Block {
                         type: props.type,
                         label: props.label,
                         placeholder: props.placeholder,
-                        value: props.recipientLogin
+                        value: props.recipientLogin,
+                        accept: props.inputAccept
                     }),
                     Commit: new Button({
                         classTypeOfButton: 'primary',
                         buttonType: 'submit',
-                        clientAction: props.executiveAction
+                        clientAction: props.executiveAction,
+                        events: props.executiveEvent
                     })
                 }
             )

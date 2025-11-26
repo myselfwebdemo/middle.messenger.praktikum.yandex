@@ -6,12 +6,89 @@
     justify-content: center;
     gap: 2vw;
 }
-.u-welcome-image {
-    --size: 30vh;
+.app-landing span {
+    position: relative;
+}
+.app-landing span h1 {
+    color: var(--primary-text-color);
+}
+.app-landing .landing-logo {
+    position: absolute;
+    top: -1.2vh;
+    left: -2vh;
+
+    --size: 3.3vh;
     width: var(--size);
     height: var(--size);
+    animation: rot 5s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
 }
+@keyframes rot {
+    from {transform: rotate(0);}
+    to {transform: rotate(360deg);}
+}
+.landing-logo::before {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    
+    content: '';
+    background: var(--theme);
+    width: inherit;
+    height: inherit;
+    
+    mask: url('/logo.png');
+    mask-size: 100%;
+    mask-position: .017px .25px;
+    transform: scale(1.5);
+    z-index: 0;
+}
+.landing-logo::after {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    
+    content: '';
+    background: url('/logo.png');
+    background-size: cover;
+    background-position: center;
+    width: inherit;
+    height: inherit;
+    z-index: 1;
+}
+
 .app-landing .u-primary {
-    min-width: 13vw;
-    max-width: 13vw;
+    --shad: var(--theme-main-color);
+
+    padding: .3vh 1.3vw;
+    margin-left: .2vw;
+    box-shadow: 
+        0 0 .1vh var(--shad), 
+        0 0 .2vh var(--shad), 
+        0 0 .3vh var(--shad), 
+        0 0 .4vh var(--shad), 
+
+        0 0 .5vh var(--shad), 
+        
+        0 0 .6vh var(--shad), 
+        0 0 .7vh var(--shad), 
+        0 0 .8vh var(--shad), 
+        0 0 .9vh var(--shad), 
+        
+        0 0 1vh var(--shad), 
+        0 0 1.5vh var(--shad), 
+        0 0 2vh var(--shad),
+        1vh -.5vh 1vh var(--theme-complementary-color),
+        -1vh .5vh 1vh var(--theme-complementary-color);
+}
+.app-landing .u-primary:hover {
+    --shad: var(--theme-main-color-darker);
+}
+
+.app-landing h5 {
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+
+    color: var(--secondary-text-color);
+    transform: translateX(-50%);
 }

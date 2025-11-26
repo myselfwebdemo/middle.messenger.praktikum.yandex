@@ -9,7 +9,10 @@ import { formInputOnFocus, formInputOnBlur} from "main";
 import renderDOM from "core/renderDOM";
 import LoginPage from "./login";
 import { injectRouter } from "utils/injectRouter";
-import transport from "core/APIs/api";
+import endPointAPI from "core/APIs/api";
+import { linkStorage } from "utils/link-storage";
+import { signup, login } from "../../services/service";
+import Fatal from "components/dialog/fatal";
 
 interface signupProp {
     method: string
@@ -17,18 +20,17 @@ interface signupProp {
 
 class SignupPage extends Block {
     constructor(props: signupProp) {
-        super('form', {
+        super('div', {
             ...props,
-            userid: '',
             formState: {
                 email: '',
                 login: '',
+                display_name: '',
                 first_name: '',
                 second_name: '',
                 phone: '',
                 password: '',
             },
-            className: 'form',
             attrs: {
                 method: props.method,
                 novalidate: true
@@ -43,60 +45,38 @@ class SignupPage extends Block {
                 input: (e) => {
                     validate(e.target)
                 },
-                submit: (e) => {
+                submit: async (e) => {
                     e.preventDefault();
-
+                    
                     let validation;
-
-                    for (const e of this._element.elements) {
+                    for (const e of this._element.lastElementChild.elements) {
                         if (e instanceof HTMLInputElement) {
-                            if (!e.checkValidity()) {
-                                validation = validate(e);
-                                this._element.reportValidity();
+                            if (!validate(e)) {
+                                validation = false;
+                                break
                             }
+                            validation = true;
                         }
                     }
-                    
-                    const inputEls = document.querySelectorAll('input');
-                    this.setProps({
-                        formState: {
-                            ...this.props.formState,
-                            email: inputEls[0].value,
-                            login: inputEls[1].value,
-                            first_name: inputEls[2].value,
-                            second_name: inputEls[3].value,
-                            phone: inputEls[4].value,
-                            password: inputEls[5].value,
-                        }
-                    })
 
-                    clg(this.props.formState);
-
-                    if (this.getContent().checkValidity()) {
-                        const a = new transport('auth');
-
-                        // a.get('/signin', {login: ''})
-                        a.post('/signup', { data: this.props.formState }).then((res) => {
-                            clg('SIGN UP response: ', res.id);
-                            this.props.userid = res.id;
-
-                            if (res.id) {
-                                this.props.router.go('/messenger');
+                    if (validation) {
+                        const inputEls = document.querySelectorAll('input');
+                        this.setProps({
+                            formState: {
+                                ...this.props.formState,
+                                email: inputEls[0].value,
+                                login: inputEls[1].value,
+                                display_name: [inputEls[2].value, inputEls[3].value].join(' '),
+                                first_name: inputEls[2].value,
+                                second_name: inputEls[3].value,
+                                phone: inputEls[4].value,
+                                password: inputEls[5].value,
                             }
-                            // if (res.status === 200) {
-                            //     clg('Sent request to signin');
-                            //     a.get('/signin', {
-                            //         login: this.props.formState.login, 
-                            //         password: this.props.formState.password
-                            //     }).then((res)=>{
-                            //         clg('SIGN IN response: ',res.status);
-                                    
-                            //         clg('Retrieving user info');
-                            //         a.get('/user').then((res)=>clg(res)).catch((e)=>clg(e));
-                            //     }).catch((e)=>clg(e));
-                            // }
-                        }).catch((e) => clg(e))
-                        return
+                        });
+
+                        document.querySelectorAll('input').forEach(i => {i.value = ''; i.style.margin = '0 0 .2vh 0'});
+                        document.querySelectorAll('label').forEach(l => {l.style.transform = 'translateY(2.4vh)'; l.style.fontSize = 'var(--regular-font-size)'});
+                        await signup(this.props.formState);
                     }
                 }
             },
@@ -107,6 +87,7 @@ class SignupPage extends Block {
                 clientAction: 'Get In',
                 events: {
                     click: () => {
+                        window.memory.give({eAPI:null});
                         resetForm();
                         this.props.router.go('/login');
                     }
@@ -120,6 +101,8 @@ class SignupPage extends Block {
                 name: 'email',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch email',
+
+                value: 'example@gmail.com'
             }),
             Username: new Input({
                 class: 'form-input',
@@ -127,6 +110,7 @@ class SignupPage extends Block {
                 label: 'Username',
                 type: 'text',
                 name: 'login',
+                required: true,
                 mismatchObject: 'input-requirements-mismatch login',
             }),
             FirstName: new Input({
@@ -137,6 +121,8 @@ class SignupPage extends Block {
                 name: 'first_name',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch first_name',
+
+                value: 'ExampleName'
             }),
             SecondName: new Input({
                 class: 'form-input',
@@ -146,6 +132,8 @@ class SignupPage extends Block {
                 name: 'second_name',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch second_name',
+                
+                value: 'ExampleSurname'
             }),
             Phone: new Input({
                 class: 'form-input',
@@ -190,25 +178,50 @@ class SignupPage extends Block {
     }
     public render(): string {
         return `
-            <div class="header">
-                <h1 class="form-title">Join</h1>
-                <span class="form-switch">
-                    <span>Part of a hub?</span> 
-                    {{{ ChangeForm }}}
-                </span>
-            </div>
-            <div class="input-fields">
-                {{{ Login }}}
-                {{{ Username }}}
-                {{{ FirstName }}}
-                {{{ SecondName }}}
-                {{{ Phone }}}
-                {{{ Password }}}
-                {{{ PasswordRep }}}
-            </div>
-            {{{ Submit }}}
+            {{#if loading}}
+                <div class="loader-wrapper">
+                    <div class="global-loader-wrapper">
+                        <div class="global-loader"></div>
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#if reqFail}}
+                <div class="api-req-res-notif arrn-fail">
+                    <p>{{ reqFail }}</p>
+                    <img src='/assets/fail.png'>
+                </div>
+            {{/if}}
+
+            {{{ SuggestAutoLogin }}}
+            <form class="form">
+                <div class="header">
+                    <h1 class="form-title">Join</h1>
+                    <span class="form-switch">
+                        <span>Part of a hub?</span> 
+                        {{{ ChangeForm }}}
+                    </span>
+                </div>
+                <div class="input-fields">
+                    {{{ Login }}}
+                    {{{ Username }}}
+                    {{{ FirstName }}}
+                    {{{ SecondName }}}
+                    {{{ Phone }}}
+                    {{{ Password }}}
+                    {{{ PasswordRep }}}
+                </div>
+                {{{ Submit }}}
+            </form>
         `
     }
 }
 
-export default injectRouter(SignupPage);
+const extraProps = (wm) => {
+    return {
+        loading: wm.loading,
+        reqFail: wm.eAPI
+    }
+}
+
+export default linkStorage(extraProps)(injectRouter(SignupPage));

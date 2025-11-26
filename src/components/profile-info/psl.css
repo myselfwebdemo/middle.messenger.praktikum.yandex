@@ -1,25 +1,44 @@
 .psl {
-    width: 35vw;
+    width: 20vw;
     height: fit-content;
-    padding: 1.3vh 0;
+    padding: 1vh 0;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-    border-bottom: solid var(--border-thickness) var(--lightgray);
+    align-items: start;
+    /* border-bottom: solid var(--border-thickness) var(--lightgray); */
+}
+.psl:first-child {
+    padding-top: 0;
 }
 .psl:last-child {
     border-bottom: none;
-}
-.psl p:nth-child(1) {
-    color: var(--theme-main-color);
-}
-.psl p:last-child {
-    color: var(--secondary-text-color);
 }
 .psl p {
     display: flex;
     align-items: center;
     height: 3.3vh;
 }
+.psl p:nth-child(1) {
+    color: var(--theme-main-color);
+}
+.psl #psl-data, .psl input{
+    box-sizing: border-box;
 
+    width: 100%;
+    background: var(--lightgray);
+    padding: 0 .7vw;
+    border-radius: .8vh;
+}
+.psl #psl-data {
+    color: var(--secondary-text-color);
+}
+.psl input {
+    color: var(--primary-text-color);
+}
+.psl input[type="password"] {
+    color: var(--theme-main-color);
+}
+.psl .input-wrapper {
+    width: 100%;
+}

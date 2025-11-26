@@ -13,7 +13,6 @@
     border: solid .2vh var(--theme-main-color);
     border-radius: var(--wrappers-rad);
     padding-top: 4vh;
-    backdrop-filter: blur(var(--blur));
 }
 .header {
     width: 100%;
@@ -31,13 +30,12 @@
 }
 .form-switch {
     width: var(--form-header-width);
-    color: var(--secondary-text-color);
     font-size: var(--small-font-size);
+    color: var(--secondary-text-color);
     margin: .3vh 0 3vh;
 }
 .form-switch .u-tetriary {
     text-decoration: underline;
-    /* color: var(--primary-text-color); */
 }
 .input-fields {
     width: 100%;
@@ -46,6 +44,9 @@
     justify-content: center;
     align-items: center;
     margin-bottom: auto;
+}
+.input-fields .input-wrapper {
+    width: var(--form-header-width);
 }
 .form .u-primary {
     margin: 7vh 0 4vh;

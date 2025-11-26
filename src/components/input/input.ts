@@ -15,7 +15,8 @@ interface InputProps {
     src?: string
     mismatchObject?: string
     disabled?: boolean
-    events?: Record<string, () => void> 
+    events?: Record<string, () => void>,
+    accept?: string
 }
 
 export default class Input extends Block {

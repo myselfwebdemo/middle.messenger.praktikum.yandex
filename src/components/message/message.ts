@@ -1,5 +1,7 @@
+// @ts-nocheck
 import Block from 'core/Block';
 import './message.css';
+import { clg } from 'main';
 
 interface MessageProps {
     messageType: 'text' | 'image' | 'location'

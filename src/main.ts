@@ -16,11 +16,13 @@ import Home from 'pages/app-landing/landing-page';
 import Profile from 'pages/profile/profile';
 import formValidationHandler from 'utils/formValidation';
 import { Storage, StoreEvents } from 'core/storage';
-import transport from 'core/APIs/api';
+import endPointAPI from 'core/APIs/api';
+import { checkLogin } from 'services/service';
   
 export function clg(...i: any[]): void {
     console.log(...i);
 }
+
 export function formInputOnFocus(e) {
     const inputFields = document.querySelector('.input-fields');
 
@@ -51,7 +53,6 @@ export function formInputOnBlur(e) {
         }
     }
 }
-
 export function validate(e, clear) {
     let isValid;
     if (e.name) {
@@ -91,24 +92,13 @@ Handlebars.registerHelper('deq', (a,b) => {
     return a !== b;
 })
 
-
-
-window.storage = new Storage({
+window.memory = new Storage({
     loading: false,
     user: {},
     chats: [],
-
-    selectedChat: null,
-    // selectedChat: index,
-
-    messages: [],
-    eAPI: null
+    eAPI: null,
+    sAPI: null,
 })
-
-// window.storage.on(StoreEvents.Updated, (prevState, newState) => {
-//     clg("previous state", prevState);
-//     clg("new state", newState);
-// });
 
 window.router = new Router('#app');
 
@@ -117,10 +107,8 @@ window.router.use('/', Home)
              .use('/login', LoginPage, {method: 'get'})
              .use('/signup', SignupPage, {method: 'post'})
              .use('/settings', Profile, ({ level: 0 }))
-             .use('/not-found', E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
-             .use('/internal-error', E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
+             .use('/404', E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
+             .use('/500', E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
 window.router.start();
 
-// document.addEventListener('DOMContentLoaded', () =>{
-//     renderDOM(new LoginPage({method: 'get'}));
-// })
+await checkLogin();

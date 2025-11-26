@@ -1,5 +1,7 @@
 .mbody {
-    --rad: 1vh;
+    --rad: 1.4vh;
+
+    position: relative;
 
     width: fit-content;
     max-width: 45%;
@@ -8,9 +10,8 @@
     flex-direction: row;
     align-items: end;
     color: var(--primary-text-color);
-    margin-bottom: .4vh;
-    border-bottom-left-radius: var(--rad);
-    border-top-right-radius: var(--rad);
+    margin-bottom: .3vh;
+    border-radius: var(--rad);
     transition: var(--theme-transition);
     overflow-wrap: break-word;
     white-space: pre-wrap;
@@ -29,11 +30,9 @@
 .mbody.u-self {
     background: var(--theme-main-color-01);
     margin-left: auto;
-    border-top-left-radius: var(--rad);
 }
 .mbody.u-toself {
     background: rgb(245 245 245);
-    border-bottom-right-radius: var(--rad);
 }
 .mbody p {
     overflow-x: hidden;
@@ -48,9 +47,30 @@
     margin: 0;
 }
 .mbody h6 {
+    position: absolute;
+    right: 0;
+    bottom: 50%;
+    transform: translate(140%,50%);
+    
+    opacity: 0;
+    
     width: fit-content;
     height: fit-content;
-    margin-left: 1vw;
+    user-select: none;
+    transition: var(--theme-transition);
+}
+.mbody:hover {
+    box-shadow: 1vw 0 2vh var(--theme-main-color-01);
+}
+.mbody:hover h6 {
+    opacity: 1;
+}
+.mbody.u-toself h6 {
+    left: 0;
+    transform: translate(-140%,50%);
+}
+.mbody.u-toself:hover {
+    box-shadow: -1vw 0 2vh rgb(245 245 245);
 }
 .mbody.u-image h6 {
     --blur: 3px;
