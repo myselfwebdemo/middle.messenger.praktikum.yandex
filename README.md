@@ -23,19 +23,16 @@ https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?no
 =======
 
 ## What's New? New Functionality
-- Added full component system using custom `Block` class built on top of `EventBus`.  
-- Implemented reactive props via `Proxy` – components re-render automatically when props change.  
-- Created base UI components:  
-    - (+) `Button`, `Input`, `ChatItem`, etc.  
-- Implemented pages:  
-    - (+) Login, Registration, Chats, Profile.  
-- Added form data collection and console output of form data.  
-- Added form validation with unified mechanism and regex rules for:  
-    - (+) first_name, second_name, login, email, password, phone, message.  
-- Implemented `HTTPTransport` class for XHR requests with:  
-    - (+) GET (with query string)  
-    - (+) POST, PUT, DELETE (with JSON body)  
-    - (+) Timeout, headers, and error handling.  
+### Real-Time Functionality
+- Added WebSocket connection for real-time chat messaging  
+- Implemented message history loading and incremental loading on scroll  
+- Added automatic reconnection logic and token renewal  
+- Integrated full chat API:  
+    - (+) login, signup, logout  
+    - (+) create/delete chats  
+    - (+) add/remove users  
+    - (+) fetch chat token  
+    - (+) request/send messages in real time  
 
 ## Tech Stack
 - **TypeScript** — static typing and safer architecture.  
@@ -72,4 +69,6 @@ You can exclude directory or file by using ```clocl --exclude-dir=dir-name1,dir-
 Exclude files by extension(s): ```cloc --exclude-ext=extensions```
 ### Stylelint: check your styles
 To run stylelint use command ``` npx stylelint "**/*.css" ```
+### ESLint: check your scripts
+To run stylelint use command ``` npx eslint . ```, ``` npx eslint src ``` or ``` npx eslint src/specific.file ```
 >>>>>>> sprint_3

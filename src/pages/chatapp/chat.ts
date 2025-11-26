@@ -9,7 +9,6 @@ import MessageList from 'components/message/mes-list';
 import Input from 'components/input/input';
 import Button from 'components/button/button';
 import { MapInit } from 'utils/map';
-import { clg } from 'main';
 
 interface ChatProps {
     nameOCR: string,

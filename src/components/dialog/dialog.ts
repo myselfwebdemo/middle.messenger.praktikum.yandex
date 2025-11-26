@@ -1,6 +1,5 @@
 // @ts-nocheck
 import Block from 'core/Block';
-import renderDOM from 'core/renderDOM';
 import Button from '../button/button';
 import Input from '../input/input';
 import { clg } from 'main';

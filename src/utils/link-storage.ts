@@ -1,7 +1,6 @@
 // @ts-nocheck
 import type Block from "core/Block";
 import { StoreEvents } from "../core/storage";
-import { clg } from "main";
 
 export function linkStorage(pageState) {
     return function (block: Block) {

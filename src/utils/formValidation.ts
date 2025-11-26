@@ -111,12 +111,6 @@ export default function formValidationHandler(
                             }
                             return validate(true);
                         }
-                        // @ts-ignore
-                        case 'phone': {
-                            if (/[A-Za-z]/.test(value)) {
-                                return validate(false, 'Must contian only numbers');
-                            }
-                        }
                         case 'phone': {
                             if (value.trim().length === 0) {
                                 return validate(false, caseBlankSpace);

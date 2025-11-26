@@ -4,12 +4,9 @@ import './form.css';
 
 import Input from "components/input/input";
 import Button from "components/button/button";
-import { clg, resetForm, validate } from "main";
+import { resetForm, validate } from "main";
 import { formInputOnFocus, formInputOnBlur} from "main";
-import SignupPage from "./signup";
-import renderDOM from "core/renderDOM";
 import { injectRouter } from "utils/injectRouter";
-import endPointAPI from "core/APIs/api";
 import { login } from "../../services/service";
 import { linkStorage } from "utils/link-storage";
 

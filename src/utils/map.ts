@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { clg } from '../main';
 import { getLocByCoords } from './locationAPI';
 import './map.css';
 

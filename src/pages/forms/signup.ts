@@ -4,15 +4,11 @@ import './form.css';
 
 import Input from "components/input/input";
 import Button from "components/button/button";
-import { clg, resetForm, validate } from "main";
+import { resetForm, validate } from "main";
 import { formInputOnFocus, formInputOnBlur} from "main";
-import renderDOM from "core/renderDOM";
-import LoginPage from "./login";
 import { injectRouter } from "utils/injectRouter";
-import endPointAPI from "core/APIs/api";
 import { linkStorage } from "utils/link-storage";
-import { signup, login } from "../../services/service";
-import Fatal from "components/dialog/fatal";
+import { signup } from "../../services/service";
 
 interface signupProp {
     method: string

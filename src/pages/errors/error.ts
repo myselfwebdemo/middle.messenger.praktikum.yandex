@@ -33,7 +33,7 @@ export default class E extends Block {
     public render(): string {
         return `
             {{{ Error }}}
-            {{{ ReturnBack }}}
+            {{{ ReturnBack }}}
         `
     }
 }

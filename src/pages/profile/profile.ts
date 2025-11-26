@@ -8,12 +8,9 @@ import Image from 'components/image/image';
 import PSL from 'components/profile-info/psl';
 import type Router from "core/router";
 import Fatal from "components/dialog/fatal";
-import { changeAvatar, editPass, editUser, logout, self } from "../../services/service";
+import { changeAvatar, editPass, editUser, logout } from "../../services/service";
 import { linkStorage } from "utils/link-storage";
 import { injectRouter } from "utils/injectRouter";
-import { clg } from "main";
-import endPointAPI from "core/APIs/api";
-import formValidationHandler from "utils/formValidation";
 
 interface ProfileProps { 
     user: Record<string, any>

@@ -137,8 +137,6 @@ export const changeAvatar= async (data) => {
     let err,suc;
     window.memory.give({loading: true, eAPI: null, sAPI: false});
     
-    const xhrRes = new endPointAPI('resources');
-
     try {
         await profileRequests.newAvatar(data);
         await self();
@@ -181,7 +179,7 @@ export const delChat = async (data) => {
     } catch (e) {
         if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
             err = null;
-        } else if (e.response?.reason.toLowerCase() === 'isnt permitted or smt') {} else if (e.response?.reason) {
+        } else if (e.response?.reason) {
             err = e.response?.reason;
         } else {
             err = 'Unknown error';

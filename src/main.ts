@@ -1,22 +1,16 @@
 // @ts-nocheck
 import './style.css'
-import Handlebars, { log } from 'handlebars';
+import Handlebars from 'handlebars';
 
-import renderDOM from './core/renderDOM';
 import LoginPage from './pages/forms/login';
 import SignupPage from './pages/forms/signup';
 import ChatAPP from './pages/chatapp/chatapp';
-import ChatList from './pages/chatapp/chat-list';
-import ChatCard from './components/chat-card/chat-card';
-import DialogWindow from './components/dialog/dialog';
 import E from './pages/errors/error';
-import Route from 'core/route';
 import Router from 'core/router';
 import Home from 'pages/app-landing/landing-page';
 import Profile from 'pages/profile/profile';
 import formValidationHandler from 'utils/formValidation';
-import { Storage, StoreEvents } from 'core/storage';
-import endPointAPI from 'core/APIs/api';
+import { Storage } from 'core/storage';
 import { checkLogin } from 'services/service';
   
 export function clg(...i: any[]): void {

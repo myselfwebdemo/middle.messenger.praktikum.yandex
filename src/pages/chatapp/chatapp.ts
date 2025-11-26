@@ -1,25 +1,16 @@
 // @ts-nocheck
 import Button from 'components/button/button';
-import DialogWindow from 'components/dialog/dialog';
-import Image from 'components/image/image';
 import Input from 'components/input/input';
-import MessageList from 'components/message/mes-list';
 import Block from 'core/Block';
-import { clg } from 'main';
-import { MapInit } from 'utils/map';
 import ChatList from './chat-list';
 import { injectRouter } from 'utils/injectRouter';
 import './chatapp.css';
-import Fatal from 'components/dialog/fatal';
 import FoundUsersList from './searched-users-list';
-import endPointAPI from 'core/APIs/api';
-import { addUserToChat, chatsUpdate, delChat, getChatToken, newChat, searchUser } from 'services/service';
+import { addUserToChat, chatsUpdate, delChat, newChat, searchUser } from 'services/service';
 import FUUser from './searched-user-component';
 import Chat from './chat';
 import ChatCard from 'components/chat-card/chat-card';
-import { linkStorage } from 'utils/link-storage';
 import Warning from 'components/dialog/warning';
-import chatList from './chat-list';
 import ChatConnection from 'core/websocket';
 import Message from 'components/message/message';
 

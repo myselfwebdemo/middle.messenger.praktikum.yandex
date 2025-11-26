@@ -4,7 +4,6 @@ import './chatapp.css';
 import { linkStorage } from 'utils/link-storage';
 import { injectRouter } from 'utils/injectRouter';
 import ChatCard from 'components/chat-card/chat-card';
-import { clg } from 'main';
 
 class ChatList extends Block {
     constructor() {
