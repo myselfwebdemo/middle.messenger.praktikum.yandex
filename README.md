@@ -19,8 +19,6 @@ Link: https://middle-messenger-yandex-praktikum.netlify.app/
 
 ## Figma Prototype Of The App
 https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?node-id=0-1&t=YNX3VAGORjhamOaX-1
-<<<<<<< HEAD
-=======
 
 ## What's New? New Functionality
 ### Real-Time Functionality
@@ -71,4 +69,3 @@ Exclude files by extension(s): ```cloc --exclude-ext=extensions```
 To run stylelint use command ``` npx stylelint "**/*.css" ```
 ### ESLint: check your scripts
 To run stylelint use command ``` npx eslint . ```, ``` npx eslint src ``` or ``` npx eslint src/specific.file ```
->>>>>>> sprint_3
