@@ -1,14 +1,13 @@
+import { Routes } from "main";
+import type Block from "./Block";
 import Route from "./route";
 
 export default class Router {
     private static _instance: Router | null = null;
-    // @ts-ignore
-    private routes: Router[];
-    // @ts-ignore
-    private history: History;
-    private _currentRoute: any;
-    // @ts-ignore
-    private _rootQuery: string;
+    private routes: Route[] = [];
+    private history: History = window.history;
+    private _currentRoute: Route | null = null;
+    private _rootQuery: string = '';
 
     constructor(rootQuery: string) {
         if (Router._instance) {
@@ -21,20 +20,17 @@ export default class Router {
     
         Router._instance = this;
     }
-    use(pathname: string, block: any, blockProps: Record<string, string> = {}) {
+    use(pathname: string, block: new (props: Record<string, any>) => Block, blockProps: Record<string, string> = {}) {
         const newRouteInstance = new Route(pathname, block, {
             rootQuery: this._rootQuery,
-            // @ts-ignore
             blockProps: blockProps
         });
 
-        // @ts-ignore
         this.routes.push(newRouteInstance);
         return this;
     }
     start() {
         window.onpopstate = () => {
-            // @ts-ignore
             this._onRoute(window.location.pathname);
         };
         this._onRoute(window.location.pathname);
@@ -42,14 +38,13 @@ export default class Router {
     _onRoute(pathname: string) {
         const route = this.getRoute(pathname);
         if (!route) {
-            return this.go('/404');
+            return this.go(Routes.E404);
         }
     
         if (this._currentRoute) {
             this._currentRoute.leave();
         }
     
-        // @ts-ignore
         route.render();
     }
     go(pathname: string) {
@@ -63,7 +58,6 @@ export default class Router {
         this.history.forward();
     }
     getRoute(pathname:  string) {
-        // @ts-ignore
         return this.routes.find(route => route.match(pathname));
     }
 }

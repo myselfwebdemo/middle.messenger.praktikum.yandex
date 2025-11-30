@@ -216,7 +216,7 @@ export default class Block<T extends Record<string, any> = any> {
     if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);
     this.children[name] = block;
     this._render();
-    this.children[name]._element.scrollIntoView({behavior: 'smooth'});
+    // this.children[name]._element.scrollIntoView({behavior: 'smooth'});
   }
   prependChildren(block, name) {
     if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);

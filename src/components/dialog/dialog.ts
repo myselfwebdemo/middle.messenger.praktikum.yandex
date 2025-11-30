@@ -5,11 +5,14 @@ import Input from '../input/input';
 import { getLocByQuery } from 'utils/locationAPI';
 import SelfSearch from '../input/selfsearch';
 import './dialog.css';
+import { clg } from 'main';
 
 interface DialogProps {
     title: string
     executiveAction: string
     executiveEvent?: Record<string, () => void>
+    inputEvent?: Record<string, () => void>
+    onSelSearchRes?: Record<string, () => void>
     id?: string
     name?: string
     type?: string
@@ -19,6 +22,7 @@ interface DialogProps {
     inputAccept?: string
     recipientLogin?: string
     locat?: boolean
+    builtInSearch?: boolean
 }
 
 export default class DialogWindow extends Block {
@@ -28,6 +32,10 @@ export default class DialogWindow extends Block {
             className: 'dialog-wrapper',
             events: {
                 click: (e: Event) => {
+                    if (props.onSelSearchRes) {
+                        props.onSelSearchRes.click?.(e);
+                    }
+
                     if (props.locat) {
                         const input = document.getElementById('standalone');
     
@@ -94,7 +102,8 @@ export default class DialogWindow extends Block {
                         label: props.label,
                         placeholder: props.placeholder,
                         value: props.recipientLogin,
-                        accept: props.inputAccept
+                        accept: props.inputAccept,
+                        events: props.inputEvent
                     }),
                     Commit: new Button({
                         classTypeOfButton: 'primary',
@@ -109,7 +118,7 @@ export default class DialogWindow extends Block {
     public render(): string {
         return `
             <div class="dialog {{#if locat}}d-locat{{/if}}">
-                <h1>{{title}}</h1>
+                <h2>{{title}}</h2>
                 {{#if locat}}
                     <div id="map-wrapper">
                         <div id="map"></div>
@@ -126,6 +135,14 @@ export default class DialogWindow extends Block {
                         <img id="dialog-preview" src="">
                     {{/if}}
                     {{{ Input }}}
+                    {{#if builtInSearch}}
+                        <div class="dw-fu">
+                            <h5>Found users:</h5>
+                            <h4 id="dwFu"></h4>
+                            <h4 id="dwFu"></h4>
+                            <h4 id="dwFu"></h4>
+                        </div>
+                    {{/if}}
                     {{{ Commit }}}
                 {{/if}}
             </div>

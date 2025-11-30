@@ -142,7 +142,7 @@ class ProfileLanding extends Block {
                 }
             }),
             ProfileIcon: new Image({
-                profAvatar: true,
+                directLink: true,
                 class: 'profile-icon',
                 src: props.user.avatar
                     ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`
@@ -197,7 +197,6 @@ class ProfileLanding extends Block {
                 clientAction: 'Log out',
                 events: {
                     click: () => {
-                        // @ts-ignore
                         this.children.ConfirmLogOut.show();
                     }
                 }
@@ -234,7 +233,7 @@ class ProfileLanding extends Block {
             }),
             ConfirmLogOut: new Fatal({
                 title: 'Log Out?',
-                mainMessage: 'Logging out will end your current session. You’ll need to sign in again to restore access.',
+                mainMessage: 'Logging out will end your current session. You will need to sign in again to restore access.',
                 extratip: 'All your messages and account data remain securely stored on our servers.',
                 finalAction: 'Log Out',
                 finalEvent: {
@@ -251,7 +250,7 @@ class ProfileLanding extends Block {
         super.setProps(newProps);
 
         this.children.ProfileIcon.setProps({
-            src: `https:ya-praktikum.tech/api/v2/resources${this.props.user.avatar}`
+            src: `https://ya-praktikum.tech/api/v2/resources${this.props.user.avatar}`
         })
     }
     public render(): string {
@@ -302,7 +301,7 @@ class EditProfile extends Block {
                 }
             }),
             ProfileIcon: new Image({
-                profAvatar: true,
+                directLink: true,
                 class: 'profile-icon',
                 src: props.user.avatar
                     ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`
@@ -471,7 +470,7 @@ class SetNewPassword extends Block {
                 }
             }),
             ProfileIcon: new Image({
-                profAvatar: true,
+                directLink: true,
                 class: 'profile-icon',
                 src: props.user.avatar
                     ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`

@@ -3,8 +3,7 @@ import EventBus from "./EventBus";
 export enum StoreEvents {
     Updated = "Updated",
 }
-// @ts-ignore
-export class Storage extends EventBus {
+export class Storage extends EventBus<StoreEvents> {
     private static _instance: Storage;
     private state = {};
 

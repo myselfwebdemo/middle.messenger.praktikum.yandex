@@ -42,6 +42,9 @@ export default class ChatRequests {
     async addUser(data: TNewUser): Promise<void | TReqError> {
         return xhrChats.put('/users', {data});
     }
+    async delUser(data: TNewUser): Promise<void | TReqError> {
+        return xhrChats.delete('/users', {data});
+    }
     async token(chatId: number): Promise<void | TReqError> {
         return xhrChats.post(`/token/${chatId}`);
     }

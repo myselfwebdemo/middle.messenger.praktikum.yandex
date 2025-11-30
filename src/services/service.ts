@@ -3,7 +3,7 @@ import endPointAPI from "core/APIs/api";
 import AuthRequests from "core/APIs/api-for-auth";
 import ChatRequests from "core/APIs/api-for-chats";
 import UserProfileRequests from "core/APIs/api-for-user";
-import { clg } from "main";
+import { clg, Routes } from "main";
 
 const requests = new AuthRequests();
 const profileRequests = new UserProfileRequests();
@@ -21,7 +21,7 @@ export const signup = async (data) => {
             }
         });
 
-        window.router.go('/messenger');
+        window.router.go(Routes.App);
     } catch (e) {
         if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
             err = null;
@@ -44,7 +44,7 @@ export const login = async (data) => {
         await requests.validate(data)
         self();
 
-        window.router.go('/messenger');
+        window.router.go(Routes.App);
     } catch (e) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
@@ -198,6 +198,13 @@ export const addUserToChat = async (data) => {
         clg(e);
     }
 }
+export const delUserFromChat = async (data) => {
+    try {
+        await chatsRequests.delUser(data);
+    } catch (e) {
+        clg(e);
+    }
+}
 
 export const getChatToken = async (id) => {
     let token;
@@ -251,8 +258,8 @@ export const self = async () => {
             // })
         });
         
-        if (window.location.pathname !== '/messenger' && window.location.pathname !== '/settings') {
-            window.router.go('/messenger');
+        if (window.location.pathname !== Routes.App && window.location.pathname !== '/settings') {
+            window.router.go(Routes.App);
         }
     } catch (e) {
         if (e.response?.reason) {
@@ -269,12 +276,12 @@ export const self = async () => {
 
         if (est === 401) {
             if (window.location.pathname !== '/' && window.location.pathname !== '/sign-up') {
-                window.router.go('/log-in');
+                window.router.go(Routes.Landing);
             }
         } else if (est === 404) {
-            window.router.go('/404');
+            window.router.go(Routes.E404);
         } else if (est === 500) {
-            window.router.go('/500');
+            window.router.go(Routes.E500);
         }
     } finally {
         window.memory.give({loading: false, eAPI: err});
@@ -347,7 +354,7 @@ export const logout = async () => {
     try {
         await requests.withdraw();
         
-        window.router.go('/');
+        window.router.go(Routes.Landing);
     } catch (e) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {

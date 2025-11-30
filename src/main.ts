@@ -13,7 +13,7 @@ import formValidationHandler from 'utils/formValidation';
 import { Storage } from 'core/storage';
 import { checkLogin } from 'services/service';
   
-export function clg(...i: any[]): void {
+export function clg(...i: []): void {
     console.log(...i);
 }
 
@@ -94,15 +94,25 @@ window.memory = new Storage({
     sAPI: null,
 })
 
+export enum Routes {
+    Landing = '/',
+    // LogIn = '/log-in',
+    SignUp = '/sign-up',
+    App = '/messenger',
+    SetUp = '/settings',
+    E404 = '/404',
+    E500 = '/500',
+}
 window.router = new Router('#app');
 
-window.router.use('/', Home)
-             .use('/messenger', ChatAPP)
-             .use('/log-in', LoginPage, {method: 'get'})
-             .use('/sign-up', SignupPage, {method: 'post'})
-             .use('/settings', Profile, ({ level: 0 }))
-             .use('/404', E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
-             .use('/500', E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
+window.router.use(Routes.Landing, LoginPage, {method: 'get'})
+            // .use('/', Home)
+            // .use('/log-in', LoginPage, {method: 'get'})
+             .use(Routes.App, ChatAPP)
+             .use(Routes.SignUp, SignupPage, {method: 'post'})
+             .use(Routes.SetUp, Profile, ({ level: 0 }))
+             .use(Routes.E404, E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
+             .use(Routes.E500, E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
 window.router.start();
 
 await checkLogin();

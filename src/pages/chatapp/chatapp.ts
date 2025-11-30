@@ -13,8 +13,14 @@ import ChatCard from 'components/chat-card/chat-card';
 import Warning from 'components/dialog/warning';
 import ChatConnection from 'core/websocket';
 import Message from 'components/message/message';
+import Image from 'components/image/image';
+import { clg, Routes } from 'main';
+import { StoreEvents } from 'core/storage';
+import DialogWindow from 'components/dialog/dialog';
 
 class Messenger extends Block {
+    private _user: Record<string, any> = {};
+
     constructor(props) {
         super('main', {
             ...props,
@@ -48,6 +54,10 @@ class Messenger extends Block {
                 },
                 click: async (e: Event) => {
                     const curSesUID = window.memory.take().user.id;
+
+                    if (e.target.closest('.user-preview')) {
+                        this.props.router.go(Routes.SetUp);
+                    }
 
                     const userSearch = document.querySelector('.user-search') as HTMLElement;
                     if (userSearch && !e.target.closest('.user-search') && userSearch.classList.contains('u-s-opened')) {
@@ -184,7 +194,7 @@ class Messenger extends Block {
 
                     if (e.target.closest('.fu-user')) {
                         const clicked_user_name = e.target.textContent.trim();
-                        let fuId;
+                        let fuId = null;
 
                         Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
                             if (clicked_user_name === this.children.FoundUsersList.children[`${childName}`].props.name) {
@@ -232,12 +242,10 @@ class Messenger extends Block {
                         if (this.socket) {
                             this.socket.close();
                         }
-
                         const socketParams = {
                             userId: curSesUID,
                             chatId: newChatResult,
                         }
-                        
                         this.socket = new ChatConnection(
                             socketParams, 
                             (data) => {
@@ -302,17 +310,236 @@ class Messenger extends Block {
                 }
             },
 
-            OpenProfile: new Button({
-                classTypeOfButton: 'tetriary',
+            AddChat: new Button({
+                classTypeOfButton: 'tetriary new-chat',
                 buttonType: 'button',
-                clientAction: 'Profile',
                 typeIMG: true,
-                src: 'to.png',
+                src: 'add-cross.png',
                 events: {
-                    click: () => {
-                        this.props.router.go('/settings');
+                    click: async () => {
+                        this.children.AddUserOnNewChat.show();
+                        ccc_user_search.value = '';
+                        document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
+                            each.textContent = '';
+                        })
+                        ccc_user_search.focus();
                     }
                 }
+            }),
+            AddUserOnNewChat: new DialogWindow({
+                title: 'Add user to the chat',
+                executiveAction: 'Create',
+                label: 'Username (case-sensitive)',
+                id: 'ccc_user_search',
+                name: 'ccc_user_search',
+                type: 'text',
+                builtInSearch: true,
+                inputEvent: {
+                    input: async () => {
+                        const dwFus = document.querySelectorAll('.dialog h4#dwFu');
+                        let count = 0;
+
+                        await searchUser({ login: document.activeElement.value }).then(() => {
+                            const found = window.memory.take().search;
+                            dwFus.forEach(each => {
+                                if (found.length !== 0) {
+                                    if (found[count]) {
+                                        each.textContent = found[count].login;
+                                        count++
+                                    } else {
+                                        each.textContent = '';
+                                    }
+                                } else {
+                                    each.textContent = '';
+                                }
+                            })
+                        });
+                        
+                        if (document.activeElement.value.length === 0) {
+                            dwFus.forEach(each => {
+                                each.textContent = '';
+                            })
+                        }
+                    }
+                },
+                onSelSearchRes: {
+                    click: async (e: Event) => {
+                        const curSesUID = window.memory.take().user.id;
+
+                        if (e.target.closest('#dwFu')) {
+                            const fuEl = e.target.closest('#dwFu');
+                            let fuId = null;
+
+                            window.memory.take().search.forEach(user => {
+                                Object.entries(user).forEach(([k,v]) => {
+                                    if (k === 'login' && v === fuEl.textContent) {
+                                        fuId = user.id;
+                                    }
+                                })
+                            })
+
+                            const chatName = `${curSesUID}_and_${fuId}`;
+                            const newChatResult = await newChat({title: chatName});
+
+                            const newUser = {
+                                users: [Number(fuId)],
+                                chatId: newChatResult
+                            }
+                            await addUserToChat(newUser);
+
+                            if (Object.keys(this.children.ChatList.children).length !== 0) {
+                                document.querySelectorAll('.chat-card.selected-card').forEach(card => {
+                                    card.classList.remove('selected-card');
+                                })
+                            }
+                            this.children.ChatList.addChildren(new ChatCard({ recipientName: fuEl.textContent, class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
+
+                            if (this.children.Chat) {
+                                this.removeChildren('Chat');
+                            }
+                            this.addChildren(new Chat({ 
+                                nameOCR: fuEl.textContent, 
+                                chatId: newChatResult,
+                                onChatDeleteConfirmed: async (id) => {
+                                    const delChatRes = await delChat({ chatId: id });
+                                    this.removeChildren('Chat');
+                                }
+                            }), 'Chat');
+
+                            if (this.socket) {
+                                this.socket.close();
+                            }
+                            const socketParams = {
+                                userId: curSesUID,
+                                chatId: newChatResult,
+                            }
+                            this.socket = new ChatConnection(
+                                socketParams, 
+                                (data) => {
+                                    if (data.type === 'message') {
+                                        const date = new Date(data.time);
+                                        const hours = date.getHours();
+                                        const minutes = String(date.getMinutes()).padStart(2, '0');
+                                        
+                                        const time = `${hours}:${minutes}`;
+    
+                                        if (data.user_id === curSesUID) {
+                                            this.children.Chat.children.Messages.addChildren(new Message({
+                                                messageType: 'text',
+                                                textContent: data.content,
+                                                fromYou: true,
+                                                time: time
+                                            }), `m_${data.id}`)
+                                        } else {
+                                            this.children.Chat.children.Messages.addChildren(new Message({
+                                                messageType: 'text',
+                                                textContent: data.content,
+                                                time: time
+                                            }), `m_${data.id}`)
+                                        }
+                                    }
+                                }
+                            );
+
+                            this.children.AddUserOnNewChat.close();
+                            ccc_user_search.value = '';
+                            document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
+                                each.textContent = '';
+                            })
+                        }
+                    }
+                },
+                executiveEvent: {
+                    click: async (e: Event) => {
+                        const curSesUID = window.memory.take().user.id;
+                        const userName = ccc_user_search.value;
+                        let fuId = null;
+
+                        window.memory.take().search.forEach(user => {
+                            Object.entries(user).forEach(([k,v]) => {
+                                if (k === 'login' && v === userName) {
+                                    fuId = user.id;
+                                }
+                            })
+                        })
+
+                        const chatName = `${curSesUID}_and_${fuId}`;
+                        const newChatResult = await newChat({title: chatName});
+
+                        const newUser = {
+                            users: [Number(fuId)],
+                            chatId: newChatResult
+                        }
+                        await addUserToChat(newUser);
+
+                        if (Object.keys(this.children.ChatList.children).length !== 0) {
+                            document.querySelectorAll('.chat-card.selected-card').forEach(card => {
+                                card.classList.remove('selected-card');
+                            })
+                        }
+                        this.children.ChatList.addChildren(new ChatCard({ recipientName: userName, class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
+
+                        if (this.children.Chat) {
+                            this.removeChildren('Chat');
+                        }
+                        this.addChildren(new Chat({ 
+                            nameOCR: userName, 
+                            chatId: newChatResult,
+                            onChatDeleteConfirmed: async (id) => {
+                                const delChatRes = await delChat({ chatId: id });
+                                this.children.ChatList.removeChildren(`chat_${id}`);
+                                this.removeChildren('Chat');
+                            }
+                        }), 'Chat');
+
+                        if (this.socket) {
+                            this.socket.close();
+                        }
+                        const socketParams = {
+                            userId: curSesUID,
+                            chatId: newChatResult,
+                        }
+                        this.socket = new ChatConnection(
+                            socketParams, 
+                            (data) => {
+                                if (data.type === 'message') {
+                                    const date = new Date(data.time);
+                                    const hours = date.getHours();
+                                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                                    
+                                    const time = `${hours}:${minutes}`;
+
+                                    if (data.user_id === curSesUID) {
+                                        this.children.Chat.children.Messages.addChildren(new Message({
+                                            messageType: 'text',
+                                            textContent: data.content,
+                                            fromYou: true,
+                                            time: time
+                                        }), `m_${data.id}`)
+                                    } else {
+                                        this.children.Chat.children.Messages.addChildren(new Message({
+                                            messageType: 'text',
+                                            textContent: data.content,
+                                            time: time
+                                        }), `m_${data.id}`)
+                                    }
+                                }
+                            }
+                        );
+
+                        this.children.AddUserOnNewChat.close();
+                        ccc_user_search.value = '';
+                        document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
+                            each.textContent = '';
+                        })
+                    }
+                }
+            }),
+            UserAvatar: new Image({
+                directLink: true,
+                class: '',
+                src: '/assets/profile/default.png',
+                alt: 'user avatar'
             }),
             SearchBar: new Input({
                 type: 'text',
@@ -330,6 +557,7 @@ class Messenger extends Block {
                 events: {
                     click: () => {
                         document.querySelector('.user-search').classList.toggle('u-s-opened');
+                        search_user.focus();
                     }
                 }
             }),
@@ -359,6 +587,21 @@ class Messenger extends Block {
                 }
             }),
             FoundUsersList: new FoundUsersList(),
+        });
+
+        window.memory.on(StoreEvents.Updated, () => {
+            const incomingUser = window.memory.take().user;
+
+            if (incomingUser.avatar) {
+                this.children.UserAvatar.setProps({
+                    src: `https://ya-praktikum.tech/api/v2/resources${incomingUser.avatar}`
+                });
+            }
+
+            if (JSON.stringify(this._user) !== JSON.stringify(incomingUser)) {
+                this.setProps({ user: incomingUser });
+                this._user = incomingUser;
+            }
         });
 
         setInterval(async () => {
@@ -398,7 +641,15 @@ class Messenger extends Block {
             <div class="chatapp-container">
                 <div class="sidebar">
                     <div class="explore">
+                        {{{ AddChat }}}
                         {{{ OpenProfile }}}
+                        <div class="user-preview">
+                            {{{ UserAvatar }}}
+                            <div>
+                                <p>{{ user.display_name }}</p>
+                                <h5>{{ user.first_name }} {{ user.second_name }} @{{ user.login }}</h5>
+                            </div>
+                        </div>
                         <span id="search-container"> {{{ SearchBar }}} </span>
                     </div>
                     {{{ ChatList }}}
@@ -436,6 +687,7 @@ class Messenger extends Block {
             </div>
 
             {{{ WarningDialog }}}
+            {{{ AddUserOnNewChat }}}
         `
     }
 }

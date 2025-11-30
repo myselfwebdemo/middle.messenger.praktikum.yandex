@@ -9,6 +9,8 @@ import MessageList from 'components/message/mes-list';
 import Input from 'components/input/input';
 import Button from 'components/button/button';
 import { MapInit } from 'utils/map';
+import { clg } from 'main';
+import { addUserToChat, delUserFromChat, searchUser } from 'services/service';
 
 interface ChatProps {
     nameOCR: string,
@@ -23,65 +25,52 @@ export default class Chat extends Block {
             events: {
                 click: (e: Event) => {
                     const target = e.target as HTMLElement;
-                    const ABCChoice = document.querySelector('.abc-choice') as HTMLElement;
+                    const cdChoice = document.querySelector('.cd-choice') as HTMLElement;
+                    const abcChoice = document.querySelector('.abc-choice') as HTMLElement;
+                    const atrChoice = document.querySelector('.atr-choice') as HTMLElement;
                     const atr = document.querySelector('.action-to-recipient') as HTMLElement;
                 
                     if (target.closest('.u-action-to-recipient-btn')) {
-                        ABCChoice.style.display = 'none';
-                
-                        const cancel = new Button({
-                            classTypeOfButton: 'tetriary small',
-                            buttonType: 'button',
-                            clientAction: 'Cancel',
-                            events: {
-                                click: () => {
-                                    atr.innerHTML = '';
-                                    atr.appendChild(this.children.ActionToRecipient.getContent());
-                                }
-                            }
-                        });
-                
-                        const confirm = new Button({
-                            classTypeOfButton: 'fatal-primary small',
-                            buttonType: 'button',
-                            clientAction: 'Delete',
-                            events: {
-                                click: () => {
-                                    this.children.ConfirmDeletionDialog.show();
-                                    atr.innerHTML = '';
-                                    atr.appendChild(this.children.ActionToRecipient.getContent());
-                                }
-                            }
-                        });
-                
-                        atr.innerHTML = '';
-                        atr.append(cancel.getContent(), confirm.getContent());
+                        abcChoice.style.display = 'none';
+                        atrChoice.style.display = atrChoice.style.display === 'flex' ? 'none' : 'flex';
                         return;
                     }
                 
                     if (target.closest('.u-add-btn')) {
-                        atr.innerHTML = '';
-                        atr.appendChild(this.children.ActionToRecipient.getContent());
-                        ABCChoice.style.display = ABCChoice.style.display === 'block' ? 'none' : 'block';
-                        return;
+                        atrChoice.style.display = 'none';
+                        abcChoice.style.display = abcChoice.style.display === 'flex' ? 'none' : 'flex';
+                        return
                     }
                 
-                    const choice = target.closest('.abc-choice li');
-                    if (choice) {
-                        const img = choice.querySelector('img');
-                        const attachChoice = img.classList[2];
-                        if (attachChoice === 'AttachLocation') MapInit();
-                        this.children[`${attachChoice}Dialog`].show();
-                        return;
+                    const attachChoice = target.closest('#cdc-span');
+                    if (attachChoice) {
+                        this.children[attachChoice.dataset.dw].show();
+                        abcChoice.style.display = 'none';
+                        atrChoice.style.display = 'none';
+                        return
                     }
                 
                     if (!target.closest('.abc-choice') && !target.closest('.action-to-recipient')) {
-                        ABCChoice.style.display = 'none';
-                        atr.innerHTML = '';
-                        atr.appendChild(this.children.ActionToRecipient.getContent());
+                        abcChoice.style.display = 'none';
+                        atrChoice.style.display = 'none';
+                        return
                     }
                 },
-                
+                mouseover: (e: Event) => {
+                    let prevIMG: HTMLImageElement;
+
+                    if (e.target.closest('.atr-choice')) {
+                        if (e.target.closest('#cdc-span')) prevIMG = document.getElementById('hov-i-atr');
+                    }
+                    if (e.target.closest('.abc-choice')) {
+                        if (e.target.closest('#cdc-span')) prevIMG = document.getElementById('hov-i-abc');
+                    }
+
+                    if (prevIMG) {
+                        const selected = e.target as HTMLElement;
+                        prevIMG.src = selected.dataset.src;
+                    }
+                }
             },
 
             CurrentRecipient: new Image({
@@ -94,6 +83,188 @@ export default class Chat extends Block {
                 src: 'atr.png',
                 alt: 'button that opens list of action that can be done to current recipient',
             }),
+            AddUserDialog: new DialogWindow({
+                title: 'Add user to this chat',
+                executiveAction: 'Add',
+                label: 'Username (case-sensitive)',
+                id: 'addUTC_search',
+                name: 'addUTC_search',
+                type: 'text',
+                builtInSearch: true,
+                inputEvent: {
+                    input: async () => {
+                        const dwFus = document.querySelectorAll('.dialog h4#dwFu');
+                        let count = 0;
+
+                        await searchUser({ login: document.activeElement.value }).then(() => {
+                            const found = window.memory.take().search;
+                            dwFus.forEach(each => {
+                                if (found.length !== 0) {
+                                    if (found[count]) {
+                                        each.textContent = found[count].login;
+                                        count++
+                                    } else {
+                                        each.textContent = '';
+                                    }
+                                } else {
+                                    each.textContent = '';
+                                }
+                            })
+                        });
+                        
+                        if (document.activeElement.value.length === 0) {
+                            dwFus.forEach(each => {
+                                each.textContent = '';
+                            })
+                        }
+                    }
+                },
+                onSelSearchRes: {
+                    click: async (e: Event) => {
+                        if (e.target.closest('#dwFu')) {
+                            const fuEl = e.target.closest('#dwFu');
+                            let fuId = null;
+
+                            window.memory.take().search.forEach(user => {
+                                Object.entries(user).forEach(([k,v]) => {
+                                    if (k === 'login' && v === fuEl.textContent) {
+                                        fuId = user.id;
+                                    }
+                                })
+                            })
+
+                            const extraUser = {
+                                users: [Number(fuId)],
+                                chatId: this.props.chatId.toString()
+                            }
+                            await addUserToChat(extraUser);
+
+                            this.children.AddUserDialog.close();
+                            addUTC_search.value = '';
+                            document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
+                                each.textContent = '';
+                            })
+                        }
+                    }
+                },
+                executiveEvent: {
+                    click: async (e: Event) => {
+                        const userName = addUTC_search.value;
+                        let fuId = null;
+
+                        window.memory.take().search.forEach(user => {
+                            Object.entries(user).forEach(([k,v]) => {
+                                if (k === 'login' && v === userName) {
+                                    fuId = user.id;
+                                }
+                            })
+                        })
+
+                        const newUser = {
+                            users: [Number(fuId)],
+                            chatId: this.props.chatId.toString()
+                        }
+                        await addUserToChat(newUser);
+
+                        this.children.AddUserDialog.close();
+                        addUTC_search.value = '';
+                        document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
+                            each.textContent = '';
+                        })
+                    }
+                }
+            }),
+            DeletUserDialog: new DialogWindow({
+                title: 'Delete user from this chat',
+                executiveAction: 'Delete',
+                label: 'Username (case-sensitive)',
+                id: 'delUFC_search',
+                name: 'delUFC_search',
+                type: 'text',
+                builtInSearch: true,
+                inputEvent: {
+                    input: async () => {
+                        const dwFus = document.querySelectorAll('.dialog h4#dwFu');
+                        let count = 0;
+
+                        await searchUser({ login: document.activeElement.value }).then(() => {
+                            const found = window.memory.take().search;
+                            dwFus.forEach(each => {
+                                if (found.length !== 0) {
+                                    if (found[count]) {
+                                        each.textContent = found[count].login;
+                                        count++
+                                    } else {
+                                        each.textContent = '';
+                                    }
+                                } else {
+                                    each.textContent = '';
+                                }
+                            })
+                        });
+                        
+                        if (document.activeElement.value.length === 0) {
+                            dwFus.forEach(each => {
+                                each.textContent = '';
+                            })
+                        }
+                    }
+                },
+                onSelSearchRes: {
+                    click: async (e: Event) => {
+                        if (e.target.closest('#dwFu')) {
+                            const fuEl = e.target.closest('#dwFu');
+                            let fuId = null;
+
+                            window.memory.take().search.forEach(user => {
+                                Object.entries(user).forEach(([k,v]) => {
+                                    if (k === 'login' && v === fuEl.textContent) {
+                                        fuId = user.id;
+                                    }
+                                })
+                            })
+
+                            const extraUser = {
+                                users: [Number(fuId)],
+                                chatId: this.props.chatId.toString()
+                            }
+                            await delUserFromChat(extraUser);
+
+                            this.children.DeletUserDialog.close();
+                            delUFC_search.value = '';
+                            document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
+                                each.textContent = '';
+                            })
+                        }
+                    }
+                },
+                executiveEvent: {
+                    click: async (e: Event) => {
+                        const userName = delUFC_search.value;
+                        let fuId = null;
+
+                        window.memory.take().search.forEach(user => {
+                            Object.entries(user).forEach(([k,v]) => {
+                                if (k === 'login' && v === userName) {
+                                    fuId = user.id;
+                                }
+                            })
+                        })
+
+                        const newUser = {
+                            users: [Number(fuId)],
+                            chatId: this.props.chatId.toString()
+                        }
+                        await delUserFromChat(newUser);
+
+                        this.children.DeletUserDialog.close();
+                        delUFC_search.value = '';
+                        document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
+                            each.textContent = '';
+                        })
+                    }
+                }
+            }),
 
             Messages: new MessageList(),
 
@@ -101,21 +272,6 @@ export default class Chat extends Block {
                 class: 'add-btn',
                 src: 'add.png',
                 alt: 'button that opens options of files to be sent'
-            }),
-            AddMedia: new Image({
-                class: 'abc-choice AttachMedia',
-                src: 'attach-media.png',
-                alt: 'action representation image: add photo or video',
-            }),
-            AddFiles: new Image({
-                class: 'abc-choice AttachFile',
-                src: 'attach-files.png',
-                alt: 'action representation image: add file',
-            }),
-            AddLocation: new Image({
-                class: 'abc-choice AttachLocation',
-                src: 'pin.png',
-                alt: 'action representation image: add location',
             }),
             Message: new Input({
                 id: 'messageInput',
@@ -217,17 +373,29 @@ export default class Chat extends Block {
                 </span>
                 <div class="action-to-recipient">
                     {{{ ActionToRecipient }}}
+                    <div class="cd-choice atr-choice">
+                        <div>
+                            <span id="cdc-span" data-dw="AddUserDialog" data-src="/assets/user-add.png">Add User</span>
+                            <span id="cdc-span" data-dw="DeletUserDialog" data-src="/assets/user-del.png">Remove User</span>
+                            <span id="cdc-span" data-dw="ConfirmDeletionDialog" data-src="/assets/del.png">Delete Chat</span>
+                        </div>
+                    </div>
                 </div>
             </span>
             {{{ Messages }}}
             <span class="prompt">
                 <span class="add-btn-container">
                     {{{ Attach }}} 
-                    <ul class="abc-choice">
-                        <li> {{{ AddMedia }}} Photo or Video </li>
-                        <li> {{{ AddFiles }}} Files </li>
-                        <li> {{{ AddLocation }}} Location </li>
-                    </ul>
+                    <div class="cd-choice abc-choice">
+                        <div>
+                            <span id="cdc-span" data-dw="AttachMediaDialog" data-src="/assets/attach-media.png">Photo or Video</span>
+                            <span id="cdc-span" data-dw="AttachFileDialog" data-src="/assets/attach-files.png">Files</span>
+                            <span id="cdc-span" data-dw="AttachLocationDialog" data-src="/assets/pin.png">Location</span>
+                        </div>
+                        <div>
+                            <img id="hov-i-abc" src="/assets/empty.png" alt="on hover option preview">
+                        </div>
+                    </div>
                 </span>
                 <div class="chat-send-form">
                     {{{ Message }}}

@@ -1,20 +1,23 @@
 import { renderWithQuery } from 'core/renderDOM';
+import type Block from './Block';
+
+type BlockConstructor = new (props: Record<string, any>) => Block;
 
 export default class Route {
     private _pathname: string
-    private _blockClass: any
-    private _block: any
-    private _props: Record<string, string>
+    private _blockClass: BlockConstructor;
+    private _block: Block | null;
+    private _props: Record<string, any>
 
     constructor(
         pathname: string, 
-        view: string, 
-        props: Record<string, string>
+        view: BlockConstructor, 
+        props: Record<string, any>
     ) {
         this._pathname = pathname;
         this._blockClass = view;
         this._block = null;
-        this._props = props;
+        this._props = props
     }
     navigate(pathname: string) {
         if (this.match(pathname)) {
@@ -24,7 +27,7 @@ export default class Route {
     }
     leave() {
         if (this._block) {
-            this._block.hide();
+            this._block.close();
         }
     }
     match(pathname: string) {
@@ -34,8 +37,7 @@ export default class Route {
         const { blockProps, rootQuery } = this._props;
         if (!this._block) {
             this._block = new this._blockClass(blockProps);
-
-            window[this._blockClass.name] = this._block;
+            (window as any)[this._blockClass.name] = this._block;
         }
 
         renderWithQuery(rootQuery, this._block);
