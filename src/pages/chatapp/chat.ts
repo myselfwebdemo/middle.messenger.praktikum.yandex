@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Block from 'core/Block';
 import './chatapp.css';
 import Fatal from 'components/dialog/fatal';
@@ -9,15 +8,15 @@ import MessageList from 'components/message/mes-list';
 import Input from 'components/input/input';
 import Button from 'components/button/button';
 import { MapInit } from 'utils/map';
-import { clg } from 'main';
 import { addUserToChat, delUserFromChat, searchUser } from 'services/service';
 
 interface ChatProps {
-    nameOCR: string,
-    chatDeleteEvent: Record<string, () => void>
+    nameOCR: string
+    onChatDeleteConfirmed: (id: number) => void
+    chatId: number
 }
 
-export default class Chat extends Block {
+export default class Chat extends Block<ChatProps, Record<string,Block>> {
     constructor(props: ChatProps) {
         super('div', { 
             ...props,
@@ -25,10 +24,8 @@ export default class Chat extends Block {
             events: {
                 click: (e: Event) => {
                     const target = e.target as HTMLElement;
-                    const cdChoice = document.querySelector('.cd-choice') as HTMLElement;
                     const abcChoice = document.querySelector('.abc-choice') as HTMLElement;
                     const atrChoice = document.querySelector('.atr-choice') as HTMLElement;
-                    const atr = document.querySelector('.action-to-recipient') as HTMLElement;
                 
                     if (target.closest('.u-action-to-recipient-btn')) {
                         abcChoice.style.display = 'none';
@@ -42,33 +39,39 @@ export default class Chat extends Block {
                         return
                     }
                 
-                    const attachChoice = target.closest('#cdc-span');
+                    const attachChoice = target.closest('#cdc-span') as HTMLElement;
                     if (attachChoice) {
-                        this.children[attachChoice.dataset.dw].show();
-                        abcChoice.style.display = 'none';
-                        atrChoice.style.display = 'none';
+                        if (attachChoice.dataset.dw === 'AttachLocationDialog') MapInit();
+
+                        if (attachChoice.dataset.dw) {
+                            this.children[attachChoice.dataset.dw].show();
+                            abcChoice.style.display = 'none';
+                            atrChoice.style.display = 'none';
+                        }
                         return
                     }
                 
                     if (!target.closest('.abc-choice') && !target.closest('.action-to-recipient')) {
-                        abcChoice.style.display = 'none';
-                        atrChoice.style.display = 'none';
+                        if (abcChoice && atrChoice) {
+                            abcChoice.style.display = 'none';
+                            atrChoice.style.display = 'none';
+                        }
                         return
                     }
                 },
                 mouseover: (e: Event) => {
-                    let prevIMG: HTMLImageElement;
+                    let prevIMG: HTMLImageElement = new DocumentFragment() as unknown as HTMLImageElement; // to learn about, how dom is built, and type conversion + everything related
 
-                    if (e.target.closest('.atr-choice')) {
-                        if (e.target.closest('#cdc-span')) prevIMG = document.getElementById('hov-i-atr');
+                    if ((e.target as HTMLElement).closest('.atr-choice')) {
+                        if ((e.target as HTMLElement).closest('#cdc-span')) prevIMG = document.getElementById('hov-i-atr') as HTMLImageElement;
                     }
-                    if (e.target.closest('.abc-choice')) {
-                        if (e.target.closest('#cdc-span')) prevIMG = document.getElementById('hov-i-abc');
+                    if ((e.target as HTMLElement).closest('.abc-choice')) {
+                        if ((e.target as HTMLElement).closest('#cdc-span')) prevIMG = document.getElementById('hov-i-abc') as HTMLImageElement;
                     }
 
                     if (prevIMG) {
                         const selected = e.target as HTMLElement;
-                        prevIMG.src = selected.dataset.src;
+                        prevIMG.src = selected.dataset.src || '';
                     }
                 }
             },
@@ -96,7 +99,7 @@ export default class Chat extends Block {
                         const dwFus = document.querySelectorAll('.dialog h4#dwFu');
                         let count = 0;
 
-                        await searchUser({ login: document.activeElement.value }).then(() => {
+                        await searchUser({ login: (document.activeElement as HTMLInputElement).value }).then(() => {
                             const found = window.memory.take().search;
                             dwFus.forEach(each => {
                                 if (found.length !== 0) {
@@ -112,7 +115,7 @@ export default class Chat extends Block {
                             })
                         });
                         
-                        if (document.activeElement.value.length === 0) {
+                        if ((document.activeElement as HTMLInputElement).value.length === 0) {
                             dwFus.forEach(each => {
                                 each.textContent = '';
                             })
@@ -121,11 +124,13 @@ export default class Chat extends Block {
                 },
                 onSelSearchRes: {
                     click: async (e: Event) => {
-                        if (e.target.closest('#dwFu')) {
-                            const fuEl = e.target.closest('#dwFu');
+                        const tar = e.target as HTMLElement;
+
+                        if (tar.closest('#dwFu')) {
+                            const fuEl = tar.closest('#dwFu') as HTMLElement;
                             let fuId = null;
 
-                            window.memory.take().search.forEach(user => {
+                            window.memory.take().search.forEach((user: Record<string, any>) => {
                                 Object.entries(user).forEach(([k,v]) => {
                                     if (k === 'login' && v === fuEl.textContent) {
                                         fuId = user.id;
@@ -135,12 +140,12 @@ export default class Chat extends Block {
 
                             const extraUser = {
                                 users: [Number(fuId)],
-                                chatId: this.props.chatId.toString()
+                                chatId: this.props.chatId
                             }
                             await addUserToChat(extraUser);
 
                             this.children.AddUserDialog.close();
-                            addUTC_search.value = '';
+                            (document.getElementById('addUTC_search') as HTMLInputElement).value = '';
                             document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
                                 each.textContent = '';
                             })
@@ -148,11 +153,12 @@ export default class Chat extends Block {
                     }
                 },
                 executiveEvent: {
-                    click: async (e: Event) => {
+                    click: async () => {
+                        const addUTC_search = document.getElementById('addUTC_search') as HTMLInputElement;
                         const userName = addUTC_search.value;
                         let fuId = null;
 
-                        window.memory.take().search.forEach(user => {
+                        window.memory.take().search.forEach((user: Record<string, any>) => {
                             Object.entries(user).forEach(([k,v]) => {
                                 if (k === 'login' && v === userName) {
                                     fuId = user.id;
@@ -162,7 +168,7 @@ export default class Chat extends Block {
 
                         const newUser = {
                             users: [Number(fuId)],
-                            chatId: this.props.chatId.toString()
+                            chatId: this.props.chatId
                         }
                         await addUserToChat(newUser);
 
@@ -187,7 +193,7 @@ export default class Chat extends Block {
                         const dwFus = document.querySelectorAll('.dialog h4#dwFu');
                         let count = 0;
 
-                        await searchUser({ login: document.activeElement.value }).then(() => {
+                        await searchUser({ login: (document.activeElement as HTMLInputElement).value }).then(() => {
                             const found = window.memory.take().search;
                             dwFus.forEach(each => {
                                 if (found.length !== 0) {
@@ -203,7 +209,7 @@ export default class Chat extends Block {
                             })
                         });
                         
-                        if (document.activeElement.value.length === 0) {
+                        if ((document.activeElement as HTMLInputElement).value.length === 0) {
                             dwFus.forEach(each => {
                                 each.textContent = '';
                             })
@@ -212,11 +218,13 @@ export default class Chat extends Block {
                 },
                 onSelSearchRes: {
                     click: async (e: Event) => {
-                        if (e.target.closest('#dwFu')) {
-                            const fuEl = e.target.closest('#dwFu');
+                        const tar = e.target as HTMLElement;
+
+                        if (tar.closest('#dwFu')) {
+                            const fuEl = tar.closest('#dwFu') as HTMLElement;
                             let fuId = null;
 
-                            window.memory.take().search.forEach(user => {
+                            window.memory.take().search.forEach((user: Record<string, any>) => {
                                 Object.entries(user).forEach(([k,v]) => {
                                     if (k === 'login' && v === fuEl.textContent) {
                                         fuId = user.id;
@@ -226,12 +234,12 @@ export default class Chat extends Block {
 
                             const extraUser = {
                                 users: [Number(fuId)],
-                                chatId: this.props.chatId.toString()
+                                chatId: this.props.chatId
                             }
                             await delUserFromChat(extraUser);
 
                             this.children.DeletUserDialog.close();
-                            delUFC_search.value = '';
+                            (document.getElementById('delUFC_search') as HTMLInputElement).value = '';
                             document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
                                 each.textContent = '';
                             })
@@ -239,11 +247,12 @@ export default class Chat extends Block {
                     }
                 },
                 executiveEvent: {
-                    click: async (e: Event) => {
+                    click: async () => {
+                        const delUFC_search = document.getElementById('delUFC_search') as HTMLInputElement;
                         const userName = delUFC_search.value;
                         let fuId = null;
 
-                        window.memory.take().search.forEach(user => {
+                        window.memory.take().search.forEach((user: Record<string, any>) => {
                             Object.entries(user).forEach(([k,v]) => {
                                 if (k === 'login' && v === userName) {
                                     fuId = user.id;
@@ -253,7 +262,7 @@ export default class Chat extends Block {
 
                         const newUser = {
                             users: [Number(fuId)],
-                            chatId: this.props.chatId.toString()
+                            chatId: this.props.chatId
                         }
                         await delUserFromChat(newUser);
 
@@ -280,14 +289,16 @@ export default class Chat extends Block {
                 placeholder: 'Communicate...',
                 events: {
                     keydown: (e: Event) => {
-                        if (e.key === 'Enter') {
-                            if (messageInput.value !== '') {
+                        if ((e as KeyboardEvent).key === 'Enter') {
+                            const messageInput = document.getElementById('messageInput') as HTMLInputElement;
+
+                            if ((messageInput).value !== '') {
                                 window.__socket.send(JSON.stringify({
-                                    content: messageInput.value,
+                                    content: (messageInput).value,
                                     type: 'message'
                                 }));
 
-                                messageInput.value = '';
+                                (messageInput).value = '';
                             } else {
                                 return
                             }

@@ -1,11 +1,10 @@
-import type Block from "core/Block"
+import type Block from "core/Block";
 
-export function injectRouter(block: typeof Block) {
+export function injectRouter<T extends new (...args: any[]) => Block>(block: T) {
     return class extends block {
-        // @ts-ignore
-        constructor(props) {
-            // @ts-ignore
-            super({...props, router: window.router})
+        constructor(...args: any[]) {
+            const props = args[0] || {};
+            super({ ...props, router: window.router });
         }
-    }
+    };
 }

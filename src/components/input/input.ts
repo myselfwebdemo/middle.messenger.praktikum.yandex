@@ -15,7 +15,7 @@ interface InputProps {
     src?: string
     mismatchObject?: string
     disabled?: boolean
-    events?: Record<string, () => void>,
+    events?: Record<string, (e: Event) => void>,
     accept?: string
 }
 

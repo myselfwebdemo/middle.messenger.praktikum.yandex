@@ -6,8 +6,7 @@ import { checkLogin } from 'services/service';
 import { injectRouter } from "utils/injectRouter";
 
 class Home extends Block {
-    // @ts-ignore
-    constructor(props) {
+    constructor(props: Record<string, any>) {
         super('div', {
             ...props,
             className: 'app-landing',

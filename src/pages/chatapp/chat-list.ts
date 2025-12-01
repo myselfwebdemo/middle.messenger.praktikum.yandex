@@ -1,26 +1,25 @@
-// @ts-nocheck
 import Block from 'core/Block';
 import './chatapp.css';
 import { linkStorage } from 'utils/link-storage';
 import { injectRouter } from 'utils/injectRouter';
 import ChatCard from 'components/chat-card/chat-card';
 
-class ChatList extends Block {
+class ChatList extends Block<Record<string,any>, Record<string,Block>> {
     constructor() {
         super('div', {
             className: 'chat-list',
         })
     }
-    setProps(newProps): void {
+    setProps(newProps: Record<string, any>): void {
         super.setProps(newProps);
         
         Object.keys(this.children).forEach(key => {
             this.removeChildren(key);
         })
         Object.entries(newProps.chats).forEach(([chatId,chat]) => {
-            chat.users.forEach(user => {
-                if (user.id !== window.memory.take().user.id) {
-                    this.addChildren(new ChatCard({ recipientName: user.login, class: 'on-hover chat-card' }), `chat_${chat.chat.id}`);
+            Object.values((chat as Record<string,any>).users).forEach((user) => {
+                if ((user as Record<string,any>).id !== window.memory.take().user.id) {
+                    this.addChildren(new ChatCard({ recipientName: (user as Record<string,any>).login, class: 'on-hover chat-card' }), `chat_${chatId}`);
                 }
             });
         });
@@ -52,7 +51,7 @@ class ChatList extends Block {
     }
 }
 
-const props = (wm) => {
+const props = (wm: Record<string, any>) => {
     return {
         loading: wm.loading,
         chats: wm.chats

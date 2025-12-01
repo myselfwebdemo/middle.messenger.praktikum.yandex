@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Block from 'core/Block';
 import './message.css';
 

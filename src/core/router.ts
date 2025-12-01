@@ -20,7 +20,7 @@ export default class Router {
     
         Router._instance = this;
     }
-    use(pathname: string, block: new (props: Record<string, any>) => Block, blockProps: Record<string, string> = {}) {
+    use(pathname: string, block: new (props: Record<string, any>) => Block, blockProps: Record<string, any> = {}) {
         const newRouteInstance = new Route(pathname, block, {
             rootQuery: this._rootQuery,
             blockProps: blockProps

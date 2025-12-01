@@ -1,3 +1,5 @@
+import { SERVER_BASE_URL } from "../../config";
+
 enum METHOD {
     GET = "GET",
     POST = "POST",
@@ -13,7 +15,7 @@ interface RequestType {
 type RequestWithoutMethod = Omit<RequestType, 'method'>;
 
 export default class endPointAPI {
-    private baseURL: string = 'https://ya-praktikum.tech/api/v2/';
+    private baseURL: string = SERVER_BASE_URL;
 
     constructor(path: string) {
         this.baseURL += path;

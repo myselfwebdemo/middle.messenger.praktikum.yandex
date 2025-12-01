@@ -16,8 +16,7 @@ export default class Fatal extends Block {
             className: 'dialog-wrapper fatal', 
             events: {
                 click: (e: Event) => {
-                    // @ts-ignore
-                    if (!e.target.closest('.fatal-dialog') || e.target.closest('.fatal-dialog .button')) {
+                    if (!(e.target as HTMLElement).closest('.fatal-dialog') || (e.target as HTMLElement).closest('.fatal-dialog .button')) {
                         this.close();
                     }
                 }

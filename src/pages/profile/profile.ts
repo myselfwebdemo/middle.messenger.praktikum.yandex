@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Block from "core/Block";
 import './profile.css';
 
@@ -11,13 +10,16 @@ import Fatal from "components/dialog/fatal";
 import { changeAvatar, editPass, editUser, logout } from "../../services/service";
 import { linkStorage } from "utils/link-storage";
 import { injectRouter } from "utils/injectRouter";
+import { SERVER_BASE_URL } from "../../config";
 
 interface ProfileProps { 
     user: Record<string, any>
     level: number
 }
 
-class Profile extends Block {
+class Profile extends Block<ProfileProps, {
+    page: Block
+}> {
     constructor(props: ProfileProps) {
         const singlePageProps = {
             router: window.router,
@@ -25,13 +27,13 @@ class Profile extends Block {
             toLevel: (nl: number) => {
                 window.memory.give({eAPI: null, sAPI: false});
 
-                const profileLevels = {
-                    '0': new ProfileLanding({...singlePageProps, user: this.props.user}),
-                    '1': new EditProfile({...singlePageProps, user: this.props.user}),
-                    '2': new SetNewPassword({...singlePageProps, user: this.props.user}),
-                }
+                const profileLevels = [
+                    new ProfileLanding({...singlePageProps, user: this.props.user}),
+                    new EditProfile({...singlePageProps, user: this.props.user}),
+                    new SetNewPassword({...singlePageProps, user: this.props.user}),
+                ]
                 
-                this.children.page = profileLevels[nl.toString()];
+                this.children.page = profileLevels[nl];
                 this._render();
             }
         }
@@ -45,7 +47,7 @@ class Profile extends Block {
             ...(props.level === 2 ? { page: new SetNewPassword(singlePageProps) } : {}),
         });
     }
-    setProps(newProps): void {
+    setProps(newProps: Record<string, any>): void {
         super.setProps(newProps);
 
         const pslToUserData = {
@@ -57,12 +59,15 @@ class Profile extends Block {
         }
 
         if (newProps.user) {
-            if (newProps.user !== this.children.page.props.user) {
-                this.children.page.setProps({ user: newProps.user });
+            const tcPage = this.children.page as Block<Record<string, any>, Record<string, Block>>;
 
-                Object.entries(this.children.page.children).forEach(([name,child]) => {
+            if (newProps.user !== tcPage.props.user) {
+                tcPage.setProps({ user: newProps.user });
+
+                Object.entries(tcPage.children).forEach(([name,child]) => {
                     if (['l','l1','l2','l3','l4'].includes(name)) {
-                        const dataFrag = pslToUserData[name];
+                        const k = name as keyof typeof pslToUserData;
+                        const dataFrag = pslToUserData[k];
                         child.setProps({ traitValue: dataFrag, value: dataFrag });
                     }
                 });
@@ -105,7 +110,6 @@ const extraProps = (wm: Record<string, any>) => {
         user: wm.user
     }
 }
-// @ts-ignore
 export default linkStorage(extraProps)(injectRouter(Profile));
 
 interface ProfilePagesProps {
@@ -114,7 +118,7 @@ interface ProfilePagesProps {
     toLevel: (nl: number) => void
 };
 
-class ProfileLanding extends Block {
+class ProfileLanding extends Block<ProfilePagesProps, Record<string,Block>> {
     constructor(props: ProfilePagesProps) {
 
         super('div', {
@@ -122,9 +126,8 @@ class ProfileLanding extends Block {
             className: 'profile profile-origin',
             events: {
                 click: (e: Event) => {
-                    // @ts-ignore
-                    if (e.target.closest('.profile-icon-wrapper')) {
-                        // @ts-ignore
+                    const tar = e.target as HTMLElement;
+                    if (tar.closest('.profile-icon-wrapper')) {
                         this.children.avatarChange.show();
                     }
                 }
@@ -145,7 +148,7 @@ class ProfileLanding extends Block {
                 directLink: true,
                 class: 'profile-icon',
                 src: props.user.avatar
-                    ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`
+                    ? `${SERVER_BASE_URL}resources${props.user.avatar}`
                     :  'assets/profile/default.png',
                 alt: 'profile picture'
             }),
@@ -215,11 +218,11 @@ class ProfileLanding extends Block {
                 executiveAction: 'Change',
                 executiveEvent: {
                     click: () => {
-                        const filei = document.querySelector('input[type="file"]');
-                        const file = filei.files[0];
+                        const filei = document.querySelector('input[type="file"]') as HTMLInputElement;
+                        const file = filei.files ? filei.files[0]: null;
 
                         const formData = new FormData();
-                        formData.append('avatar', file);
+                        formData.append('avatar', file as Blob);
                         formData.append('path', 'avatars/current-user.png');
                         formData.append('overwrite', 'true');
                         
@@ -246,11 +249,11 @@ class ProfileLanding extends Block {
             }),
         })
     }
-    setProps(newProps): void {
+    setProps(newProps: Record<string,any>): void {
         super.setProps(newProps);
 
         this.children.ProfileIcon.setProps({
-            src: `https://ya-praktikum.tech/api/v2/resources${this.props.user.avatar}`
+            src: `${SERVER_BASE_URL}resources${this.props.user.avatar}`
         })
     }
     public render(): string {
@@ -281,7 +284,7 @@ class ProfileLanding extends Block {
     }
 }
 
-class EditProfile extends Block {
+class EditProfile extends Block<ProfilePagesProps, Record<string,Block>> {
     constructor(props: ProfilePagesProps) {
         super('form', {
             ...props,
@@ -304,7 +307,7 @@ class EditProfile extends Block {
                 directLink: true,
                 class: 'profile-icon',
                 src: props.user.avatar
-                    ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`
+                    ? `${SERVER_BASE_URL}resources${props.user.avatar}`
                     :  '/profile/default.png',
                 alt: 'profile picture'
             }),
@@ -402,12 +405,12 @@ class EditProfile extends Block {
                     click: () => {                        
                         editUser({
                             ...this.props.user,
-                            email: profile_email.value,
-                            display_name: profile_display_name.value,
-                            login: profile_login.value,
-                            first_name: profile_first_name.value,
-                            second_name: profile_second_name.value,
-                            phone: profile_phone.value,
+                            email: (document.getElementById('profile_email') as HTMLInputElement).value,
+                            display_name: (document.getElementById('profile_display_name') as HTMLInputElement).value,
+                            login: (document.getElementById('profile_login') as HTMLInputElement).value,
+                            first_name: (document.getElementById('profile_first_name') as HTMLInputElement).value,
+                            second_name: (document.getElementById('profile_second_name') as HTMLInputElement).value,
+                            phone: (document.getElementById('profile_phone') as HTMLInputElement).value,
                         })
                         this.props.toLevel(0);
                     }
@@ -450,7 +453,7 @@ class EditProfile extends Block {
         `
     }
 }
-class SetNewPassword extends Block {
+class SetNewPassword extends Block<ProfilePagesProps, Record<string,Block>> {
     constructor(props: ProfilePagesProps) {
         super('form', {
             ...props,
@@ -473,7 +476,7 @@ class SetNewPassword extends Block {
                 directLink: true,
                 class: 'profile-icon',
                 src: props.user.avatar
-                    ? `https:ya-praktikum.tech/api/v2/resources${props.user.avatar}`
+                    ? `${SERVER_BASE_URL}resources${props.user.avatar}`
                     :  '/profile/default.png',
                 alt: 'profile picture'
             }),
@@ -521,6 +524,10 @@ class SetNewPassword extends Block {
                 clientAction: 'Set',
                 events: {
                     click: () => {
+                        const new_password = document.getElementById('new_password') as HTMLInputElement;
+                        const new_password_rep = document.getElementById('new_password_rep') as HTMLInputElement;
+                        const old_password = document.getElementById('old_password') as HTMLInputElement;
+
                         if (new_password.value !== new_password_rep.value) {
                             new_password_rep.style.border = 'solid .2vh rgb(255,0,0,.5)';
                             new_password_rep.style.background = 'rgb(255,0,0,.2)';

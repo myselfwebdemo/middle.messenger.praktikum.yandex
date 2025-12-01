@@ -1,9 +1,9 @@
-// @ts-nocheck
 import Block from "./Block";
-import Handlebars, { HelperOptions } from "handlebars";
+import Handlebars, { type HelperOptions } from "handlebars";
 
+type PropsBlock = Record<string, any>;
 interface BlockConstructable<P = PropsBlock> {
-  new (props: P): Block;
+  new (props: P): Block & { id: string };
 }
 
 export default function registerComponent<Props extends PropsBlock>(
@@ -25,14 +25,10 @@ export default function registerComponent<Props extends PropsBlock>(
 
       const { children, refs } = data.root;
 
-      /**
-       * Костыль для того, чтобы передавать переменные
-       * внутрь блоков вручную подменяя значение
-       */
       (Object.keys(hash) as any).forEach((key: keyof Props) => {
         if (this[key] && typeof this[key] === "string") {
           hash[key] = hash[key].replace(
-            new RegExp(`{{${key}}}`, "i"),
+            new RegExp(`{{${String(key)}}}`, "i"),
             this[key],
           );
         }

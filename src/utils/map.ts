@@ -1,8 +1,8 @@
-// @ts-nocheck
 import { getLocByCoords } from './locationAPI';
 import './map.css';
+import L, { Map as LeafletMap, Marker as LeafletMarker, Icon as LeafletIcon } from 'leaflet';
 
-let map, marker, pin;
+let map: LeafletMap, marker: LeafletMarker, pin: LeafletIcon;
 
 async function approxL() {
   try {
@@ -10,7 +10,7 @@ async function approxL() {
     const data = await res.json();
 
     getLocByCoords(data.lat, data.lon).then(userLoc => {
-      document.getElementById('standalone').textContent = userLoc;
+      (document.getElementById('standalone') as HTMLElement).textContent = userLoc;
     })
 
     return { lat: data.lat, lon: data.lon };
@@ -27,13 +27,13 @@ export async function MapInit() {
   
   const co = await approxL() || {lat:0, lon: 0}
   map = L.map('map').setView([co.lat, co.lon], 12);
+  // clg(map, l);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     maxNativeZoom: 17,
     updateWhenIdle: true,
     keepBuffer: 4,
-    reuseTiles: true,
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
   pin = L.icon({
@@ -46,7 +46,7 @@ export async function MapInit() {
     const { lat,lng } = e.latlng;
 
     getLocByCoords(lat, lng).then(userLoc => {
-      document.getElementById('standalone').textContent = userLoc;
+      (document.getElementById('standalone') as HTMLElement).textContent = userLoc;
     });
   });
 

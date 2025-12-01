@@ -8,8 +8,8 @@ export default class MessageList extends Block {
             className: 'messages',
             events: {
                 scroll: () => {
-                    // @ts-ignore
-                    if (this._element.scrollTop <= 0) {
+                    const el = this._element as unknown; 
+                    if ((el as HTMLElement).scrollTop <= 0) {
                         const maxMesId = this.getMaxMesID();
                         window.__socket.send(JSON.stringify({
                             content: maxMesId.toString(),

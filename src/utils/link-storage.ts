@@ -2,12 +2,13 @@
 import type Block from "core/Block";
 import { StoreEvents } from "../core/storage";
 
-export function linkStorage(pageState) {
-    return function (block: Block) {
+export function linkStorage(pageState: (s: any) => Record<string, any>) {
+    return function <T extends new (...args: any[]) => Block>(block: T) {
         return class extends block {
             private dispatchDataUpdate: () => void;
             
-            constructor(props) {
+            constructor(...args: any[]) {
+                const props = args[0] || {};
                 const store = window.memory;
                 let objState = pageState(store.take());
 
@@ -15,7 +16,7 @@ export function linkStorage(pageState) {
 
                 this.dispatchDataUpdate = () => {
                     const newState = pageState(store.take());
-
+                    
                     const changed = Object.keys(newState).some(
                         key => newState[key] !== objState[key]
                     );

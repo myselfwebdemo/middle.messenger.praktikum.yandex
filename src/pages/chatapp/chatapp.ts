@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Button from 'components/button/button';
 import Input from 'components/input/input';
 import Block from 'core/Block';
@@ -14,28 +13,30 @@ import Warning from 'components/dialog/warning';
 import ChatConnection from 'core/websocket';
 import Message from 'components/message/message';
 import Image from 'components/image/image';
-import { clg, Routes } from 'main';
+import { Routes } from 'main';
 import { StoreEvents } from 'core/storage';
 import DialogWindow from 'components/dialog/dialog';
+import { SERVER_BASE_URL } from '../../config';
 
-class Messenger extends Block {
+class Messenger extends Block<Record<string,any>, Record<string,Block>> {
     private _user: Record<string, any> = {};
+    private socket!: ChatConnection;
 
-    constructor(props) {
+    constructor(props: Record<string, any>) {
         super('main', {
             ...props,
             events: {
                 input: (e: Event) => {
-                    if (e.target.id === 'search') {
-                        document.querySelector('.chat-list').scrollIntoView({block:'start'});
+                    if ((e.target as HTMLElement).id === 'search') {
+                        (document.querySelector('.chat-list') as HTMLElement).scrollIntoView({block:'start'});
 
-                        const chatCards = document.querySelectorAll('.chat-card');
-                        const term = e.target.value.toLowerCase();
-                        const fieldLast = document.querySelectorAll('.chat-last-text');
+                        const chatCards = document.querySelectorAll<HTMLElement>('.chat-card');
+                        const term = (e.target as HTMLInputElement).value.toLowerCase();
+                        const fieldLast = document.querySelectorAll<HTMLInputElement>('.chat-last-text');
                         
                         chatCards.forEach(card => {
-                            const recipients = card.dataset.recipient.toLowerCase();
-                            const lastMessages = card.dataset.lastMessage.toLowerCase();
+                            const recipients = (card.dataset.recipient as string).toLowerCase();
+                            const lastMessages = (card.dataset.lastMessage as string).toLowerCase();
                         
                             if (recipients.includes(term) || lastMessages.includes(term)) {
                                 card.style.display = 'flex';
@@ -44,7 +45,7 @@ class Messenger extends Block {
                                 card.style.display = 'none';
                             }
                         });
-                        if (e.target.value.length === 0) {
+                        if ((e.target as HTMLInputElement).value.length === 0) {
                             chatCards.forEach(card => {
                                 card.style.display = 'flex';
                             });
@@ -54,23 +55,27 @@ class Messenger extends Block {
                 },
                 click: async (e: Event) => {
                     const curSesUID = window.memory.take().user.id;
+                    const search_user = document.getElementById('search_user') as HTMLInputElement;
+                    const tar = e.target as HTMLElement;
 
-                    if (e.target.closest('.user-preview')) {
+                    if (tar.closest('.user-preview')) {
                         this.props.router.go(Routes.SetUp);
                     }
 
                     const userSearch = document.querySelector('.user-search') as HTMLElement;
-                    if (userSearch && !e.target.closest('.user-search') && userSearch.classList.contains('u-s-opened')) {
+                    if (userSearch && !tar.closest('.user-search') && userSearch.classList.contains('u-s-opened')) {
                         search_user.value = '';
-                        Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
+                        Object.keys((this.children.FoundUsersList.children as Block)).forEach((childName) => {
                             this.children.FoundUsersList.removeChildren(childName);
                         });
                         userSearch.classList.remove('u-s-opened');
                     }
 
-                    if (e.target.closest('.chat-card')) {
-                        if (!e.target.closest('.chat-card').classList.contains('selected-card')) {
-                            const card = e.target.closest('.chat-card');
+                    const tarCC = tar.closest('.chat-card') as HTMLElement;
+
+                    if (tarCC) {
+                        if (!tarCC.classList.contains('selected-card')) {
+                            const card = tarCC;
     
                             document.querySelectorAll('.chat-card.selected-card').forEach(card => {
                                 card.classList.remove('selected-card');
@@ -78,15 +83,15 @@ class Messenger extends Block {
     
                             card.classList.add('selected-card');
     
-                            const onCardUsername = card.textContent.trim().split(' ')[0];
-                            let onCardChatId: number;
+                            const onCardUsername = card.textContent ? card.textContent.trim().split(' ')[0] : '';
+                            let onCardChatId: number = 0;
     
-                            const memChats = window.memory.take().chats;
+                            const memChats = window.memory.take().chats as Record<string, any>;
     
                             Object.entries(memChats).forEach(([chatId, chat]) => {
-                                chat['users'].forEach(user => {
+                                Object.values(chat.users as Record<string, any>).forEach(user => {
                                     if (onCardUsername === user.login) {
-                                        onCardChatId = chatId;
+                                        onCardChatId = Number(chatId);
                                     }
                                 })
                             })
@@ -95,13 +100,13 @@ class Messenger extends Block {
                                 this.removeChildren('Chat');
                             }
                             this.addChildren(new Chat({ 
-                                nameOCR: card.dataset.recipient, 
+                                nameOCR: card.dataset.recipient || '', 
                                 chatId: onCardChatId,
                                 onChatDeleteConfirmed: async (id) => {
-                                    memChats[id]['users'].forEach(user => {
+                                    Object.values(memChats[id]['users'] as Record<string, any>).forEach(user => {
                                         if (user.id === curSesUID) {
                                             if (user.role === 'admin') {
-                                                const delChatRes = delChat({ chatId: id });
+                                                delChat({ chatId: id });
                                                 this.children.ChatList.removeChildren(`chat_${id}`);
                                                 this.removeChildren('Chat');
                                                 
@@ -112,7 +117,7 @@ class Messenger extends Block {
                                                     this.children.WarningDialog.show();
                                                 } else {
                                                     this.addChildren(new Warning({mesWarning: 'You cannot perform this action. Only admin of this chat can delete it'}), 'WarningDialog');
-                                                    this.children.WarningDialog.show();
+                                                    (this.children.WarningDialog as Block).show();
                                                 }
                                             }
                                         }
@@ -132,6 +137,7 @@ class Messenger extends Block {
                             this.socket = new ChatConnection(
                                 socketParams, 
                                 (data) => {
+                                    const tccc = this.children.Chat as Block<Record<string,any>,Record<string,Block>>;
                                     if (data.type === 'message') {
                                         const date = new Date(data.time);
                                         const hours = date.getHours();
@@ -140,14 +146,14 @@ class Messenger extends Block {
                                         const time = `${hours}:${minutes}`;
     
                                         if (data.user_id === curSesUID) {
-                                            this.children.Chat.children.Messages.addChildren(new Message({
+                                            tccc.children.Messages.addChildren(new Message({
                                                 messageType: 'text',
                                                 textContent: data.content,
                                                 fromYou: true,
                                                 time: time
                                             }), `m_${data.id}`)
                                         } else {
-                                            this.children.Chat.children.Messages.addChildren(new Message({
+                                            tccc.children.Messages.addChildren(new Message({
                                                 messageType: 'text',
                                                 textContent: data.content,
                                                 time: time
@@ -155,9 +161,9 @@ class Messenger extends Block {
                                         }
                                     }
                                     if (Array.isArray(data)) {
-                                        const lastMesEl = this.children.Chat.children.Messages._element;
-                                        const oldScrollHeight = lastMesEl.scrollHeight;
-                                        const oldScrollTop = lastMesEl.scrollTop;
+                                        const lastMesEl = tccc.children.Messages._element as unknown as HTMLElement;
+                                        const oldScrollHeight = (lastMesEl).scrollHeight;
+                                        const oldScrollTop = (lastMesEl).scrollTop;
 
                                         data.forEach(mes => {
                                             const date = new Date(mes.time);
@@ -167,14 +173,14 @@ class Messenger extends Block {
                                             const time = `${hours}:${minutes}`;
 
                                             if (mes.user_id === curSesUID) {
-                                                this.children.Chat.children.Messages.prependChildren(new Message({
+                                                tccc.children.Messages.prependChildren(new Message({
                                                     messageType: 'text',
                                                     textContent: mes.content,
                                                     fromYou: true,
                                                     time: time
                                                 }), `m_${mes.id}`)
                                             } else {
-                                                this.children.Chat.children.Messages.prependChildren(new Message({
+                                                tccc.children.Messages.prependChildren(new Message({
                                                     messageType: 'text',
                                                     textContent: mes.content,
                                                     time: time
@@ -192,12 +198,13 @@ class Messenger extends Block {
                         }
                     }
 
-                    if (e.target.closest('.fu-user')) {
-                        const clicked_user_name = e.target.textContent.trim();
+                    if (tar.closest('.fu-user')) {
+                        const clicked_user_name = tar.textContent ? tar.textContent.trim() : '';
+                        const tcfl = this.children.FoundUsersList as Block<Record<string,any>,Record<string, Block>>;
                         let fuId = null;
 
-                        Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
-                            if (clicked_user_name === this.children.FoundUsersList.children[`${childName}`].props.name) {
+                        Object.keys(tcfl.children).forEach((childName) => {
+                            if (clicked_user_name === tcfl.children[`${childName}`].props.name) {
                                 fuId = childName;
                             }
                         });
@@ -213,16 +220,18 @@ class Messenger extends Block {
                         }
                         await addUserToChat(newUser);                   
                         
-                        if (Object.keys(this.children.ChatList.children).length !== 0) {
+                        const tccl = this.children.ChatList as Block<Record<string,any>,Record<string, Block>>;
+
+                        if (Object.keys(tccl.children).length !== 0) {
                             document.querySelectorAll('.chat-card.selected-card').forEach(card => {
                                 card.classList.remove('selected-card');
                             })
                         }
-                        this.children.ChatList.addChildren(new ChatCard({ recipientName: clicked_user_name, class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
+                        tccl.addChildren(new ChatCard({ recipientName: clicked_user_name, class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
 
                         search_user.value = '';
-                        Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
-                            this.children.FoundUsersList.removeChildren(childName);
+                        Object.keys(tcfl.children).forEach((childName) => {
+                            tcfl.removeChildren(childName);
                         });
                         userSearch.classList.remove('u-s-opened');
                         
@@ -233,8 +242,7 @@ class Messenger extends Block {
                             nameOCR: clicked_user_name, 
                             chatId: newChatResult,
                             onChatDeleteConfirmed: async (id) => {
-                                const delChatRes = await delChat({ chatId: id });
-                                this.children.ChatList.removeChildren(`chat_${id}`);
+                                delChat({ chatId: id });
                                 this.removeChildren('Chat');
                             }
                         }), 'Chat');
@@ -249,6 +257,8 @@ class Messenger extends Block {
                         this.socket = new ChatConnection(
                             socketParams, 
                             (data) => {
+                                const tcc = this.children.Chat as Block<Record<string,any>,Record<string,Block>>;
+
                                 if (data.type === 'message') {
                                     const date = new Date(data.time);
                                     const hours = date.getHours();
@@ -257,14 +267,14 @@ class Messenger extends Block {
                                     const time = `${hours}:${minutes}`;
 
                                     if (data.user_id === curSesUID) {
-                                        this.children.Chat.children.Messages.addChildren(new Message({
+                                        tcc.children.Messages.addChildren(new Message({
                                             messageType: 'text',
                                             textContent: data.content,
                                             fromYou: true,
                                             time: time
                                         }), `m_${data.id}`)
                                     } else {
-                                        this.children.Chat.children.Messages.addChildren(new Message({
+                                        tcc.children.Messages.addChildren(new Message({
                                             messageType: 'text',
                                             textContent: data.content,
                                             time: time
@@ -280,14 +290,14 @@ class Messenger extends Block {
                                         const time = `${hours}:${minutes}`;
 
                                         if (mes.user_id === curSesUID) {
-                                            this.children.Chat.children.Messages.prependChildren(new Message({
+                                            tcc.children.Messages.prependChildren(new Message({
                                                 messageType: 'text',
                                                 textContent: mes.content,
                                                 fromYou: true,
                                                 time: time
                                             }), `m_${mes.id}`)
                                         } else {
-                                            this.children.Chat.children.Messages.prependChildren(new Message({
+                                            tcc.children.Messages.prependChildren(new Message({
                                                 messageType: 'text',
                                                 textContent: mes.content,
                                                 time: time
@@ -299,7 +309,9 @@ class Messenger extends Block {
                         );
                     }
 
-                    if (e.target.closest('.button.u-send')) {
+                    if (tar.closest('.button.u-send')) {
+                        const messageInput = document.getElementById('message_input') as HTMLInputElement;
+
                         if (messageInput.value !== '') {
                             this.socket.sendMessage(messageInput.value);
                             messageInput.value = '';
@@ -317,6 +329,8 @@ class Messenger extends Block {
                 src: 'add-cross.png',
                 events: {
                     click: async () => {
+                        const ccc_user_search = document.getElementById('ccc_user_search') as HTMLInputElement;
+
                         this.children.AddUserOnNewChat.show();
                         ccc_user_search.value = '';
                         document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
@@ -339,7 +353,7 @@ class Messenger extends Block {
                         const dwFus = document.querySelectorAll('.dialog h4#dwFu');
                         let count = 0;
 
-                        await searchUser({ login: document.activeElement.value }).then(() => {
+                        await searchUser({ login: (document.activeElement as HTMLInputElement).value }).then(() => {
                             const found = window.memory.take().search;
                             dwFus.forEach(each => {
                                 if (found.length !== 0) {
@@ -355,7 +369,7 @@ class Messenger extends Block {
                             })
                         });
                         
-                        if (document.activeElement.value.length === 0) {
+                        if ((document.activeElement as HTMLInputElement).value.length === 0) {
                             dwFus.forEach(each => {
                                 each.textContent = '';
                             })
@@ -366,11 +380,11 @@ class Messenger extends Block {
                     click: async (e: Event) => {
                         const curSesUID = window.memory.take().user.id;
 
-                        if (e.target.closest('#dwFu')) {
-                            const fuEl = e.target.closest('#dwFu');
+                        if ((e.target as HTMLElement).closest('#dwFu')) {
+                            const fuEl = (e.target as HTMLElement).closest('#dwFu') as HTMLElement;
                             let fuId = null;
 
-                            window.memory.take().search.forEach(user => {
+                            window.memory.take().search.forEach((user: Record<string,any>) => {
                                 Object.entries(user).forEach(([k,v]) => {
                                     if (k === 'login' && v === fuEl.textContent) {
                                         fuId = user.id;
@@ -387,21 +401,23 @@ class Messenger extends Block {
                             }
                             await addUserToChat(newUser);
 
-                            if (Object.keys(this.children.ChatList.children).length !== 0) {
+                            const tccl = this.children.ChatList as Block<Record<string,any>,Record<string,Block>>;
+                            
+                            if (Object.keys(tccl.children).length !== 0) {
                                 document.querySelectorAll('.chat-card.selected-card').forEach(card => {
                                     card.classList.remove('selected-card');
                                 })
                             }
-                            this.children.ChatList.addChildren(new ChatCard({ recipientName: fuEl.textContent, class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
+                            tccl.addChildren(new ChatCard({ recipientName: fuEl.textContent || '', class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
 
                             if (this.children.Chat) {
                                 this.removeChildren('Chat');
                             }
                             this.addChildren(new Chat({ 
-                                nameOCR: fuEl.textContent, 
+                                nameOCR: fuEl.textContent || '', 
                                 chatId: newChatResult,
                                 onChatDeleteConfirmed: async (id) => {
-                                    const delChatRes = await delChat({ chatId: id });
+                                    delChat({ chatId: id });
                                     this.removeChildren('Chat');
                                 }
                             }), 'Chat');
@@ -416,6 +432,8 @@ class Messenger extends Block {
                             this.socket = new ChatConnection(
                                 socketParams, 
                                 (data) => {
+                                    const tcc = this.children.Chat as Block<Record<string,any>,Record<string,Block>>;
+
                                     if (data.type === 'message') {
                                         const date = new Date(data.time);
                                         const hours = date.getHours();
@@ -424,14 +442,14 @@ class Messenger extends Block {
                                         const time = `${hours}:${minutes}`;
     
                                         if (data.user_id === curSesUID) {
-                                            this.children.Chat.children.Messages.addChildren(new Message({
+                                            tcc.children.Messages.addChildren(new Message({
                                                 messageType: 'text',
                                                 textContent: data.content,
                                                 fromYou: true,
                                                 time: time
                                             }), `m_${data.id}`)
                                         } else {
-                                            this.children.Chat.children.Messages.addChildren(new Message({
+                                            tcc.children.Messages.addChildren(new Message({
                                                 messageType: 'text',
                                                 textContent: data.content,
                                                 time: time
@@ -442,7 +460,7 @@ class Messenger extends Block {
                             );
 
                             this.children.AddUserOnNewChat.close();
-                            ccc_user_search.value = '';
+                            (document.getElementById('ccc_user_search') as HTMLInputElement).value = '';
                             document.querySelectorAll('.dialog h4#dwFu').forEach(each => {
                                 each.textContent = '';
                             })
@@ -450,12 +468,13 @@ class Messenger extends Block {
                     }
                 },
                 executiveEvent: {
-                    click: async (e: Event) => {
+                    click: async () => {
                         const curSesUID = window.memory.take().user.id;
+                        const ccc_user_search = document.getElementById('ccc_user_search') as HTMLInputElement;
                         const userName = ccc_user_search.value;
                         let fuId = null;
 
-                        window.memory.take().search.forEach(user => {
+                        window.memory.take().search.forEach((user: Record<string, any>) => {
                             Object.entries(user).forEach(([k,v]) => {
                                 if (k === 'login' && v === userName) {
                                     fuId = user.id;
@@ -472,12 +491,14 @@ class Messenger extends Block {
                         }
                         await addUserToChat(newUser);
 
-                        if (Object.keys(this.children.ChatList.children).length !== 0) {
+                        const tccl = this.children.ChatList as Block<Record<string,any>,Record<string,Block>>;
+
+                        if (Object.keys(tccl.children).length !== 0) {
                             document.querySelectorAll('.chat-card.selected-card').forEach(card => {
                                 card.classList.remove('selected-card');
                             })
                         }
-                        this.children.ChatList.addChildren(new ChatCard({ recipientName: userName, class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
+                        tccl.addChildren(new ChatCard({ recipientName: userName, class: 'on-hover chat-card selected-card' }), `chat_${newChatResult}`);
 
                         if (this.children.Chat) {
                             this.removeChildren('Chat');
@@ -486,8 +507,7 @@ class Messenger extends Block {
                             nameOCR: userName, 
                             chatId: newChatResult,
                             onChatDeleteConfirmed: async (id) => {
-                                const delChatRes = await delChat({ chatId: id });
-                                this.children.ChatList.removeChildren(`chat_${id}`);
+                                delChat({ chatId: id });
                                 this.removeChildren('Chat');
                             }
                         }), 'Chat');
@@ -502,6 +522,8 @@ class Messenger extends Block {
                         this.socket = new ChatConnection(
                             socketParams, 
                             (data) => {
+                                const tcc = this.children.Chat as Block<Record<string,any>,Record<string,Block>>;
+
                                 if (data.type === 'message') {
                                     const date = new Date(data.time);
                                     const hours = date.getHours();
@@ -510,14 +532,14 @@ class Messenger extends Block {
                                     const time = `${hours}:${minutes}`;
 
                                     if (data.user_id === curSesUID) {
-                                        this.children.Chat.children.Messages.addChildren(new Message({
+                                        tcc.children.Messages.addChildren(new Message({
                                             messageType: 'text',
                                             textContent: data.content,
                                             fromYou: true,
                                             time: time
                                         }), `m_${data.id}`)
                                     } else {
-                                        this.children.Chat.children.Messages.addChildren(new Message({
+                                        tcc.children.Messages.addChildren(new Message({
                                             messageType: 'text',
                                             textContent: data.content,
                                             time: time
@@ -556,8 +578,8 @@ class Messenger extends Block {
                 clientAction: 'Lookup People.',
                 events: {
                     click: () => {
-                        document.querySelector('.user-search').classList.toggle('u-s-opened');
-                        search_user.focus();
+                        (document.querySelector('.user-search') as HTMLElement).classList.toggle('u-s-opened');
+                        (document.getElementById('search_user') as HTMLInputElement).focus();
                     }
                 }
             }),
@@ -568,18 +590,20 @@ class Messenger extends Block {
                 placeholder: '...search by username',
                 events: {
                     input: () => {
-                        searchUser({ login: document.activeElement.value }).then(() => {
-                            Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
-                                this.children.FoundUsersList.removeChildren(childName);
+                        searchUser({ login: (document.activeElement as HTMLInputElement).value }).then(() => {
+                            const tcful = this.children.FoundUsersList as Block<Record<string,any>,Record<string,Block>>;
+
+                            Object.keys(tcful.children).forEach((childName) => {
+                                tcful.removeChildren(childName);
                             });
                             
                             for (const user of window.memory.take().search) {
-                                this.children.FoundUsersList.addChildren(new FUUser({ name: user.login }), user.id);
+                                tcful.addChildren(new FUUser({ name: user.login }), user.id);
                             }
                             
-                            if (document.activeElement.value === '') {
-                                Object.keys(this.children.FoundUsersList.children).forEach((childName) => {
-                                    this.children.FoundUsersList.removeChildren(childName);
+                            if ((document.activeElement as HTMLInputElement).value === '') {
+                                Object.keys(tcful.children).forEach((childName) => {
+                                    tcful.removeChildren(childName);
                                 });
                             }
                         });
@@ -594,7 +618,7 @@ class Messenger extends Block {
 
             if (incomingUser.avatar) {
                 this.children.UserAvatar.setProps({
-                    src: `https://ya-praktikum.tech/api/v2/resources${incomingUser.avatar}`
+                    src: `${SERVER_BASE_URL}resources${incomingUser.avatar}`
                 });
             }
 
@@ -609,13 +633,13 @@ class Messenger extends Block {
             
             const openChatName = this.children.Chat?.props.nameOCR;
             if (this.children.Chat) {
-                Object.values(window.memory.take().chats).forEach(inMemChat => {
-                    inMemChat.users.forEach(user => {
-                        if (user.id !== window.memory.take().user.id) {
-                            if (user.login === openChatName) {
-                                Object.values(this.children.ChatList.children).forEach(onListChat => {
+                Object.values((window.memory.take().chats as Record<string, Record<string,any>>)).forEach(inMemChat => {
+                    Object.values(inMemChat.users).forEach((user) => {
+                        if ((user as Record<string,any>).id !== window.memory.take().user.id) {
+                            if ((user as Record<string,any>).login === openChatName) {
+                                Object.values((this.children.ChatList as Block<Record<string,any>,Record<string,Block>>).children).forEach(onListChat => {
                                     if (onListChat.props.recipientName === openChatName) {
-                                        onListChat._element.classList.add('selected-card');
+                                        (onListChat._element as unknown as HTMLElement).classList.add('selected-card');
                                     }
                                 })
                             }

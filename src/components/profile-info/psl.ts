@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Block from 'core/Block';
 import Input from '../input/input';
 import './psl.css';
@@ -27,9 +26,9 @@ export default class PSL extends Block {
                 ? {
                     Input: new Input({
                         class: props.class,
-                        id: props.id,
-                        name: props.name,
-                        type: props.type,
+                        id: props.id || '',
+                        name: props.name || '',
+                        type: props.type || '',
                         value: props.value,
                         placeholder: props.placeholder,
                         required: props.required

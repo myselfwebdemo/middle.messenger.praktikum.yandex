@@ -25,7 +25,6 @@ export class Storage extends EventBus<StoreEvents> {
 
         this.state = {...this.state, ...newState};
 
-        // @ts-ignore
         this.emit(StoreEvents.Updated, last, this.state);
     }
 }

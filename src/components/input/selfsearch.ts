@@ -6,7 +6,7 @@ interface TAProps {
     label: string
     placeholder?: string
     required?: boolean
-    events?: Record<string, () => void> 
+    events?: Record<string, (e: Event) => void> 
 }
 
 export default class SelfSearch extends Block {

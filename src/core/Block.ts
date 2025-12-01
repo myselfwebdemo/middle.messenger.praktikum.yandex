@@ -2,9 +2,9 @@
 import EventBus from "./EventBus";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
-export default class Block<T extends Record<string, any> = any> {
+export default class Block<T extends Record<string, any> = any, C extends Record<string, Block | Block[]> = Record<string, Block | Block[]>> {
   props!: T;
-  children!: Record<string, Block | Block[]>;
+  children!: C;
   
   static EVENTS = {
     INIT: "init",
@@ -105,6 +105,7 @@ export default class Block<T extends Record<string, any> = any> {
   componentDidUpdate(oldProps, newProps) {
     return true;
   }
+  componentWillUnmount(): void;
   setProps(newProps) {
     if (!newProps) {
       return;
@@ -216,7 +217,7 @@ export default class Block<T extends Record<string, any> = any> {
     if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);
     this.children[name] = block;
     this._render();
-    // this.children[name]._element.scrollIntoView({behavior: 'smooth'});
+    this.children[name]._element.scrollIntoView({behavior: 'smooth'});
   }
   prependChildren(block, name) {
     if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);

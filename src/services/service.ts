@@ -1,15 +1,47 @@
-// @ts-nocheck
-import endPointAPI from "core/APIs/api";
 import AuthRequests from "core/APIs/api-for-auth";
 import ChatRequests from "core/APIs/api-for-chats";
 import UserProfileRequests from "core/APIs/api-for-user";
-import { clg, Routes } from "main";
+import { Routes } from "main";
 
 const requests = new AuthRequests();
 const profileRequests = new UserProfileRequests();
 const chatsRequests = new ChatRequests();
 
-export const signup = async (data) => {
+interface TUser {
+    avatar: string
+    first_name: string
+    second_name: string
+    display_name: string
+    login: string
+    email: string
+    phone: string,
+}
+type TUOnGet = Omit<TUser, 'email'> & {
+    id: number
+};
+type TSignup = Omit<TUser, 'avatar' | 'display_name' | 'id'>  & {
+    password: string
+}
+interface TLogin {
+    login: string
+    password: string
+}
+interface TE {
+    reason: string
+}
+interface TL {
+    login: string
+}
+interface TChat {
+    avatar: string | null
+    created_by: number
+    id: number
+    last_message: string | null
+    title: string
+    unread_count: number
+}
+
+export const signup = async (data: TSignup) => {
     let err;
     window.memory.give({loading: true, eAPI: null});
 
@@ -22,7 +54,7 @@ export const signup = async (data) => {
         });
 
         window.router.go(Routes.App);
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
             err = null;
         } else if (e.response?.reason) {
@@ -36,7 +68,7 @@ export const signup = async (data) => {
     }
 }
 
-export const login = async (data) => {
+export const login = async (data: TLogin) => {
     let err;
     window.memory.give({loading: true, eAPI: null});
 
@@ -45,7 +77,7 @@ export const login = async (data) => {
         self();
 
         window.router.go(Routes.App);
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
@@ -61,14 +93,14 @@ export const login = async (data) => {
     }
 }
 
-export const searchUser = async (data) => {
+export const searchUser = async (data: TL) => {
     let err;
 
     try {
         await profileRequests.search(data).then(res => {
             window.memory.give({ search: res });
         });
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
@@ -84,14 +116,14 @@ export const searchUser = async (data) => {
     }
 }
 
-export const editUser = async (data) => {
+export const editUser = async <T extends Omit<TUser, 'avatar'>>(data: T) => {
     let err,suc;
     window.memory.give({loading: true, eAPI: null, sAPI: false});
 
     try {
         await profileRequests.changeUserData(data);
         await self();
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
@@ -109,13 +141,13 @@ export const editUser = async (data) => {
     }
 }
 
-export const editPass = async (data) => {
+export const editPass = async (data:{oldPassword:string,newPassword:string}) => {
     let err,suc;
     window.memory.give({loading: true, eAPI: null, sAPI: false});
 
     try {
         await profileRequests.changePass(data);
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
@@ -133,14 +165,14 @@ export const editPass = async (data) => {
     }
 }
 
-export const changeAvatar= async (data) => {
+export const changeAvatar = async (data:FormData) => {
     let err,suc;
     window.memory.give({loading: true, eAPI: null, sAPI: false});
     
     try {
         await profileRequests.newAvatar(data);
         await self();
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
@@ -158,25 +190,25 @@ export const changeAvatar= async (data) => {
     }
 }
 
-export const newChat = async (data) => {
+export const newChat = async (data:{title:string}) => {
     try {
         let id;
         await chatsRequests.new(data).then(res => {
             id = res;
         });
-        return id.id;
-    } catch (e) {
+        return (id as unknown as Record<string, number>).id;
+    } catch (e: TE | any) {
         return e
     }
 }
 
-export const delChat = async (data) => {
+export const delChat = async (data:{chatId:number}) => {
     let err,suc;
     window.memory.give({loading: true, eAPI: null, sAPI: false});
     
     try {
         await chatsRequests.del(data);
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
             err = null;
         } else if (e.response?.reason) {
@@ -191,29 +223,28 @@ export const delChat = async (data) => {
     }
 }
 
-export const addUserToChat = async (data) => {
+export const addUserToChat = async (data: {users: Array<number>,chatId: number}) => {
     try {
         await chatsRequests.addUser(data);
-    } catch (e) {
-        clg(e);
+    } catch (e: TE | any) {
+        return e;
     }
 }
-export const delUserFromChat = async (data) => {
+export const delUserFromChat = async (data: {users: Array<number>,chatId: number}) => {
     try {
         await chatsRequests.delUser(data);
-    } catch (e) {
-        clg(e);
+    } catch (e: TE | any) {
+        return e;
     }
 }
 
-export const getChatToken = async (id) => {
+export const getChatToken = async (chatId: number) => {
     let token;
 
     try {
-        const t = await chatsRequests.token(id);
+        const t = await chatsRequests.token(chatId);
         token=t;
-    } catch (e) {
-        clg(e);
+    } catch (e: TE | any) {
         token=null;
     } finally {
         return token;
@@ -231,23 +262,22 @@ export const self = async () => {
             window.memory.give({ user: res });
         });
 
-        await chatsRequests.get().then(async chats => {
-            let chats_temp = {};
+        await chatsRequests.get().then(async (chats) => {
+            let chats_temp: Record<number, {chat: TChat, users: Record<number, TUOnGet>}> = {};
 
-            const promises = chats.map(chat => chatsRequests.getUsers(chat.id)
-                .then(chat_users => {
+            const promises = (chats as unknown as TChat[]).map(chat => 
+                chatsRequests.getUsers(chat.id).then(chat_users => {
                     let singleChat = {
-                        'chat': chat,
-                        'users': []
-                    }
-                    chat_users.forEach(user => {
-                        singleChat['users'][user.id] = user;
-                    })
-
+                        chat,
+                        users: {} as Record<number, TUOnGet>
+                    };
+                    (chat_users as unknown as TUOnGet[]).forEach(user => {
+                        singleChat.users[user.id] = user;
+                    });
                     chats_temp[chat.id] = singleChat;
                 })
             );
-            
+
             await Promise.all(promises);
 
             window.memory.give({chats: chats_temp});
@@ -261,7 +291,7 @@ export const self = async () => {
         if (window.location.pathname !== Routes.App && window.location.pathname !== '/settings') {
             window.router.go(Routes.App);
         }
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
@@ -294,28 +324,29 @@ export const chatsUpdate = async () => {
         await chatsRequests.get().then(async chats => {
             const memChats = window.memory.take().chats;
 
-            let mcID = [];
-            let fetcID = [];
+            let mcID: Number[] = [];
+            let fetcID: Number[] = [];
 
             Object.keys(memChats).forEach(cID => {
                 mcID.push(Number(cID));
                 mcID.sort();
             });
-            chats.forEach(chat => {
+            (chats as unknown as Array<TChat>).forEach(chat => {
                 fetcID.push(chat.id);
                 fetcID.sort();
             });
 
             if (fetcID.toString() !== mcID.toString()) {
-                let chats_temp = {};
+                let chats_temp: Record<number, {chat: TChat,users: Record<number, TUOnGet>;}> = {};
     
-                const promises = chats.map(chat => chatsRequests.getUsers(chat.id)
+                const promises = (chats as unknown as Array<TChat>).map(chat => chatsRequests.getUsers(chat.id)
                     .then(chat_users => {
                         let singleChat = {
                             'chat': chat,
-                            'users': []
-                        }
-                        chat_users.forEach(user => {
+                            'users': <Array<TUOnGet>>[]
+                        };
+
+                        (chat_users as unknown as Array<TUOnGet>).forEach(user => {
                             singleChat['users'][user.id] = user;
                         })
     
@@ -330,7 +361,7 @@ export const chatsUpdate = async () => {
                 return
             }
         });
-    } catch (e) {
+    } catch (e: TE | any) {
         return
     }
 }
@@ -340,7 +371,7 @@ export const checkLogin = async () => {
 
     try {
         await self();
-    } catch (e) {
+    } catch (e: TE | any) {
         return
     } finally {
         window.memory.give({loading: false});
@@ -355,7 +386,7 @@ export const logout = async () => {
         await requests.withdraw();
         
         window.router.go(Routes.Landing);
-    } catch (e) {
+    } catch (e: TE | any) {
         if (e.response?.reason) {
             if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;

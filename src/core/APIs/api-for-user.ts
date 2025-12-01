@@ -8,7 +8,6 @@ interface TUser {
     first_name: string
     second_name: string
     display_name: string
-    avatar: string
     phone: string
     email: string
 }
@@ -36,7 +35,7 @@ export default class UserProfileRequests {
     async changePass(data: TPass): Promise<void | TReqError> {
         return xhrUser.put('/password', { data });
     }
-    async newAvatar(data: Record<string, any>): Promise<void | TReqError> {
+    async newAvatar(data: FormData): Promise<void | TReqError> {
         return xhrUser.put('/profile/avatar', { data });
     }
     async search(data: Record<'login', string>): Promise<void | TReqError> {

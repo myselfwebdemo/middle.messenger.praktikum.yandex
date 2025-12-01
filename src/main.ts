@@ -1,4 +1,3 @@
-// @ts-nocheck
 import './style.css'
 import Handlebars from 'handlebars';
 
@@ -7,62 +6,74 @@ import SignupPage from './pages/forms/signup';
 import ChatAPP from './pages/chatapp/chatapp';
 import E from './pages/errors/error';
 import Router from 'core/router';
-import Home from 'pages/app-landing/landing-page';
+// import Home from 'pages/app-landing/landing-page';
 import Profile from 'pages/profile/profile';
 import formValidationHandler from 'utils/formValidation';
 import { Storage } from 'core/storage';
 import { checkLogin } from 'services/service';
   
-export function clg(...i: []): void {
+export function clg(...i: any[]): void {
     console.log(...i);
 }
 
-export function formInputOnFocus(e) {
-    const inputFields = document.querySelector('.input-fields');
+export function formInputOnFocus(e: Event) {
+    const inputFields = document.querySelector('.input-fields') as HTMLElement;
+    const tar = e.target as HTMLElement;
 
     for (let i = 0;i<inputFields.children.length; i++) {
-        const label = inputFields.children[i].children[0];
-        if (inputFields.children[i].children[1].id === e.target.id) {
+        const label = inputFields.children[i].children[0] as HTMLElement;
+        if (inputFields.children[i].children[1].id === tar.id) {
             if (i == 0) {
                 label.style.transform = 'unset';
             } else {
                 const inputTopSpacing = 1.3;
-                e.target.style.margin = `${inputTopSpacing}vh 0 .2vh 0`;
+                tar.style.margin = `${inputTopSpacing}vh 0 .2vh 0`;
                 label.style.transform = `translateY(${inputTopSpacing}vh)`;
             }
             label.style.fontSize = 'var(--small-font-size)';
         }
     }
 }
-export function formInputOnBlur(e) {
-    const inputFields = document.querySelector('.input-fields');
+export function formInputOnBlur(e: Event) {
+    const inputFields = document.querySelector('.input-fields') as HTMLElement;
+    const tar = e.target as HTMLInputElement;
 
     for (let i = 0;i<inputFields.children.length; i++) {
-        const label = inputFields.children[i].children[0];
+        const label = inputFields.children[i].children[0] as HTMLElement;
 
-        if (inputFields.children[i].children[1].id === e.target.id && !e.target.value) {
-            e.target.style.margin = '0 0 .2vh 0';
+        if (inputFields.children[i].children[1].id === tar.id && !tar.value) {
+            tar.style.margin = '0 0 .2vh 0';
             label.style.transform = 'translateY(2.4vh)';
             label.style.fontSize = 'var(--regular-font-size)';
         }
     }
 }
-export function validate(e, clear) {
-    let isValid;
-    if (e.name) {
-        const { valid, verdict } = formValidationHandler(clear | false,'signup', e.name, e.value, true);
-        e.style.borderBottom = verdict ? 'dashed .2vh var(--color-fatal)' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.id}`).textContent = verdict;
+export function validate(e: Event | HTMLInputElement, clear: boolean) {
+    const inputEl = e instanceof HTMLInputElement 
+        ? e 
+        : (e.target as HTMLInputElement);
 
-        isValid = valid;
-    } else {
-        const { valid, verdict } = formValidationHandler(clear | false,'login', e.target.name, e.target.value);
-        e.target.style.borderBottom = verdict ? 'dashed .2vh var(--color-fatal)' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
-        
-        isValid = valid;
-    }
-    return isValid
+    const mode = e instanceof HTMLInputElement ? 'signup' : 'login';
+
+    const { valid, verdict } = formValidationHandler(
+        clear || false,
+        mode,
+        inputEl.name,
+        inputEl.value,
+        e instanceof HTMLInputElement
+    );
+
+    inputEl.style.borderBottom = verdict
+        ? 'dashed .2vh var(--color-fatal)'
+        : '';
+
+    const mismatch = document.querySelector(
+        `.input-requirements-mismatch.${inputEl.id}`
+    ) as HTMLElement;
+
+    if (mismatch) mismatch.textContent = verdict || '';
+
+    return valid;
 }
 export function resetForm() {
     document.querySelectorAll('input').forEach(i => {
@@ -70,7 +81,7 @@ export function resetForm() {
         i.value = '';
         i.style.margin = '0 0 .2vh 0';
 
-        const label = document.querySelector(`label[for="${i.id}"]`);
+        const label = document.querySelector(`label[for="${i.id}"]`) as HTMLLabelElement;
         label.style.transform = 'translateY(2.4vh)';
         label.style.fontSize = 'var(--regular-font-size)';
     });
@@ -97,6 +108,7 @@ window.memory = new Storage({
 export enum Routes {
     Landing = '/',
     // LogIn = '/log-in',
+    // signup page uses Landing instead of LogIn
     SignUp = '/sign-up',
     App = '/messenger',
     SetUp = '/settings',
@@ -107,12 +119,12 @@ window.router = new Router('#app');
 
 window.router.use(Routes.Landing, LoginPage, {method: 'get'})
             // .use('/', Home)
-            // .use('/log-in', LoginPage, {method: 'get'})
+            // .use(Routes.LogIn, LoginPage, {method: 'get'})
              .use(Routes.App, ChatAPP)
              .use(Routes.SignUp, SignupPage, {method: 'post'})
-             .use(Routes.SetUp, Profile, ({ level: 0 }))
-             .use(Routes.E404, E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
-             .use(Routes.E500, E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
+             .use(Routes.SetUp, Profile, { level: 0 })
+             .use(Routes.E404, E as any, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
+             .use(Routes.E500, E as any, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
 window.router.start();
 
 await checkLogin();

@@ -11,8 +11,7 @@ export default class Warning extends Block {
             className: 'dialog-wrapper warning', 
             events: {
                 click: (e: Event) => {
-                    // @ts-ignore
-                    if (!e.target.closest('.warning-dialog')) {
+                    if (!(e.target as HTMLElement).closest('.warning-dialog')) {
                         this.close();
                     }
                 }

@@ -7,7 +7,7 @@ interface TCNew {
     title: string
 }
 interface TCDel {
-    id: string
+    chatId: number
 }
 interface TNewUser {
     users: Array<number>

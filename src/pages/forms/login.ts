@@ -1,10 +1,9 @@
-// @ts-nocheck
 import Block from "core/Block";
 import './form.css';
 
 import Input from "components/input/input";
 import Button from "components/button/button";
-import { resetForm, validate } from "main";
+import { resetForm, Routes, validate } from "main";
 import { formInputOnFocus, formInputOnBlur} from "main";
 import { injectRouter } from "utils/injectRouter";
 import { login } from "../../services/service";
@@ -27,22 +26,22 @@ class LoginPage extends Block {
                 novalidate: true
             }, 
             events: {
-                focusin: (e) => {
+                focusin: (e: Event) => {
                     formInputOnFocus(e)
                 },
-                focusout: (e) => {
+                focusout: (e: Event) => {
                     formInputOnBlur(e)
                 },
-                input: (e) => {
-                    validate(e)
+                input: (e: Event) => {
+                    validate(e,false);
                 },
-                submit: async (e) => {
+                submit: async (e: Event) => {
                     e.preventDefault();
 
                     let validation;
-                    for (const e of this._element.lastElementChild.elements) {
+                    for (const e of ((this._element as unknown as HTMLElement).lastElementChild as HTMLFormElement).elements) {
                         if (e instanceof HTMLInputElement) {
-                            if (!validate(e)) {
+                            if (!validate(e,false)) {
                                 validation = false;
                                 break
                             }
@@ -75,7 +74,7 @@ class LoginPage extends Block {
                     click: () => {
                         window.memory.give({eAPI:null});
                         resetForm();
-                        this.props.router.go('/sign-up');
+                        this.props.router.go(Routes.SignUp);
                     }
                 }
             }),
@@ -140,7 +139,7 @@ class LoginPage extends Block {
     }
 }
 
-const extraProps = (wm) => {
+const extraProps = (wm: Record<string,any>) => {
     return {
         loading: wm.loading,
         reqFail: wm.eAPI

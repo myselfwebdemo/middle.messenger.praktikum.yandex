@@ -8,7 +8,7 @@ interface EProps {
     eAlt: string
     error: string
 }
-export default class E extends Block {
+export default class E extends Block<EProps> {
     constructor(props: EProps) {
         super('div', {
             className: 'error-container',

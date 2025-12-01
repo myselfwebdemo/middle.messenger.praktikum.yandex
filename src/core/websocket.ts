@@ -1,5 +1,4 @@
 import { getChatToken } from 'services/service';
-// import { clg } from 'main';
 
 interface SocketParams {
     userId: number;
@@ -29,8 +28,14 @@ export default class ChatConnection {
         this.connect();
     }
     private async connect() {
-        // @ts-ignore
-        const { token } = await getChatToken(this.chatId);
+        const result = await getChatToken(this.chatId);
+
+        if (!result || !('token' in result)) {
+            throw new Error(`Failed to get chat token: ${JSON.stringify(result)}`);
+        }
+
+        const token = result.token;
+
         this.url = `wss://ya-praktikum.tech/ws/chats/${this.userId}/${this.chatId}/${token}`;
         this.socket = new WebSocket(this.url);
         window.__socket = this.socket;
@@ -38,12 +43,10 @@ export default class ChatConnection {
         this.socket.addEventListener('open', () => this.onOpen());
         this.socket.addEventListener('message', (e) => this.onMessage(e));
         this.socket.addEventListener('error', (e) => this.onError(e));
-        this.socket.addEventListener('close', (e) => this.onClose(e));
+        this.socket.addEventListener('close', () => this.onClose());
     }
 
     private onOpen() {
-        // clg('[WS] Opened');
-
         this.requestHistory(0);
         this.requestHistory(20);
 
@@ -69,13 +72,11 @@ export default class ChatConnection {
         console.error('[WS] Error:', e);
     }
 
-    // @ts-ignore
-    private onClose(e: CloseEvent) {
+    private onClose() {
         clearInterval(this.pingInterval);
         this.pingInterval = null;
 
         if (!this.isManualClose) {
-            // clg('[WS] Unexpected close', e.code);
             this.reconnect();
         }
     }
