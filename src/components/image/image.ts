@@ -20,10 +20,10 @@ export default class Image extends Block {
     }
     componentDidUpdate(oldProps: ImageProps, newProps: ImageProps) {
         if (oldProps.src !== newProps.src) {
-            this._element.setAttribute('src', newProps.src || '/profile/default.png');
+            (this._element as unknown as HTMLElement).setAttribute('src', newProps.src || '/profile/default.png');
         }
         if (oldProps.alt !== newProps.alt) {
-            this._element.setAttribute('alt', newProps.alt);
+            (this._element as unknown as HTMLElement).setAttribute('alt', newProps.alt);
         }
         return true;
     }

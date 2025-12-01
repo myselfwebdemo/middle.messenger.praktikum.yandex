@@ -2,7 +2,7 @@ import Block from 'core/Block';
 import './message.css';
 import Button from 'components/button/button';
 
-export default class MessageList extends Block {
+export default class MessageList extends Block<Record<string,any>,Record<string,Block>> {
     constructor() {
         super('div', {
             className: 'messages',

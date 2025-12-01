@@ -62,16 +62,15 @@
     margin-left: .3vw;
 }
 .new-chat:hover {
+    cursor: pointer;
     color: var(--complementary-text-color);
 }
 .explore .new-chat img {
     --size: 2vh;
+
     width: var(--size);
     height: var(--size);
     border-radius: 40%;
-}
-.new-chat:hover {
-    cursor: pointer;
 }
 .new-chat:hover::before {
     position: absolute;
@@ -95,7 +94,7 @@
     align-items: center;
     gap: 1vw;
     width: 100%;
-    margin: 1vh 0 2vh 0;
+    margin: 1vh 0 2vh;
     padding: .3vw;
     border-radius: 1.8vh;
     transition: var(--theme-transition);
@@ -103,9 +102,12 @@
 }
 .user-preview:hover {
     --c: var(--theme-main-color-01);
+
     background: var(--theme-main-color-01);
 }
+
 /* current session user info preview (not released, overflow issue) */
+
 /* .user-preview:hover::before {
     position: absolute;
     content: '';
@@ -117,6 +119,7 @@
 
 .user-preview img {
     --size: 6vh;
+
     width: var(--size);
     height: var(--size);
     border-radius: calc(1.8vh - .3vw);
@@ -130,6 +133,7 @@
 }
 #search-container {
     --c: rgb(230 230 230 / 60%);
+
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
@@ -572,7 +576,7 @@
     flex-direction: row-reverse;
     gap: .5vw;
     top: -1.3vh;
-    right: 0vw;
+    right: 0;
     background: none;
 }
 .abc-choice {
@@ -592,6 +596,7 @@
 .cd-choice div:nth-child(2) img {
     --size: 3vh;
     --p: 1.5vh;
+
     width: var(--size);
     height: var(--size);
     margin: calc(2vh - var(--p));
@@ -679,6 +684,7 @@
 /* stylelint-disable-next-line no-descending-specificity */
 .u-send img {
     --size: 2vh;
+
     width: var(--size);
     height: var(--size);
     filter: invert(100%);
