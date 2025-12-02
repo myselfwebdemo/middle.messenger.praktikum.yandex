@@ -1,18 +1,18 @@
 import { renderWithQuery } from 'core/renderDOM';
 import type Block from './Block';
 
-type BlockConstructor = new (props: Record<string, any>) => Block;
+export type BlockConstructor<P extends Record<string, unknown>> = new (props: P) => Block<P, Record<string,Block>>;
 
-export default class Route {
+export default class Route<P extends Record<string,unknown>> {
     private _pathname: string
-    private _blockClass: BlockConstructor;
-    private _block: Block | null;
-    private _props: Record<string, any>
+    private _blockClass: BlockConstructor<P>;
+    private _block: Block<P> | null;
+    private _props: { blockProps: P; rootQuery: string }
 
     constructor(
         pathname: string, 
-        view: BlockConstructor, 
-        props: Record<string, any>
+        view: BlockConstructor<P>, 
+        props: { blockProps: P; rootQuery: string }
     ) {
         this._pathname = pathname;
         this._blockClass = view;
@@ -37,7 +37,6 @@ export default class Route {
         const { blockProps, rootQuery } = this._props;
         if (!this._block) {
             this._block = new this._blockClass(blockProps);
-            (window as any)[this._blockClass.name] = this._block;
         }
 
         renderWithQuery(rootQuery, this._block);

@@ -130,7 +130,7 @@ export default class Chat extends Block<ChatProps, Record<string,Block>> {
                             const fuEl = tar.closest('#dwFu') as HTMLElement;
                             let fuId = null;
 
-                            window.memory.take().search.forEach((user: Record<string, any>) => {
+                            window.memory.take().search.forEach((user: TUser) => {
                                 Object.entries(user).forEach(([k,v]) => {
                                     if (k === 'login' && v === fuEl.textContent) {
                                         fuId = user.id;
@@ -158,7 +158,7 @@ export default class Chat extends Block<ChatProps, Record<string,Block>> {
                         const userName = addUTC_search.value;
                         let fuId = null;
 
-                        window.memory.take().search.forEach((user: Record<string, any>) => {
+                        window.memory.take().search.forEach((user: TUser) => {
                             Object.entries(user).forEach(([k,v]) => {
                                 if (k === 'login' && v === userName) {
                                     fuId = user.id;
@@ -224,7 +224,7 @@ export default class Chat extends Block<ChatProps, Record<string,Block>> {
                             const fuEl = tar.closest('#dwFu') as HTMLElement;
                             let fuId = null;
 
-                            window.memory.take().search.forEach((user: Record<string, any>) => {
+                            window.memory.take().search.forEach((user: TUser) => {
                                 Object.entries(user).forEach(([k,v]) => {
                                     if (k === 'login' && v === fuEl.textContent) {
                                         fuId = user.id;
@@ -252,7 +252,7 @@ export default class Chat extends Block<ChatProps, Record<string,Block>> {
                         const userName = delUFC_search.value;
                         let fuId = null;
 
-                        window.memory.take().search.forEach((user: Record<string, any>) => {
+                        window.memory.take().search.forEach((user: TUser) => {
                             Object.entries(user).forEach(([k,v]) => {
                                 if (k === 'login' && v === userName) {
                                     fuId = user.id;

@@ -8,19 +8,21 @@ import { formInputOnFocus, formInputOnBlur} from "main";
 import { injectRouter } from "utils/injectRouter";
 import { login } from "../../services/service";
 import { linkStorage } from "utils/link-storage";
+import type Router from "core/router";
 
-interface loginProps {
+export interface loginProps {
     method: string
+    formState: {
+        login: string,
+        password: string,
+    }
+    router: Router
 }
 
-class LoginPage extends Block {
+class LoginPage extends Block<loginProps, Record<string,Block>> {
     constructor(props: loginProps) {
         super('div', {
             ...props,
-            formState: {
-                login: '',
-                password: '',
-            },
             attrs: {
                 method: props.method,
                 novalidate: true
@@ -139,7 +141,7 @@ class LoginPage extends Block {
     }
 }
 
-const extraProps = (wm: Record<string,any>) => {
+const extraProps = (wm: Partial<MemoryBI>) => {
     return {
         loading: wm.loading,
         reqFail: wm.eAPI

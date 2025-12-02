@@ -17,7 +17,7 @@ export default class EventBus<E extends string> {
             (listener) => listener !== callback,
         )
     }
-    emit<T extends any[] = []>(event: E, ...args: T) {
+    emit<T extends Record<string,unknown>[] = []>(event: E, ...args: T) {
         if (!this.listeners[event]) {
             return;
         }

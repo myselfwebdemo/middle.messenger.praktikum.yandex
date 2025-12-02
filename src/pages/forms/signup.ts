@@ -8,24 +8,18 @@ import { formInputOnFocus, formInputOnBlur} from "main";
 import { injectRouter } from "utils/injectRouter";
 import { linkStorage } from "utils/link-storage";
 import { signup } from "../../services/service";
+import type Router from "core/router";
 
 interface signupProp {
     method: string
+    formState: TSignup
+    router: Router
 }
 
-class SignupPage extends Block {
+class SignupPage extends Block<signupProp, Record<string,Block>> {
     constructor(props: signupProp) {
         super('div', {
             ...props,
-            formState: {
-                email: '',
-                login: '',
-                display_name: '',
-                first_name: '',
-                second_name: '',
-                phone: '',
-                password: '',
-            },
             attrs: {
                 method: props.method,
                 novalidate: true
@@ -201,7 +195,7 @@ class SignupPage extends Block {
     }
 }
 
-const extraProps = (wm: Record<string,any>) => {
+const extraProps = (wm: Partial<MemoryBI>) => {
     return {
         loading: wm.loading,
         reqFail: wm.eAPI

@@ -2,11 +2,15 @@ import './landing-style.css';
 
 import Button from "components/button/button";
 import Block from "core/Block";
+import type Router from 'core/router';
 import { checkLogin } from 'services/service';
 import { injectRouter } from "utils/injectRouter";
 
-class Home extends Block {
-    constructor(props: Record<string, any>) {
+interface THome {
+    router: Router
+}
+class Home extends Block<THome,Record<string,Block>>{
+    constructor(props: THome) {
         super('div', {
             ...props,
             className: 'app-landing',

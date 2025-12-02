@@ -1,22 +1,19 @@
 import endPointAPI from "./api";
 
-interface TReqError {
-    reason: string
-}
-interface TCNew {
+export interface TCNew {
     title: string
 }
-interface TCDel {
+export interface TCDel {
     chatId: number
 }
-interface TNewUser {
+export interface TNewUser {
     users: Array<number>
     chatId: number
 }
 
-const xhrChats = new endPointAPI('chats');
 
 export default class ChatRequests {
+    private readonly xhrChats = new endPointAPI('chats');
     private static _instance: ChatRequests;
 
     constructor() {
@@ -28,24 +25,24 @@ export default class ChatRequests {
     }
 
     async get(): Promise<void | TReqError> {
-        return xhrChats.get('/');
+        return this.xhrChats.get('/');
     }
     async getUsers(id: number): Promise<void | TReqError> {
-        return xhrChats.get(`/${id}/users`);
+        return this.xhrChats.get(`/${id}/users`);
     }
     async new(data: TCNew): Promise<void | TReqError> {
-        return xhrChats.post('/', {data});
+        return this.xhrChats.post('/', {data});
     }
     async del(data: TCDel): Promise<void | TReqError> {
-        return xhrChats.delete('/', {data});
+        return this.xhrChats.delete('/', {data});
     }
     async addUser(data: TNewUser): Promise<void | TReqError> {
-        return xhrChats.put('/users', {data});
+        return this.xhrChats.put('/users', {data});
     }
     async delUser(data: TNewUser): Promise<void | TReqError> {
-        return xhrChats.delete('/users', {data});
+        return this.xhrChats.delete('/users', {data});
     }
     async token(chatId: number): Promise<void | TReqError> {
-        return xhrChats.post(`/token/${chatId}`);
+        return this.xhrChats.post(`/token/${chatId}`);
     }
 }

@@ -1,12 +1,12 @@
 import Block from 'core/Block';
 import './chatapp.css';
 
-interface Props {
+interface FUUProps {
     name: string
 }
 
 export default class FUUser extends Block {
-    constructor(props: Props) {
+    constructor(props: FUUProps) {
         super('div', { 
             ...props,
             className: 'fu-user',

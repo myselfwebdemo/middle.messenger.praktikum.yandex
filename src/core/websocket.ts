@@ -4,11 +4,18 @@ interface SocketParams {
     userId: number;
     chatId: number;
 }
+interface TMes {
+    content: string
+    id: number
+    time: string
+    type: string
+    user_id: number
+}
 
 export default class ChatConnection {
     private socket: WebSocket | null = null;
-    private pingInterval: any = null;
-    private reconnectTimeout: any = null;
+    private pingInterval: number = 0;
+    private reconnectTimeout: number = 0;
 
     private readonly userId: number;
     private readonly chatId: number;
@@ -16,9 +23,9 @@ export default class ChatConnection {
     private isManualClose = false;
     private url = '';
 
-    private onMessageHandler: (data: any) => void;
+    private onMessageHandler: (data: TMes) => void;
 
-    constructor(params: SocketParams, onMessage: (data: any) => void) {
+    constructor(params: SocketParams, onMessage: (data: TMes) => void) {
         if (window.__socket) window.__socket.close();
         
         this.userId = params.userId;
@@ -74,7 +81,7 @@ export default class ChatConnection {
 
     private onClose() {
         clearInterval(this.pingInterval);
-        this.pingInterval = null;
+        this.pingInterval = 0;
 
         if (!this.isManualClose) {
             this.reconnect();
@@ -87,7 +94,7 @@ export default class ChatConnection {
             this.connect();
         }, 2000);
     }
-    private send(obj: Record<string, any>) {
+    private send(obj: Record<string, unknown>) {
         if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
             return;
         }

@@ -7,19 +7,20 @@ import Image from 'components/image/image';
 import PSL from 'components/profile-info/psl';
 import type Router from "core/router";
 import Fatal from "components/dialog/fatal";
-import { changeAvatar, editPass, editUser, logout } from "../../services/service";
+import { changeAvatar, editPass, editUser, logout, self } from "../../services/service";
 import { linkStorage } from "utils/link-storage";
 import { injectRouter } from "utils/injectRouter";
 import { SERVER_BASE_URL } from "../../config";
 
 interface ProfileProps { 
-    user: Record<string, any>
+    loading: boolean
+    reqFail: string
+    reqSuccess: boolean
+    user: TUser
     level: number
 }
 
-class Profile extends Block<ProfileProps, {
-    page: Block
-}> {
+class Profile extends Block<ProfileProps, {page: Block}> {
     constructor(props: ProfileProps) {
         const singlePageProps = {
             router: window.router,
@@ -47,7 +48,7 @@ class Profile extends Block<ProfileProps, {
             ...(props.level === 2 ? { page: new SetNewPassword(singlePageProps) } : {}),
         });
     }
-    setProps(newProps: Record<string, any>): void {
+    setProps(newProps: ProfileProps): void {
         super.setProps(newProps);
 
         const pslToUserData = {
@@ -59,7 +60,7 @@ class Profile extends Block<ProfileProps, {
         }
 
         if (newProps.user) {
-            const tcPage = this.children.page as Block<Record<string, any>, Record<string, Block>>;
+            const tcPage = this.children.page as Block<{user:TUser}, Record<string, Block>>;
 
             if (newProps.user !== tcPage.props.user) {
                 tcPage.setProps({ user: newProps.user });
@@ -102,7 +103,7 @@ class Profile extends Block<ProfileProps, {
     }
 }
 
-const extraProps = (wm: Record<string, any>) => {
+const extraProps = (wm: Partial<MemoryBI>) => {
     return {
         loading: wm.loading,
         reqFail: wm.eAPI,
@@ -114,7 +115,7 @@ export default linkStorage(extraProps)(injectRouter(Profile));
 
 interface ProfilePagesProps {
     router: Router,
-    user: Record<string, any>,
+    user: TUser,
     toLevel: (nl: number) => void
 };
 
@@ -139,8 +140,9 @@ class ProfileLanding extends Block<ProfilePagesProps, Record<string,Block>> {
                 typeIMG: true,
                 src: 'back.png',
                 events: {
-                    click: () => {
+                    click: async () => {
                         this.props.router.go('/messenger');
+                        await self();
                     }
                 }
             }),
@@ -249,7 +251,7 @@ class ProfileLanding extends Block<ProfilePagesProps, Record<string,Block>> {
             }),
         })
     }
-    setProps(newProps: Record<string,any>): void {
+    setProps(newProps: ProfilePagesProps): void {
         super.setProps(newProps);
 
         this.children.ProfileIcon.setProps({
@@ -296,10 +298,11 @@ class EditProfile extends Block<ProfilePagesProps, Record<string,Block>> {
                 typeIMG: true,
                 src: 'back.png',
                 events: {
-                    click: () => {
+                    click: async () => {
                         document.querySelectorAll('input').forEach(i => i.value=i.placeholder)
                         this.props.toLevel(0)
                         this.props.router.go('/messenger');
+                        await self();
                     }
                 }
             }),
@@ -465,10 +468,11 @@ class SetNewPassword extends Block<ProfilePagesProps, Record<string,Block>> {
                 typeIMG: true,
                 src: 'back.png',
                 events: {
-                    click: () => {
+                    click: async () => {
                         document.querySelectorAll('input').forEach(i => i.value='');
                         this.props.toLevel(0);
                         this.props.router.go('/messenger');
+                        await self();
                     }
                 }
             }),

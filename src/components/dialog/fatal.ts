@@ -2,7 +2,7 @@ import Block from 'core/Block';
 import '../dialog/dialog.css';
 import Button from 'components/button/button';
 
-interface Props {
+interface FatalProps {
     title: string
     mainMessage: string
     finalAction: string
@@ -10,7 +10,7 @@ interface Props {
     finalEvent?: Record<string, () => void>
 }
 export default class Fatal extends Block {
-    constructor(props: Props) {
+    constructor(props: FatalProps) {
         super('div', {
             ...props,
             className: 'dialog-wrapper fatal', 

@@ -185,7 +185,7 @@ export default class Block<T extends Record<string, any> = any, C extends Record
     const eventBus = this.eventBus();
     const emitBind = eventBus.emit.bind(eventBus);
 
-    return new Proxy(props as any, {
+    return new Proxy(props as Record<string, any>, {
       get(target, prop) {
         const value = target[prop];
         return typeof value === "function" ? value.bind(target) : value;

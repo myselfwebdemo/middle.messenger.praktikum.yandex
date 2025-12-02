@@ -1,7 +1,7 @@
 import Block from 'core/Block';
 import './chatapp.css';
 
-export default class FoundUsersList extends Block<Record<string,any>,Record<string,Block>> {
+export default class FoundUsersList extends Block<{},Record<string,Block>> {
     constructor() {
         super('div', { className: 'found-users-list' })
     }

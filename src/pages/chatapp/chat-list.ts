@@ -4,22 +4,22 @@ import { linkStorage } from 'utils/link-storage';
 import { injectRouter } from 'utils/injectRouter';
 import ChatCard from 'components/chat-card/chat-card';
 
-class ChatList extends Block<Record<string,any>, Record<string,Block>> {
+class ChatList extends Block<{}, Record<string,Block>> {
     constructor() {
         super('div', {
             className: 'chat-list',
-        })
+        });
     }
-    setProps(newProps: Record<string, any>): void {
+    setProps(newProps: {loading: boolean, chats: Record<number, TChatBE>}): void {
         super.setProps(newProps);
         
         Object.keys(this.children).forEach(key => {
             this.removeChildren(key);
         })
         Object.entries(newProps.chats).forEach(([chatId,chat]) => {
-            Object.values((chat as Record<string,any>).users).forEach((user) => {
-                if ((user as Record<string,any>).id !== window.memory.take().user.id) {
-                    this.addChildren(new ChatCard({ recipientName: (user as Record<string,any>).login, class: 'on-hover chat-card' }), `chat_${chatId}`);
+            Object.values((chat as TChatBE).users).forEach((user) => {
+                if ((user as TUser).id !== window.memory.take().user.id) {
+                    this.addChildren(new ChatCard({ recipientName: (user as TUser).login, class: 'on-hover chat-card' }), `chat_${chatId}`);
                 }
             });
         });
@@ -51,7 +51,7 @@ class ChatList extends Block<Record<string,any>, Record<string,Block>> {
     }
 }
 
-const props = (wm: Record<string, any>) => {
+const props = (wm: Partial<MemoryBI>) => {
     return {
         loading: wm.loading,
         chats: wm.chats

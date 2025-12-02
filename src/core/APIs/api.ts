@@ -1,4 +1,6 @@
 import { SERVER_BASE_URL } from "../../config";
+import type { TCDel, TCNew, TNewUser } from "./api-for-chats";
+import type { TPass } from "./api-for-user";
 
 enum METHOD {
     GET = "GET",
@@ -9,7 +11,7 @@ enum METHOD {
 
 interface RequestType {
     method: METHOD,
-    data?: Record<string, any>
+    data?: TCNew | TCDel | TNewUser | TPass | FormData | Record<'login',string>
 }
 
 type RequestWithoutMethod = Omit<RequestType, 'method'>;

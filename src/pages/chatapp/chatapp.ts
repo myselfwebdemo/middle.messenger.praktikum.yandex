@@ -17,12 +17,17 @@ import { Routes } from 'main';
 import { StoreEvents } from 'core/storage';
 import DialogWindow from 'components/dialog/dialog';
 import { SERVER_BASE_URL } from '../../config';
+import type Router from 'core/router';
 
-class Messenger extends Block<Record<string,any>, Record<string,Block>> {
-    private _user: Record<string, any> = {};
+interface MesProps {
+    router: Router
+    user: TUser
+}
+class Messenger extends Block<MesProps, Record<string,Block>> {
+    private _user: TUser = {} as TUser;
     private socket!: ChatConnection;
 
-    constructor(props: Record<string, any>) {
+    constructor(props: MesProps) {
         super('main', {
             ...props,
             events: {
@@ -86,10 +91,10 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                             const onCardUsername = card.textContent ? card.textContent.trim().split(' ')[0] : '';
                             let onCardChatId: number = 0;
     
-                            const memChats = window.memory.take().chats as Record<string, any>;
+                            const memChats = window.memory.take().chats as Record<number, TChatBE>;
     
                             Object.entries(memChats).forEach(([chatId, chat]) => {
-                                Object.values(chat.users as Record<string, any>).forEach(user => {
+                                Object.values(chat.users as Record<number, TUser>).forEach(user => {
                                     if (onCardUsername === user.login) {
                                         onCardChatId = Number(chatId);
                                     }
@@ -103,7 +108,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                                 nameOCR: card.dataset.recipient || '', 
                                 chatId: onCardChatId,
                                 onChatDeleteConfirmed: async (id) => {
-                                    Object.values(memChats[id]['users'] as Record<string, any>).forEach(user => {
+                                    Object.values(memChats[id]['users'] as Record<number,TUser>).forEach(user => {
                                         if (user.id === curSesUID) {
                                             if (user.role === 'admin') {
                                                 delChat({ chatId: id });
@@ -137,7 +142,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                             this.socket = new ChatConnection(
                                 socketParams, 
                                 (data) => {
-                                    const tccc = this.children.Chat as Block<Record<string,any>,Record<string,Block>>;
+                                    const tccc = this.children.Chat as Block<Record<string,unknown>,Record<string,Block>>;
                                     if (data.type === 'message') {
                                         const date = new Date(data.time);
                                         const hours = date.getHours();
@@ -200,7 +205,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
 
                     if (tar.closest('.fu-user')) {
                         const clicked_user_name = tar.textContent ? tar.textContent.trim() : '';
-                        const tcfl = this.children.FoundUsersList as Block<Record<string,any>,Record<string, Block>>;
+                        const tcfl = this.children.FoundUsersList as Block<{},Record<string, Block>>;
                         let fuId = null;
 
                         Object.keys(tcfl.children).forEach((childName) => {
@@ -220,7 +225,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                         }
                         await addUserToChat(newUser);                   
                         
-                        const tccl = this.children.ChatList as Block<Record<string,any>,Record<string, Block>>;
+                        const tccl = this.children.ChatList as Block<{},Record<string, Block>>;
 
                         if (Object.keys(tccl.children).length !== 0) {
                             document.querySelectorAll('.chat-card.selected-card').forEach(card => {
@@ -257,7 +262,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                         this.socket = new ChatConnection(
                             socketParams, 
                             (data) => {
-                                const tcc = this.children.Chat as Block<Record<string,any>,Record<string,Block>>;
+                                const tcc = this.children.Chat as Block<Record<string,unknown>,Record<string,Block>>;
 
                                 if (data.type === 'message') {
                                     const date = new Date(data.time);
@@ -384,7 +389,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                             const fuEl = (e.target as HTMLElement).closest('#dwFu') as HTMLElement;
                             let fuId = null;
 
-                            window.memory.take().search.forEach((user: Record<string,any>) => {
+                            window.memory.take().search.forEach((user: TUser) => {
                                 Object.entries(user).forEach(([k,v]) => {
                                     if (k === 'login' && v === fuEl.textContent) {
                                         fuId = user.id;
@@ -401,7 +406,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                             }
                             await addUserToChat(newUser);
 
-                            const tccl = this.children.ChatList as Block<Record<string,any>,Record<string,Block>>;
+                            const tccl = this.children.ChatList as Block<Record<string,unknown>,Record<string,Block>>;
                             
                             if (Object.keys(tccl.children).length !== 0) {
                                 document.querySelectorAll('.chat-card.selected-card').forEach(card => {
@@ -432,7 +437,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                             this.socket = new ChatConnection(
                                 socketParams, 
                                 (data) => {
-                                    const tcc = this.children.Chat as Block<Record<string,any>,Record<string,Block>>;
+                                    const tcc = this.children.Chat as Block<Record<string,unknown>,Record<string,Block>>;
 
                                     if (data.type === 'message') {
                                         const date = new Date(data.time);
@@ -474,7 +479,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                         const userName = ccc_user_search.value;
                         let fuId = null;
 
-                        window.memory.take().search.forEach((user: Record<string, any>) => {
+                        window.memory.take().search.forEach((user: TUser) => {
                             Object.entries(user).forEach(([k,v]) => {
                                 if (k === 'login' && v === userName) {
                                     fuId = user.id;
@@ -491,7 +496,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                         }
                         await addUserToChat(newUser);
 
-                        const tccl = this.children.ChatList as Block<Record<string,any>,Record<string,Block>>;
+                        const tccl = this.children.ChatList as Block<Record<string,unknown>,Record<string,Block>>;
 
                         if (Object.keys(tccl.children).length !== 0) {
                             document.querySelectorAll('.chat-card.selected-card').forEach(card => {
@@ -522,7 +527,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                         this.socket = new ChatConnection(
                             socketParams, 
                             (data) => {
-                                const tcc = this.children.Chat as Block<Record<string,any>,Record<string,Block>>;
+                                const tcc = this.children.Chat as Block<Record<string,unknown>,Record<string,Block>>;
 
                                 if (data.type === 'message') {
                                     const date = new Date(data.time);
@@ -591,7 +596,7 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
                 events: {
                     input: () => {
                         searchUser({ login: (document.activeElement as HTMLInputElement).value }).then(() => {
-                            const tcful = this.children.FoundUsersList as Block<Record<string,any>,Record<string,Block>>;
+                            const tcful = this.children.FoundUsersList as Block<Record<string,unknown>,Record<string,Block>>;
 
                             Object.keys(tcful.children).forEach((childName) => {
                                 tcful.removeChildren(childName);
@@ -633,11 +638,11 @@ class Messenger extends Block<Record<string,any>, Record<string,Block>> {
             
             const openChatName = this.children.Chat?.props.nameOCR;
             if (this.children.Chat) {
-                Object.values((window.memory.take().chats as Record<string, Record<string,any>>)).forEach(inMemChat => {
+                Object.values((window.memory.take().chats as Record<number, TChatBE>)).forEach(inMemChat => {
                     Object.values(inMemChat.users).forEach((user) => {
-                        if ((user as Record<string,any>).id !== window.memory.take().user.id) {
-                            if ((user as Record<string,any>).login === openChatName) {
-                                Object.values((this.children.ChatList as Block<Record<string,any>,Record<string,Block>>).children).forEach(onListChat => {
+                        if ((user as TUser).id !== window.memory.take().user.id) {
+                            if ((user as TUser).login === openChatName) {
+                                Object.values((this.children.ChatList as Block<Record<string,unknown>,Record<string,Block>>).children).forEach(onListChat => {
                                     if (onListChat.props.recipientName === openChatName) {
                                         (onListChat._element as unknown as HTMLElement).classList.add('selected-card');
                                     }

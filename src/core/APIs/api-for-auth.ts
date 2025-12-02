@@ -6,26 +6,14 @@ interface TReqError {
 interface TSignupRes {
     id: number
 }
-interface TUser {
-    login: string
-    first_name: string
-    second_name: string
-    display_name: string
-    avatar: string
-    phone: string
-    email: string
-}
-type TSignup = Omit<TUser, 'avatar' | 'display_name' | 'id'>  & {
-    password: string
-}
-interface TLogin {
-    login: string
-    password: string
-}
 
-const xhrAuth = new endPointAPI('auth');
+export interface TLogin {
+    login: string
+    password: string
+}
 
 export default class AuthRequests {
+    private readonly xhrAuth = new endPointAPI('auth');
     private static _instance: AuthRequests;
 
     constructor() {
@@ -37,15 +25,15 @@ export default class AuthRequests {
     }
 
     async bindUser(data: TSignup): Promise<TSignupRes> {
-        return xhrAuth.post<TSignupRes>("/signup", { data });
+        return this.xhrAuth.post<TSignupRes>("/signup", { data });
     }
     async validate(data: TLogin): Promise<void> {
-        return xhrAuth.post("/signin", { data })
+        return this.xhrAuth.post("/signin", { data })
     }    
     async self(): Promise<TUser | TReqError> {
-        return xhrAuth.get("/user");
+        return this.xhrAuth.get("/user");
     }
     async withdraw(): Promise<void | TReqError> {
-        return xhrAuth.post("/logout");
+        return this.xhrAuth.post("/logout");
     }
 }

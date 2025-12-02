@@ -1,6 +1,5 @@
 import './style.css'
 import Handlebars from 'handlebars';
-
 import LoginPage from './pages/forms/login';
 import SignupPage from './pages/forms/signup';
 import ChatAPP from './pages/chatapp/chatapp';
@@ -12,7 +11,7 @@ import formValidationHandler from 'utils/formValidation';
 import { Storage } from 'core/storage';
 import { checkLogin } from 'services/service';
   
-export function clg(...i: any[]): void {
+export function clg(...i: unknown[]): void {
     console.log(...i);
 }
 
@@ -100,10 +99,10 @@ Handlebars.registerHelper('deq', (a,b) => {
 window.memory = new Storage({
     loading: false,
     user: {},
-    chats: [],
+    chats: {},
     eAPI: null,
     sAPI: null,
-})
+});
 
 export enum Routes {
     Landing = '/',
@@ -120,11 +119,11 @@ window.router = new Router('#app');
 window.router.use(Routes.Landing, LoginPage, {method: 'get'})
             // .use('/', Home)
             // .use(Routes.LogIn, LoginPage, {method: 'get'})
-             .use(Routes.App, ChatAPP)
+             .use(Routes.App, ChatAPP, {})
              .use(Routes.SignUp, SignupPage, {method: 'post'})
-             .use(Routes.SetUp, Profile, { level: 0 })
-             .use(Routes.E404, E as any, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
-             .use(Routes.E500, E as any, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
+             .use(Routes.SetUp, Profile, { level: 0, user: window.memory.take().user })
+             .use(Routes.E404, E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
+             .use(Routes.E500, E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
 window.router.start();
 
 await checkLogin();

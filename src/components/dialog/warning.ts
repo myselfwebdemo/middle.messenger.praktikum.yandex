@@ -1,11 +1,11 @@
 import Block from 'core/Block';
 import '../dialog/dialog.css';
 
-interface Props {
+interface WarningProps {
     mesWarning: string
 }
 export default class Warning extends Block {
-    constructor(props: Props) {
+    constructor(props: WarningProps) {
         super('div', {
             ...props,
             className: 'dialog-wrapper warning', 

@@ -20,7 +20,7 @@ export class Storage extends EventBus<StoreEvents> {
     public take() {
         return this.state;
     }
-    public give(newState: Record<string, any>) {
+    public give(newState: Partial<MemoryBI>) {
         const last = {...this.state};
 
         this.state = {...this.state, ...newState};

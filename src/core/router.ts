@@ -1,12 +1,11 @@
 import { Routes } from "main";
-import type Block from "./Block";
-import Route from "./route";
+import Route, { type BlockConstructor } from "./route";
 
 export default class Router {
     private static _instance: Router | null = null;
-    private routes: Route[] = [];
+    private routes: Route<any>[] = [];
     private history: History = window.history;
-    private _currentRoute: Route | null = null;
+    private _currentRoute: Route<Record<string,unknown>> | null = null;
     private _rootQuery: string = '';
 
     constructor(rootQuery: string) {
@@ -20,8 +19,8 @@ export default class Router {
     
         Router._instance = this;
     }
-    use(pathname: string, block: new (props: Record<string, any>) => Block, blockProps: Record<string, any> = {}) {
-        const newRouteInstance = new Route(pathname, block, {
+    use<P extends Record<string,unknown>>(pathname: string, block: BlockConstructor<P>, blockProps: P) {
+        const newRouteInstance = new Route<P>(pathname, block, {
             rootQuery: this._rootQuery,
             blockProps: blockProps
         });

@@ -2,43 +2,21 @@ import AuthRequests from "core/APIs/api-for-auth";
 import ChatRequests from "core/APIs/api-for-chats";
 import UserProfileRequests from "core/APIs/api-for-user";
 import { Routes } from "main";
+import type { TLogin } from "core/APIs/api-for-auth";
 
 const requests = new AuthRequests();
 const profileRequests = new UserProfileRequests();
 const chatsRequests = new ChatRequests();
 
-interface TUser {
-    avatar: string
-    first_name: string
-    second_name: string
-    display_name: string
-    login: string
-    email: string
-    phone: string,
-}
 type TUOnGet = Omit<TUser, 'email'> & {
     id: number
 };
-type TSignup = Omit<TUser, 'avatar' | 'display_name' | 'id'>  & {
-    password: string
-}
-interface TLogin {
-    login: string
-    password: string
-}
 interface TE {
-    reason: string
+    response?: {reason: string}
+    status?: number
 }
 interface TL {
     login: string
-}
-interface TChat {
-    avatar: string | null
-    created_by: number
-    id: number
-    last_message: string | null
-    title: string
-    unread_count: number
 }
 
 export const signup = async (data: TSignup) => {
@@ -54,11 +32,12 @@ export const signup = async (data: TSignup) => {
         });
 
         window.router.go(Routes.App);
-    } catch (e: TE | any) {
-        if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
             err = null;
-        } else if (e.response?.reason) {
-            err = e.response?.reason;
+        } else if (er.response?.reason) {
+            err = er.response?.reason;
         } else {
             err = 'Unknown error';
         }
@@ -77,12 +56,13 @@ export const login = async (data: TLogin) => {
         self();
 
         window.router.go(Routes.App);
-    } catch (e: TE | any) {
-        if (e.response?.reason) {
-            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason) {
+            if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response?.reason;
+                err = er.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -100,12 +80,13 @@ export const searchUser = async (data: TL) => {
         await profileRequests.search(data).then(res => {
             window.memory.give({ search: res });
         });
-    } catch (e: TE | any) {
-        if (e.response?.reason) {
-            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason) {
+            if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response?.reason;
+                err = er.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -116,19 +97,20 @@ export const searchUser = async (data: TL) => {
     }
 }
 
-export const editUser = async <T extends Omit<TUser, 'avatar'>>(data: T) => {
+export const editUser = async <T extends Omit<TUser, 'avatar'|'id'>>(data: T) => {
     let err,suc;
     window.memory.give({loading: true, eAPI: null, sAPI: false});
 
     try {
         await profileRequests.changeUserData(data);
         await self();
-    } catch (e: TE | any) {
-        if (e.response?.reason) {
-            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason) {
+            if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response?.reason;
+                err = er.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -147,12 +129,13 @@ export const editPass = async (data:{oldPassword:string,newPassword:string}) => 
 
     try {
         await profileRequests.changePass(data);
-    } catch (e: TE | any) {
-        if (e.response?.reason) {
-            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason) {
+            if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response?.reason;
+                err = er.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -172,12 +155,13 @@ export const changeAvatar = async (data:FormData) => {
     try {
         await profileRequests.newAvatar(data);
         await self();
-    } catch (e: TE | any) {
-        if (e.response?.reason) {
-            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason) {
+            if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response?.reason;
+                err = er.response?.reason;
             }
         } else {
             err = 'Unknown error';
@@ -197,8 +181,9 @@ export const newChat = async (data:{title:string}) => {
             id = res;
         });
         return (id as unknown as Record<string, number>).id;
-    } catch (e: TE | any) {
-        return e
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        throw new Error(er.response?.reason || 'Unknown error');
     }
 }
 
@@ -208,11 +193,12 @@ export const delChat = async (data:{chatId:number}) => {
     
     try {
         await chatsRequests.del(data);
-    } catch (e: TE | any) {
-        if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
             err = null;
-        } else if (e.response?.reason) {
-            err = e.response?.reason;
+        } else if (er.response?.reason) {
+            err = er.response?.reason;
         } else {
             err = 'Unknown error';
         }
@@ -226,15 +212,17 @@ export const delChat = async (data:{chatId:number}) => {
 export const addUserToChat = async (data: {users: Array<number>,chatId: number}) => {
     try {
         await chatsRequests.addUser(data);
-    } catch (e: TE | any) {
-        return e;
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        throw new Error(er.response?.reason || 'Unknown error');;
     }
 }
 export const delUserFromChat = async (data: {users: Array<number>,chatId: number}) => {
     try {
         await chatsRequests.delUser(data);
-    } catch (e: TE | any) {
-        return e;
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        throw new Error(er.response?.reason || 'Unknown error');;
     }
 }
 
@@ -244,8 +232,10 @@ export const getChatToken = async (chatId: number) => {
     try {
         const t = await chatsRequests.token(chatId);
         token=t;
-    } catch (e: TE | any) {
+    } catch (e: TE | unknown) {
         token=null;
+        const er = e as Partial<TE>;
+        throw new Error(er.response?.reason || 'Unknown error');
     } finally {
         return token;
     }
@@ -291,18 +281,19 @@ export const self = async () => {
         if (window.location.pathname !== Routes.App && window.location.pathname !== '/settings') {
             window.router.go(Routes.App);
         }
-    } catch (e: TE | any) {
-        if (e.response?.reason) {
-            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason) {
+            if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response?.reason;
+                err = er.response?.reason;
             }
         } else {
             err = 'Unknown error';
         }
 
-        const est = e.status;
+        const est = er.status;
 
         if (est === 401) {
             if (window.location.pathname !== '/' && window.location.pathname !== '/sign-up') {
@@ -361,8 +352,9 @@ export const chatsUpdate = async () => {
                 return
             }
         });
-    } catch (e: TE | any) {
-        return
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        throw new Error(er.response?.reason || 'Unknown error');
     }
 }
 
@@ -371,8 +363,9 @@ export const checkLogin = async () => {
 
     try {
         await self();
-    } catch (e: TE | any) {
-        return
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        throw new Error(er.response?.reason || 'Unknown error');
     } finally {
         window.memory.give({loading: false});
     }
@@ -386,12 +379,13 @@ export const logout = async () => {
         await requests.withdraw();
         
         window.router.go(Routes.Landing);
-    } catch (e: TE | any) {
-        if (e.response?.reason) {
-            if (e.response?.reason.toLowerCase() === 'cookie is not valid') {
+    } catch (e: TE | unknown) {
+        const er = e as Partial<TE>;
+        if (er.response?.reason) {
+            if (er.response?.reason.toLowerCase() === 'cookie is not valid') {
                 err = null;
             } else {
-                err = e.response?.reason;
+                err = er.response?.reason;
             }
         } else {
             err = 'Unknown error';
