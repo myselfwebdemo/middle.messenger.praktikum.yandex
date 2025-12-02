@@ -10,6 +10,7 @@ import Profile from 'pages/profile/profile';
 import formValidationHandler from 'utils/formValidation';
 import { Storage } from 'core/storage';
 import { checkLogin } from 'services/service';
+import { SITE_BASE_URL } from 'config';
   
 export function clg(...i: unknown[]): void {
     console.log(...i);
@@ -105,14 +106,14 @@ window.memory = new Storage({
 });
 
 export enum Routes {
-    Landing = '/',
-    // LogIn = '/log-in',
+    Landing = `${SITE_BASE_URL}/`,
+    // LogIn = `${SITE_BASE_URL}/log-in`,
     // signup page uses Landing instead of LogIn
-    SignUp = '/sign-up',
-    App = '/messenger',
-    SetUp = '/settings',
-    E404 = '/404',
-    E500 = '/500',
+    SignUp = `${SITE_BASE_URL}/sign-up`,
+    App = `${SITE_BASE_URL}/messenger`,
+    SetUp = `${SITE_BASE_URL}/settings`,
+    E404 = `${SITE_BASE_URL}/404`,
+    E500 = `${SITE_BASE_URL}/500`,
 }
 window.router = new Router('#app');
 
