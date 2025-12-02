@@ -4,13 +4,10 @@
     height: fit-content;
 }
 .on-hover:hover {
-    background: conic-gradient(from -90deg, transparent 0%, var(--theme-main-color-01) , transparent 100%);
+    background: linear-gradient(to left, var(--theme-main-color-01), transparent 100%);
 }
-.selected-card {
-    background: conic-gradient(from -90deg, transparent 0%, var(--theme-main-color-025) , transparent 100%);
-}
-.chat-card.selected-card:hover {
-    background: conic-gradient(from -90deg, transparent 0%, var(--theme-main-color-025) , transparent 100%);
+.selected-card, .chat-card.selected-card:hover {
+    background: linear-gradient(to left, var(--theme-main-color-025), transparent 100%);
 }
 .chat-card {
     --borderOffset: 10%;
