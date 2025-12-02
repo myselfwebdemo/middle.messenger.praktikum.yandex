@@ -83,7 +83,7 @@ class LoginPage extends Block<loginProps, Record<string,Block>> {
             Login: new Input({
                 class: 'form-input',
                 id: 'login',
-                label: 'Email or username',
+                label: 'Username',
                 type: 'text',
                 name: 'login',
                 required: true,
