@@ -311,6 +311,22 @@ export default class Chat extends Block<ChatProps, Record<string,Block>> {
                 buttonType: 'button',
                 typeIMG: true,
                 src: 'send.png',
+                events: {
+                    click: () => {
+                        const messageInput = document.getElementById('messageInput') as HTMLInputElement;
+
+                        if ((messageInput).value !== '') {
+                            window.__socket.send(JSON.stringify({
+                                content: (messageInput).value,
+                                type: 'message'
+                            }));
+
+                            (messageInput).value = '';
+                        } else {
+                            return
+                        }
+                    }
+                }
             }),
 
             ConfirmDeletionDialog: new Fatal({
