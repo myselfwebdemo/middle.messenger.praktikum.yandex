@@ -10,7 +10,7 @@ import Profile from 'pages/profile/profile';
 import formValidationHandler from 'utils/formValidation';
 import { Storage } from 'core/storage';
 import { checkLogin } from 'services/service';
-import { SITE_BASE_URL } from 'config';
+import { SITE_BASE_URL } from './config';
   
 export function clg(...i: unknown[]): void {
     console.log(...i);
