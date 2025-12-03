@@ -19,7 +19,7 @@ export default class ChatCard extends Block {
             className: props.class || 'on-hover chat-card',
             attrs: {
                 'data-recipient': props.recipientName,
-                'data-last-message': props.lastMessage,
+                'data-last-message': props.lastMessage || '',
             },
             image: new Image({
                 class: 'chat-list-recipient',

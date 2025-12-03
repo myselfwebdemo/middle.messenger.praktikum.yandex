@@ -23,7 +23,9 @@ interface MesProps {
     router: Router
     user: TUser
 }
-class Messenger extends Block<MesProps, Record<string,Block>> {
+type P = MesProps & BlockBaseProps
+
+class Messenger extends Block<P, Record<string,Block>> {
     private _user: TUser = {} as TUser;
     private socket!: ChatConnection;
 
@@ -70,7 +72,7 @@ class Messenger extends Block<MesProps, Record<string,Block>> {
                     const userSearch = document.querySelector('.user-search') as HTMLElement;
                     if (userSearch && !tar.closest('.user-search') && userSearch.classList.contains('u-s-opened')) {
                         search_user.value = '';
-                        Object.keys((this.children.FoundUsersList.children as Block)).forEach((childName) => {
+                        Object.keys((this.children.FoundUsersList.children as Record<string,Block>)).forEach((childName) => {
                             this.children.FoundUsersList.removeChildren(childName);
                         });
                         userSearch.classList.remove('u-s-opened');
@@ -128,7 +130,7 @@ class Messenger extends Block<MesProps, Record<string,Block>> {
                                         }
                                     });
                                 }
-                            }), 'Chat');
+                            }) as Block<{}>, 'Chat');
     
                             if (this.socket) {
                                 this.socket.close();
@@ -250,7 +252,7 @@ class Messenger extends Block<MesProps, Record<string,Block>> {
                                 delChat({ chatId: id });
                                 this.removeChildren('Chat');
                             }
-                        }), 'Chat');
+                        }) as Block<{}>, 'Chat');
 
                         if (this.socket) {
                             this.socket.close();
@@ -425,7 +427,7 @@ class Messenger extends Block<MesProps, Record<string,Block>> {
                                     delChat({ chatId: id });
                                     this.removeChildren('Chat');
                                 }
-                            }), 'Chat');
+                            }) as Block<{}>, 'Chat');
 
                             if (this.socket) {
                                 this.socket.close();
@@ -515,7 +517,7 @@ class Messenger extends Block<MesProps, Record<string,Block>> {
                                 delChat({ chatId: id });
                                 this.removeChildren('Chat');
                             }
-                        }), 'Chat');
+                        }) as Block<{}>, 'Chat');
 
                         if (this.socket) {
                             this.socket.close();

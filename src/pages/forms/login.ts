@@ -18,14 +18,15 @@ export interface loginProps {
     }
     router: Router
 }
+type P = loginProps & BlockBaseProps
 
-class LoginPage extends Block<loginProps, Record<string,Block>> {
+class LoginPage extends Block<P, Record<string,Block>> {
     constructor(props: loginProps) {
         super('div', {
             ...props,
             attrs: {
                 method: props.method,
-                novalidate: true
+                novalidate: "true"
             }, 
             events: {
                 focusin: (e: Event) => {

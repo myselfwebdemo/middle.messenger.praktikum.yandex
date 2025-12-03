@@ -19,8 +19,9 @@ interface ProfileProps {
     user: TUser
     level: number
 }
+type P = ProfileProps & BlockBaseProps
 
-class Profile extends Block<ProfileProps, {page: Block}> {
+class Profile extends Block<P, {page: Block}> {
     constructor(props: ProfileProps) {
         const singlePageProps = {
             router: window.router,
@@ -48,18 +49,20 @@ class Profile extends Block<ProfileProps, {page: Block}> {
             ...(props.level === 2 ? { page: new SetNewPassword(singlePageProps) } : {}),
         });
     }
-    setProps(newProps: ProfileProps): void {
+    setProps(newProps: Partial<ProfileProps>): void {
         super.setProps(newProps);
 
-        const pslToUserData = {
-            'l': newProps.user.login,
-            'l1': newProps.user.first_name,
-            'l2': newProps.user.second_name,
-            'l3': newProps.user.email,
-            'l4': newProps.user.phone,
-        }
+        let pslToUserData: Record<string,string>;
 
         if (newProps.user) {
+            pslToUserData = {
+                'l': newProps.user.login,
+                'l1': newProps.user.first_name,
+                'l2': newProps.user.second_name,
+                'l3': newProps.user.email,
+                'l4': newProps.user.phone,
+            }
+            
             const tcPage = this.children.page as Block<{user:TUser}, Record<string, Block>>;
 
             if (newProps.user !== tcPage.props.user) {
@@ -118,10 +121,10 @@ interface ProfilePagesProps {
     user: TUser,
     toLevel: (nl: number) => void
 };
+type P1 = ProfilePagesProps & BlockBaseProps
 
-class ProfileLanding extends Block<ProfilePagesProps, Record<string,Block>> {
+class ProfileLanding extends Block<P1, Record<string,Block>> {
     constructor(props: ProfilePagesProps) {
-
         super('div', {
             ...props,
             className: 'profile profile-origin',
@@ -251,7 +254,7 @@ class ProfileLanding extends Block<ProfilePagesProps, Record<string,Block>> {
             }),
         })
     }
-    setProps(newProps: ProfilePagesProps): void {
+    setProps(newProps: Partial<ProfilePagesProps>): void {
         super.setProps(newProps);
 
         this.children.ProfileIcon.setProps({
@@ -286,7 +289,7 @@ class ProfileLanding extends Block<ProfilePagesProps, Record<string,Block>> {
     }
 }
 
-class EditProfile extends Block<ProfilePagesProps, Record<string,Block>> {
+class EditProfile extends Block<P1, Record<string,Block>> {
     constructor(props: ProfilePagesProps) {
         super('form', {
             ...props,
@@ -456,7 +459,7 @@ class EditProfile extends Block<ProfilePagesProps, Record<string,Block>> {
         `
     }
 }
-class SetNewPassword extends Block<ProfilePagesProps, Record<string,Block>> {
+class SetNewPassword extends Block<P1, Record<string,Block>> {
     constructor(props: ProfilePagesProps) {
         super('form', {
             ...props,

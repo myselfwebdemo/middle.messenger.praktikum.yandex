@@ -116,11 +116,11 @@ export enum Routes {
 }
 window.router = new Router('#app');
 
-window.router.use(Routes.Landing, LoginPage, {method: 'get'})
+window.router.use(Routes.Landing, LoginPage, {method: 'get', formState: {login: '', password: ''}, router: window.router})
             // .use('/', Home)
             // .use(Routes.LogIn, LoginPage, {method: 'get'})
-             .use(Routes.App, ChatAPP, {})
-             .use(Routes.SignUp, SignupPage, {method: 'post'})
+             .use(Routes.App, ChatAPP, {router: window.router, user: window.memory.take().user})
+             .use(Routes.SignUp, SignupPage, {method: 'post', formState: {email:'',login:'',first_name:'',second_name:'',phone:'',password:''}, router: window.router})
              .use(Routes.SetUp, Profile, { level: 0, user: window.memory.take().user })
              .use(Routes.E404, E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
              .use(Routes.E500, E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})

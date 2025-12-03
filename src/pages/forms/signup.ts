@@ -15,14 +15,15 @@ interface signupProp {
     formState: TSignup
     router: Router
 }
+type P = signupProp & BlockBaseProps
 
-class SignupPage extends Block<signupProp, Record<string,Block>> {
+class SignupPage extends Block<P, Record<string,Block>> {
     constructor(props: signupProp) {
         super('div', {
             ...props,
             attrs: {
                 method: props.method,
-                novalidate: true
+                novalidate: "true"
             }, 
             events: {
                 focusin: (e: Event) => {
@@ -55,7 +56,6 @@ class SignupPage extends Block<signupProp, Record<string,Block>> {
                                 ...this.props.formState,
                                 email: inputEls[0].value,
                                 login: inputEls[1].value,
-                                display_name: [inputEls[2].value, inputEls[3].value].join(' '),
                                 first_name: inputEls[2].value,
                                 second_name: inputEls[3].value,
                                 phone: inputEls[4].value,
