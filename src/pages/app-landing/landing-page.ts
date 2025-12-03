@@ -9,7 +9,9 @@ import { injectRouter } from "utils/injectRouter";
 interface THome {
     router: Router
 }
-class Home extends Block<THome,Record<string,Block>>{
+type P = THome & BlockBaseProps;
+
+class Home extends Block<P,Record<string,Block>>{
     constructor(props: THome) {
         super('div', {
             ...props,

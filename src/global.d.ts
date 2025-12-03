@@ -14,6 +14,12 @@ declare global {
     eAPI: string | null,
     sAPI: string | null,
   }
+  interface BlockBaseProps {
+    events?: Record<string, EventListener>
+    attrs?: Record<string, string>
+    className?: string
+    [key: string]: unknown
+  }
   interface TReqError {
     reason: string
   }

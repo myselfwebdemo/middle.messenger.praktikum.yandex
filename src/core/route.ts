@@ -1,7 +1,7 @@
 import { renderWithQuery } from 'core/renderDOM';
 import type Block from './Block';
 
-export type BlockConstructor<P extends Record<string, unknown>> = new (props: P) => Block<P, Record<string,Block>>;
+export type BlockConstructor<P extends Record<string, unknown>> = new (props: P) => Block<P>;
 
 export default class Route<P extends Record<string,unknown>> {
     private _pathname: string

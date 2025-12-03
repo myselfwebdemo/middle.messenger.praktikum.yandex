@@ -7,23 +7,28 @@ interface ImageProps {
     alt: string
     directLink?: boolean
 }
-export default class Image extends Block {
+type P = ImageProps & BlockBaseProps
+
+export default class Image extends Block<P> {
     constructor(props: ImageProps) {
         super('img', {
             ...props,
             className: `app-img u-${props.class}`,
             attrs: {
-                src: props.directLink ? props.src : (props.src ? `/assets/${props.src}` : '/assets/profile/default.png'),
+                src: (props.directLink ? props.src : (props.src ? `/assets/${props.src}` : '/assets/profile/default.png')) || '',
                 alt: props.alt
             }
         })
     }
-    componentDidUpdate(oldProps: ImageProps, newProps: ImageProps) {
-        if (oldProps.src !== newProps.src) {
-            (this._element as unknown as HTMLElement).setAttribute('src', newProps.src || '/profile/default.png');
+    componentDidUpdate(oldProps: Record<string, unknown>, newProps: Record<string, unknown>): boolean {
+        const oldImageProps = oldProps as unknown as ImageProps;
+        const newImageProps = newProps as unknown as ImageProps;
+
+        if (oldImageProps.src !== newImageProps.src) {
+            this.element?.setAttribute('src', newImageProps.src || '/profile/default.png');
         }
-        if (oldProps.alt !== newProps.alt) {
-            (this._element as unknown as HTMLElement).setAttribute('alt', newProps.alt);
+        if (oldImageProps.alt !== newImageProps.alt) {
+            this.element?.setAttribute('alt', newImageProps.alt);
         }
         return true;
     }

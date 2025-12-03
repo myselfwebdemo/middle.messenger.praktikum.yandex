@@ -15,8 +15,9 @@ interface ChatProps {
     onChatDeleteConfirmed: (id: number) => void
     chatId: number
 }
+type P = ChatProps & BlockBaseProps;
 
-export default class Chat extends Block<ChatProps, Record<string,Block>> {
+export default class Chat extends Block<P, Record<string,Block>> {
     constructor(props: ChatProps) {
         super('div', { 
             ...props,
