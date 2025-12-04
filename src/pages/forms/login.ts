@@ -1,84 +1,71 @@
-// @ts-nocheck
 import Block from "core/Block";
+import './form.css';
 
 import Input from "components/input/input";
 import Button from "components/button/button";
-import { clg } from "main";
+import { resetForm, Routes, validate } from "main";
 import { formInputOnFocus, formInputOnBlur} from "main";
-import formValidationHandler from "utils/formValidation";
-import SignupPage from "./signup";
-import renderDOM from "core/renderDOM";
+import { injectRouter } from "utils/injectRouter";
+import { login } from "../../services/service";
+import { linkStorage } from "utils/link-storage";
+import type Router from "core/router";
 
-function validate(e) {
-    let isValid;
-    if (e.name) {
-        const { valid, verdict } = formValidationHandler('login', e.name, e.value, true);
-        e.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.id}`).textContent = verdict;
-
-        isValid = valid;
-    } else {
-        const { valid, verdict } = formValidationHandler('login', e.target.name, e.target.value);
-        e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
-        
-        isValid = valid;
-    }
-    return isValid
-}
-
-interface loginProps {
+export interface loginProps {
     method: string
+    formState: {
+        login: string,
+        password: string,
+    }
+    router: Router
 }
+type P = loginProps & BlockBaseProps
 
-export default class LoginPage extends Block {
+class LoginPage extends Block<P, Record<string,Block>> {
     constructor(props: loginProps) {
-        super('form', {
+        super('div', {
             ...props,
-            formState: {
-                login: '',
-                password: '',
-            },
-            className: 'form',
             attrs: {
                 method: props.method,
-                novalidate: true
+                novalidate: "true"
             }, 
             events: {
-                focusin: (e) => {
+                focusin: (e: Event) => {
                     formInputOnFocus(e)
                 },
-                focusout: (e) => {
+                focusout: (e: Event) => {
                     formInputOnBlur(e)
                 },
-                input: (e) => {
-                    validate(e)
+                input: (e: Event) => {
+                    validate(e,false);
                 },
-                submit: (e) => {
+                submit: async (e: Event) => {
                     e.preventDefault();
 
                     let validation;
-
-                    for (const e of this._element.elements) {
+                    for (const e of ((this._element as unknown as HTMLElement).lastElementChild as HTMLFormElement).elements) {
                         if (e instanceof HTMLInputElement) {
-                            if (!e.checkValidity()) {
-                                validation = validate(e);
-                                this._element.reportValidity();
+                            if (!validate(e,false)) {
+                                validation = false;
+                                break
                             }
+                            validation = true;
                         }
                     }
                     
-                    const inputEls = document.querySelectorAll('input');
-                    this.setProps({
-                        formState: {
-                            ...this.props.formState,
-                            login: inputEls[0].value,
-                            password: inputEls[1].value
-                        }
-                    })
-                    clg(this.props.formState);
-
-                    if (validate) return
+                    if (validation) {
+                        const inputEls = document.querySelectorAll('input');
+                        this.setProps({
+                            formState: {
+                                ...this.props.formState,
+                                login: inputEls[0].value,
+                                password: inputEls[1].value
+                            }
+                        })
+    
+                        document.querySelectorAll('input').forEach(i => {i.value = ''; i.style.margin = '0 0 .2vh 0'});
+                        document.querySelectorAll('label').forEach(l => {l.style.transform = 'translateY(2.4vh)'; l.style.fontSize = 'var(--regular-font-size)'});
+                        await login(this.props.formState);
+                    }
                 }
             },
 
@@ -86,12 +73,19 @@ export default class LoginPage extends Block {
                 classTypeOfButton: 'tetriary', 
                 buttonType: 'button', 
                 clientAction: 'Boot New Profile',
+                events: {
+                    click: () => {
+                        window.memory.give({eAPI:null});
+                        resetForm();
+                        this.props.router.go(Routes.SignUp);
+                    }
+                }
             }),
             Login: new Input({
                 class: 'form-input',
                 id: 'login',
                 label: 'Email or username',
-                type: 'email',
+                type: 'text',
                 name: 'login',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch login',
@@ -105,27 +99,54 @@ export default class LoginPage extends Block {
                 required: true,
                 mismatchObject: 'input-requirements-mismatch password',
             }),
+
             Submit: new Button({
                 classTypeOfButton: 'primary', 
                 buttonType: 'submit', 
-                clientAction: 'Jump In',
+                clientAction: 'Jump In'
             }),
         })
     }
     public render(): string {
         return `
-            <div class="header">
-                <h1 class="form-title">Login</h1>
-                <span class="form-switch">
-                    <span>No account? No problem.</span> 
-                    {{{ ChangeForm }}}
-                </span>
-            </div>
-            <div class="input-fields">
-                {{{ Login }}}
-                {{{ Password }}}
-            </div>
-            {{{ Submit }}}
+            {{#if loading}}
+                <div class="loader-wrapper">
+                    <div class="global-loader-wrapper">
+                        <div class="global-loader"></div>
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#if reqFail}}
+                <div class="api-req-res-notif arrn-fail">
+                    <p>{{ reqFail }}</p>
+                    <img src='/assets/fail.png'>
+                </div>
+            {{/if}}
+
+            <form class="form">
+                <div class="header">
+                    <h1 class="form-title">Login</h1>
+                    <span class="form-switch">
+                        <span>No account? No problem –</span> 
+                        {{{ ChangeForm }}}
+                    </span>
+                </div>
+                <div class="input-fields">
+                    {{{ Login }}}
+                    {{{ Password }}}
+                </div>
+                {{{ Submit }}}
+            </form>
         `
     }
 }
+
+const extraProps = (wm: Partial<MemoryBI>) => {
+    return {
+        loading: wm.loading,
+        reqFail: wm.eAPI
+    }
+}
+ 
+export default linkStorage(extraProps)(injectRouter(LoginPage));

@@ -3,7 +3,7 @@
 ## Project Overview:
 
 The project is a starter layout for a messenger-style web application.
-It includes several static pages and Handlebars templates, uses TypeScript modules for better code structure, and PostCSS with Autoprefixer / CSSNano for optimized and consistent styling. The build is configured with Vite for fast development and bundling.
+It includes several static pages and Handlebars templates, uses TypeScript modules for better code structure, and PostCSS with autoprefixer alongside CSSnano for optimized styling. The build is configured with Vite for fast development and bundling.
 
 ## Fast Deploy
 
@@ -21,19 +21,16 @@ Link: https://middle-messenger-yandex-praktikum.netlify.app/
 https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?node-id=0-1&t=YNX3VAGORjhamOaX-1
 
 ## What's New? New Functionality
-- Added full component system using custom `Block` class built on top of `EventBus`.  
-- Implemented reactive props via `Proxy` – components re-render automatically when props change.  
-- Created base UI components:  
-    - (+) `Button`, `Input`, `ChatItem`, etc.  
-- Implemented pages:  
-    - (+) Login, Registration, Chats, Profile.  
-- Added form data collection and console output of form data.  
-- Added form validation with unified mechanism and regex rules for:  
-    - (+) first_name, second_name, login, email, password, phone, message.  
-- Implemented `HTTPTransport` class for XHR requests with:  
-    - (+) GET (with query string)  
-    - (+) POST, PUT, DELETE (with JSON body)  
-    - (+) Timeout, headers, and error handling.  
+### Real-Time Functionality
+- Added WebSocket connection for real-time chat messaging  
+- Implemented message history loading and incremental loading on scroll  
+- Added automatic reconnection logic and token renewal  
+- Integrated full chat API:  
+    - (+) login, signup, logout  
+    - (+) create/delete chats  
+    - (+) add/remove users  
+    - (+) fetch chat token  
+    - (+) request/send messages in real time  
 
 ## Tech Stack
 - **TypeScript** — static typing and safer architecture.  
@@ -61,9 +58,14 @@ https://www.figma.com/design/EIJl6jgQEAapCA8nKsz0wp/Chat_external_link--Copy-?no
 | **password** | Cannot be blank on submit. Optional otherwise. |
 
 ## Utilities & Tips
+### Cloc: find out number of lines in your project
 To count lines of code use ```cloc```  
 #### By default ```cloc``` traverses whole directory!  
 If you want to specify directory, write ```cloc ./directory-name```  
 Same way you can specify file: ```cloc ./directory-name/file-name.ext```  
 You can exclude directory or file by using ```clocl --exclude-dir=dir-name1,dir-name2``` or ```cloc --exclude-list-file=file-name.ext```  
-Exclude files by extension(s): ```cloc --exclude-ext=extensions```  
+Exclude files by extension(s): ```cloc --exclude-ext=extensions```
+### Stylelint: check your styles
+To run stylelint use command ``` npx stylelint "**/*.css" ```
+### ESLint: check your scripts
+To run stylelint use command ``` npx eslint . ```, ``` npx eslint src ``` or ``` npx eslint src/specific.file ```

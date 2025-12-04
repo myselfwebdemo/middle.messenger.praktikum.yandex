@@ -1,4 +1,6 @@
 import Block from 'core/Block';
+import './chat-card.css';
+import Image from 'components/image/image';
 
 interface CardInterface {
     recipientName: string
@@ -7,24 +9,28 @@ interface CardInterface {
     time?: string
     lastTextYou?: boolean
     unread?: number
+    class?: string
 }
 
 export default class ChatCard extends Block {
     constructor(props: CardInterface) {
         super('div', {
             ...props,
-            className: 'on-hover chat-card',
+            className: props.class || 'on-hover chat-card',
             attrs: {
                 'data-recipient': props.recipientName,
-                'data-last-message': props.lastMessage,
-            }
+                'data-last-message': props.lastMessage || '',
+            },
+            image: new Image({
+                class: 'chat-list-recipient',
+                src: props.src || 'profile/default.png',
+                alt: 'recipient image in chat list'
+            })
         })
     }
     public render(): string {
         return `
-            {{> component_image
-                class="chat-list-recipient"
-                src=src}}
+            {{{ image}}}
             <div class="chat-info">
                 <h3>{{recipientName}}</h3>
                 {{#if lastMessage}}

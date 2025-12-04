@@ -1,6 +1,6 @@
-// @ts-nocheck
 import Block from 'core/Block';
 import Input from '../input/input';
+import './psl.css';
 
 interface PSLProps {
     trait: string
@@ -26,9 +26,9 @@ export default class PSL extends Block {
                 ? {
                     Input: new Input({
                         class: props.class,
-                        id: props.id,
-                        name: props.name,
-                        type: props.type,
+                        id: props.id || '',
+                        name: props.name || '',
+                        type: props.type || '',
                         value: props.value,
                         placeholder: props.placeholder,
                         required: props.required
@@ -41,7 +41,7 @@ export default class PSL extends Block {
     public render(): string {
         return `
             <p>{{trait}}</p>
-            {{#if traitValue}} <p>{{traitValue}}</p> {{/if}}
+            {{#if traitValue}} <p id="psl-data">{{traitValue}}</p> {{/if}}
             {{#if reqInput}}
                 {{{ Input }}}
             {{/if}}

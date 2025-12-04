@@ -6,7 +6,6 @@
     align-items: center;
     justify-content: center;
 }
-
 .error-container div {
     width: 100%;
     display: flex;
@@ -14,7 +13,6 @@
     align-items: center;
     justify-content: center;
 }
-
 .error-container .button.u-tetriary {
     position: absolute;
     left: auto;

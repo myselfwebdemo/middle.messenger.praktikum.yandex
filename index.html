@@ -3,45 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/mascot.png"/>
+    <link rel="icon" type="image/png" href="/logo.png"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <title>middle.messenger.praktikum.yandex</title>
+
+    <style>
+      .jjj {
+        position: absolute;left: 50%;bottom: 1vh;width: 5vh;height: 5vh;border-radius: 5vh;z-index: 9999;transform:translateX(-50%);display: flex;flex-direction: row;gap: 2vw;
+      }
+    </style>
   </head>
   <body>
-    <!-- <div class="switch-theme">
-      <img name="darkTheme" src="/assets/theme-dark.png">
-      <img class="disabled" name="lightTheme" src="/assets/theme-light.png">
-    </div>
-    <script type="module" src="/src/theme.ts"></script> -->
-    
-    <div id="app">
-      <ul id='nav'>
-        <li><a href="#" page="login">Login form page</a></li>
-        <li><a href="#" page="signup">Signup form page</a></li>
-        <li><a href="#" page="chatapp">Chatapp page</a></li>
-        <li><a href="#" page="usp">User profile page</a></li>
-        <li><a href="#" page="eusp">Edit User profile page</a></li>
-        <li><a href="#" page="chp">Change password page</a></li>
-        <li><a href="#" page="404">Error 404 page</a></li>
-        <li><a href="#" page="500">Error 500 page</a></li>
-      </ul>
-    </div>
-    
+    <!-- <section class="jjj">
+      <button type="button" onclick="console.log(window.memory.take())">Window memory</button>
+      <button type="button" onclick="console.log(window.memory.take().chats)">Window chats</button>
+    </section> -->
+    <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
-    
-    <!-- <img class="mouse" src="/cursor.png"></img>
-    <script>
-      const mouse = document.querySelector('.mouse');
-      document.addEventListener('mousemove', e => {
-        const x = e.clientX;
-        const y = e.clientY;
-
-        const bounding = mouse.getBoundingClientRect();
-        const width = bounding.right - bounding.left;
-        const height = bounding.bottom - bounding.top;
-
-        mouse.style.transform = `translate3d(${x-7}px,${y-7}px,0)`;
-      });
-    </script> -->
   </body>
 </html>

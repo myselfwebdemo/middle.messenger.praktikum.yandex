@@ -4,18 +4,24 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "vite --port 3000",
-    "dev": "vite --port 3000",
+    "start": "vite --host --port 3000",
+    "dev": "vite --host --port 3000",
     "build": "tsc && vite build",
-    "preview": "vite preview --port 3000"
+    "preview": "vite preview --port 3000",
+    "lint:ts": "tsc --noEmit",
+    "lint:js": "eslint src --ext .ts,.js",
+    "lint:css": "stylelint \"**/*.css\"",
+    "lint": "npm run lint:ts && npm run lint:js && npm run lint:css"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@types/handlebars": "^4.0.40",
+    "@types/leaflet": "^1.9.21",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
     "autoprefixer": "^10.4.21",
     "cssnano": "^7.1.1",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.1",
     "handlebars": "4.7.8",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
@@ -26,9 +32,10 @@
   },
   "dependencies": {
     "handlebars": "^4.7.8",
+    "leaflet": "^1.9.4",
     "vite-plugin-handlebars": "^2.0.0"
   },
   "engines": {
-    "node": "18"
+    "node": "22.14.0"
   }
 }

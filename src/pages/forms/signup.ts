@@ -1,101 +1,86 @@
-// @ts-nocheck
 import Block from "core/Block";
+import './form.css';
 
 import Input from "components/input/input";
 import Button from "components/button/button";
-import { clg } from "main";
+import { resetForm, Routes, validate } from "main";
 import { formInputOnFocus, formInputOnBlur} from "main";
-import formValidationHandler from "utils/formValidation";
-import renderDOM from "core/renderDOM";
-import LoginPage from "./login";
-
-function validate(e) {
-    let isValid;
-    if (e.name) {
-        const { valid, verdict } = formValidationHandler('signup', e.name, e.value, true);
-        e.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.id}`).textContent = verdict;
-
-        isValid = valid;
-    } else {
-        const { valid, verdict } = formValidationHandler('login', e.target.name, e.target.value);
-        e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-        document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
-        
-        isValid = valid;
-    }
-    return isValid
-}
+import { injectRouter } from "utils/injectRouter";
+import { linkStorage } from "utils/link-storage";
+import { signup } from "../../services/service";
+import type Router from "core/router";
 
 interface signupProp {
     method: string
+    formState: TSignup
+    router: Router
 }
+type P = signupProp & BlockBaseProps
 
-export default class SignupPage extends Block {
+class SignupPage extends Block<P, Record<string,Block>> {
     constructor(props: signupProp) {
-        super('form', {
+        super('div', {
             ...props,
-            formState: {
-                email: '',
-                login: '',
-                firstName: '',
-                secondName: '',
-                phone: '',
-                password: '',
-            },
-            className: 'form',
             attrs: {
                 method: props.method,
-                novalidate: true
+                novalidate: "true"
             }, 
             events: {
-                focusin: (e) => {
+                focusin: (e: Event) => {
                     formInputOnFocus(e)
                 },
-                focusout: (e) => {
+                focusout: (e: Event) => {
                     formInputOnBlur(e)
                 },
-                input: (e) => {
-                    const { verdict } = formValidationHandler('signup', e.target.name, e.target.value);
-                    e.target.style.borderBottom = verdict ? 'dashed .2vh red' : '';
-                    document.querySelector(`.input-requirements-mismatch.${e.target.id}`).textContent = verdict;
+                input: (e: Event) => {
+                    validate((e.target as HTMLInputElement),false)
                 },
-                submit: (e) => {
+                submit: async (e: Event) => {
                     e.preventDefault();
-
+                    
                     let validation;
-
-                    for (const e of this._element.elements) {
+                    for (const e of ((this._element as unknown as HTMLElement).lastElementChild as HTMLFormElement).elements) {
                         if (e instanceof HTMLInputElement) {
-                            if (!e.checkValidity()) {
-                                validation = validate(e);
-                                this._element.reportValidity();
+                            if (!validate(e,false)) {
+                                validation = false;
+                                break
                             }
+                            validation = true;
                         }
                     }
-                    
-                    const inputEls = document.querySelectorAll('input');
-                    this.setProps({
-                        formState: {
-                            ...this.props.formState,
-                            email: inputEls[0].value,
-                            login: inputEls[1].value,
-                            firstName: inputEls[2].value,
-                            secondName: inputEls[3].value,
-                            phone: inputEls[4].value,
-                            password: inputEls[5].value,
-                        }
-                    })
-                    clg(this.props.formState);
 
-                    if (validate) return
+                    if (validation) {
+                        const inputEls = document.querySelectorAll('input');
+                        this.setProps({
+                            formState: {
+                                ...this.props.formState,
+                                email: inputEls[0].value,
+                                login: inputEls[1].value,
+                                first_name: inputEls[2].value,
+                                second_name: inputEls[3].value,
+                                phone: inputEls[4].value,
+                                password: inputEls[5].value,
+                            }
+                        });
+
+                        document.querySelectorAll('input').forEach(i => {i.value = ''; i.style.margin = '0 0 .2vh 0'});
+                        document.querySelectorAll('label').forEach(l => {l.style.transform = 'translateY(2.4vh)'; l.style.fontSize = 'var(--regular-font-size)'});
+                        await signup(this.props.formState);
+                    }
                 }
             },
 
             ChangeForm: new Button({
                 classTypeOfButton: 'tetriary', 
                 buttonType: 'button', 
-                clientAction: 'Boot New Profile',
+                clientAction: 'Get In',
+                events: {
+                    click: () => {
+                        window.memory.give({eAPI:null});
+                        resetForm();
+                        this.props.router.go(Routes.Landing);
+                    }
+                }
             }),
             Login: new Input({
                 class: 'form-input',
@@ -112,6 +97,7 @@ export default class SignupPage extends Block {
                 label: 'Username',
                 type: 'text',
                 name: 'login',
+                required: true,
                 mismatchObject: 'input-requirements-mismatch login',
             }),
             FirstName: new Input({
@@ -131,6 +117,7 @@ export default class SignupPage extends Block {
                 name: 'second_name',
                 required: true,
                 mismatchObject: 'input-requirements-mismatch second_name',
+            
             }),
             Phone: new Input({
                 class: 'form-input',
@@ -159,32 +146,60 @@ export default class SignupPage extends Block {
                 required: true,
                 mismatchObject: 'input-requirements-mismatch password-rep',
             }),
+
             Submit: new Button({
                 classTypeOfButton: 'primary', 
                 buttonType: 'submit', 
-                clientAction: 'Get Started',
+                clientAction: 'Get Started'
             }),
         })
     }
     public render(): string {
         return `
-            <div class="header">
-                <h1 class="form-title">Join</h1>
-                <span class="form-switch">
-                    <span>Part of a hub?</span> 
-                    {{{ ChangeForm }}}
-                </span>
-            </div>
-            <div class="input-fields">
-                {{{ Login }}}
-                {{{ Username }}}
-                {{{ FirstName }}}
-                {{{ SecondName }}}
-                {{{ Phone }}}
-                {{{ Password }}}
-                {{{ PasswordRep }}}
-            </div>
-            {{{ Submit }}}
+            {{#if loading}}
+                <div class="loader-wrapper">
+                    <div class="global-loader-wrapper">
+                        <div class="global-loader"></div>
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#if reqFail}}
+                <div class="api-req-res-notif arrn-fail">
+                    <p>{{ reqFail }}</p>
+                    <img src='/assets/fail.png'>
+                </div>
+            {{/if}}
+
+            {{{ SuggestAutoLogin }}}
+            <form class="form">
+                <div class="header">
+                    <h1 class="form-title">Join</h1>
+                    <span class="form-switch">
+                        <span>Part of a hub?</span> 
+                        {{{ ChangeForm }}}
+                    </span>
+                </div>
+                <div class="input-fields">
+                    {{{ Login }}}
+                    {{{ Username }}}
+                    {{{ FirstName }}}
+                    {{{ SecondName }}}
+                    {{{ Phone }}}
+                    {{{ Password }}}
+                    {{{ PasswordRep }}}
+                </div>
+                {{{ Submit }}}
+            </form>
         `
     }
 }
+
+const extraProps = (wm: Partial<MemoryBI>) => {
+    return {
+        loading: wm.loading,
+        reqFail: wm.eAPI
+    }
+}
+
+export default linkStorage(extraProps)(injectRouter(SignupPage));

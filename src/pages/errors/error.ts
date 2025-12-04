@@ -1,13 +1,16 @@
 import Button from "components/button/button";
 import e from "components/error/error";
 import Block from "core/Block";
+import './errors.css';
 
 interface EProps {
     eSrc: string
     eAlt: string
     error: string
 }
-export default class E extends Block {
+type P = EProps & BlockBaseProps
+
+export default class E extends Block<P, Record<string,Block>> {
     constructor(props: EProps) {
         super('div', {
             className: 'error-container',
@@ -20,14 +23,19 @@ export default class E extends Block {
             ReturnBack: new Button({
                 classTypeOfButton: 'tetriary',
                 buttonType: 'button',
-                clientAction: 'Back to chats'
+                clientAction: 'Return back',
+                events: {
+                    click: () => {
+                        window.history.back();
+                    }
+                }
             })
         })
     }
     public render(): string {
         return `
             {{{ Error }}}
-            {{{ ReturnBack }}}
+            {{{ ReturnBack }}}
         `
     }
 }

@@ -1,23 +1,26 @@
-// @ts-nocheck
 import Block from 'core/Block';
-import renderDOM from 'core/renderDOM';
 import Button from '../button/button';
 import Input from '../input/input';
-import { clg } from 'main';
 import { getLocByQuery } from 'utils/locationAPI';
 import SelfSearch from '../input/selfsearch';
+import './dialog.css';
 
 interface DialogProps {
     title: string
     executiveAction: string
+    executiveEvent?: Record<string, () => void>
+    inputEvent?: Record<string, () => void>
+    onSelSearchRes?: Record<string, (e: Event) => void>
     id?: string
     name?: string
     type?: string
     class?: string
     label?: string
     placeholder?: string
+    inputAccept?: string
     recipientLogin?: string
     locat?: boolean
+    builtInSearch?: boolean
 }
 
 export default class DialogWindow extends Block {
@@ -27,29 +30,36 @@ export default class DialogWindow extends Block {
             className: 'dialog-wrapper',
             events: {
                 click: (e: Event) => {
-                    e.preventDefault();
+                    if (props.onSelSearchRes) {
+                        props.onSelSearchRes.click?.(e);
+                    }
 
                     if (props.locat) {
-                        const input = document.getElementById('standalone');
+                        const input = document.getElementById('standalone') as HTMLInputElement;
     
                         if (input.textContent === '') {
                             input?.setAttribute('placeholder','Required field: must contain the adress.');
                         }
-                        if (e.target.closest('.button.u-primary') && input.textContent !== '') {
-                            document.querySelector('.dialog form').submit();
+                        if ((e.target as HTMLElement).closest('.button.u-primary') && input.textContent !== '') {
+                            (document.querySelector('.dialog form') as HTMLFormElement).submit();
                         }
                     }
 
-                    if (!e.target.closest('.dialog') && document.activeElement.id !== 'map' && document.activeElement.id !== 'standalone' || e.target.closest('.dialog .button.u-secondary')) {
+                    if (
+                        !(e.target as HTMLElement).closest('.dialog') && 
+                        (document.activeElement as HTMLInputElement).id !== 'map' && 
+                        (document.activeElement as HTMLInputElement).id !== 'standalone' || 
+                        (e.target as HTMLElement).closest('.dialog .button.u-secondary')
+                    ) {
                         this.close();
                     }
                 },
-                change: (e: Event) => {
+                change: () => {
                     if (props.type !== 'text') {
-                        const i = document.querySelector('.dialog input[type="file"]')
-                        const preview = document.getElementById('dialog-preview');
+                        const i = document.querySelector('.dialog input[type="file"]') as HTMLInputElement;
+                        const preview = document.getElementById('dialog-preview') as HTMLImageElement;
 
-                        preview.src = window.URL.createObjectURL(i.files[0]);
+                        preview.src = i.files ? window.URL.createObjectURL(i.files[0]) : '';
                     }
                 }
             },
@@ -58,19 +68,18 @@ export default class DialogWindow extends Block {
                 ? {
                     StandaloneSearch: new SelfSearch({
                         id: 'standalone',
-                        type: 'text',
                         label: 'Your location',
                         placeholder: 'Find a city or place',
                         required: true,
                         events: {
                             input: (e: Event) => {
-                                const request = document.getElementById('standalone').textContent;
+                                const request = document.getElementById('standalone') as HTMLInputElement;
                                 
-                                if (e.target?.textContent === '') {
-                                    e.target.innerHTML = '';
+                                if ((e.target as HTMLElement)?.textContent === '') {
+                                    (e.target as HTMLElement).innerHTML = '';
                                 }
-                                if (/\u00A0$| $/.test(request)) {
-                                    getLocByQuery(request.trim());
+                                if (/\u00A0$| $/.test(request.textContent || '')) {
+                                    getLocByQuery((request.textContent as string).trim());
                                 }
                             }
                         }
@@ -88,18 +97,21 @@ export default class DialogWindow extends Block {
                 }
                 : {
                     Input: new Input({
-                        id: props.id,
-                        name: props.name,
+                        id: props.id || '',
+                        name: props.name || '',
                         class: props.class,
-                        type: props.type,
+                        type: props.type || '',
                         label: props.label,
                         placeholder: props.placeholder,
-                        value: props.recipientLogin
+                        value: props.recipientLogin,
+                        accept: props.inputAccept,
+                        events: props.inputEvent
                     }),
                     Commit: new Button({
                         classTypeOfButton: 'primary',
                         buttonType: 'submit',
-                        clientAction: props.executiveAction
+                        clientAction: props.executiveAction,
+                        events: props.executiveEvent
                     })
                 }
             )
@@ -107,8 +119,8 @@ export default class DialogWindow extends Block {
     }
     public render(): string {
         return `
-            <div class="dialog">
-                <h1>{{title}}</h1>
+            <div class="dialog {{#if locat}}d-locat{{/if}}">
+                <h2>{{title}}</h2>
                 {{#if locat}}
                     <div id="map-wrapper">
                         <div id="map"></div>
@@ -125,6 +137,14 @@ export default class DialogWindow extends Block {
                         <img id="dialog-preview" src="">
                     {{/if}}
                     {{{ Input }}}
+                    {{#if builtInSearch}}
+                        <div class="dw-fu">
+                            <h5>Found users:</h5>
+                            <h4 id="dwFu"></h4>
+                            <h4 id="dwFu"></h4>
+                            <h4 id="dwFu"></h4>
+                        </div>
+                    {{/if}}
                     {{{ Commit }}}
                 {{/if}}
             </div>

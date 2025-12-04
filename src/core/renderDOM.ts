@@ -1,21 +1,18 @@
 import Block from '../core/Block';
 
-
 export default function renderDOM(block: Block) {
   const root = document.querySelector("#app");
 
   root!.innerHTML = "";
-//   @ts-ignore
-root!.appendChild(block.getContent());
+  root!.appendChild(block.getContent() || new DocumentFragment());
 }
 
-//   @ts-ignore
-export function render(query, block) {
+export function renderWithQuery(query: string, block: Block) {
   const root = document.querySelector(query);
 
-  root.appendChild(block.getContent());
+  root!.innerHTML = "";
+  root!.appendChild(block.getContent() || new DocumentFragment());
 
   block.dispatchComponentDidMount();
-
   return root;
 }

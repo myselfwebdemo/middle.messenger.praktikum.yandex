@@ -1,4 +1,5 @@
 import Block from 'core/Block';
+import './message.css';
 
 interface MessageProps {
     messageType: 'text' | 'image' | 'location'

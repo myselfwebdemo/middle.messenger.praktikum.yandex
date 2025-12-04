@@ -4,9 +4,8 @@
     height: auto;
     filter: invert(100%) drop-shadow(0 0 3vh orange);
     mix-blend-mode: difference;
-    z-index: 1;
+    z-index: var(--z-i-lvl-1);
 }
-
 .error-title {
     position: absolute;
     top: -8%;
@@ -14,6 +13,5 @@
     font-size: 90vh;
     font-weight: 900;
     text-shadow: 0 0 5vh var(--primary-text-color);
-    z-index: 0;
+    z-index: var(--z-i-ground);
 }
-

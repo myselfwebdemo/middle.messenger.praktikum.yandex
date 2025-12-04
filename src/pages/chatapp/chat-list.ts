@@ -1,33 +1,60 @@
 import Block from 'core/Block';
+import './chatapp.css';
+import { linkStorage } from 'utils/link-storage';
+import { injectRouter } from 'utils/injectRouter';
 import ChatCard from 'components/chat-card/chat-card';
 
-export default class ChatList extends Block {
+class ChatList extends Block<{}, Record<string,Block>> {
     constructor() {
         super('div', {
             className: 'chat-list',
-            PublicChat: new ChatCard({
-                recipientName: 'Source Dev',
-                lastMessage: '',
-                src: 'profile/example.png',
-                time: '',
-            }),
-            CC1: new ChatCard({
-                src: 'profile/example.png',
-                recipientName: 'Recipient Name',
-                lastMessage: 'Last message.',
-                unread: 4,
-                time: '2:00'
-            }),
+        });
+    }
+    setProps(newProps: {loading: boolean, chats: Record<number, TChatBE>}): void {
+        super.setProps(newProps);
+        
+        Object.keys(this.children).forEach(key => {
+            this.removeChildren(key);
         })
+        Object.entries(newProps.chats).forEach(([chatId,chat]) => {
+            Object.values((chat as TChatBE).users).forEach((user) => {
+                if ((user as TUser).id !== window.memory.take().user.id) {
+                    this.addChildren(new ChatCard({ recipientName: (user as TUser).login, class: 'on-hover chat-card' }), `chat_${chatId}`);
+                }
+            });
+        });
     }
     public render(): string {
-        const children_names = Object.keys(this.children);
-        const line = [];
-
-        for(const name of children_names) {
-            line.push(`{{{ ${name} }}}`)
+        if (Object.keys(this.children).length !== 0) {
+            const children_names = Object.keys(this.children);
+            const line = [];
+            
+            for(const name of children_names) {
+                line.push(`{{{ ${name} }}}`)
+            }
+            
+            return line.join(' ')
+        } else {
+            return `
+                <div class="chatlist-cork">
+                    {{#if loading}}
+                        <div class="local-loader-wrapper">
+                            <div class="local-loader"></div>
+                            <h5>Loading chats...</h5>
+                        </div>
+                    {{else}}
+                        <h5>Your chats will appear here</h5>
+                    {{/if}}
+                </div>
+            `
         }
-
-        return line.join(' ')
     }
 }
+
+const props = (wm: Partial<MemoryBI>) => {
+    return {
+        loading: wm.loading,
+        chats: wm.chats
+    }
+}
+export default linkStorage(props)(injectRouter(ChatList));

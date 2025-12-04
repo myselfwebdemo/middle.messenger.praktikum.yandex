@@ -1,35 +1,43 @@
-// @ts-nocheck
-import EventBus from "./eventBus";
+import EventBus from "./EventBus";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
-import { clg } from "../main";
-export default class Block<T extends Record<string, any> = any> {
+
+type BlockEvents = "init" | "flow:component-did-mount" | "flow:component-did-update" | "flow:render";
+
+interface BaseProps {
+  events?: Record<string, EventListener>
+  attrs?: Record<string, string>
+  className?: string
+  [key: string]: unknown
+}
+
+type Children = Record<string, Block | Block[]>;
+
+export default class Block<
+  T extends BaseProps = BaseProps, 
+  C extends Children = Children
+> {
   props!: T;
-  children!: Record<string, Block | Block[]>;
-  
+  children!: C;
+  eventBus!: () => EventBus<BlockEvents>;
+
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
     FLOW_CDU: "flow:component-did-update",
     FLOW_RENDER: "flow:render",
-  };
+  } as const;
 
-  _element = null;
-  _meta = null;
+  _element: HTMLElement | null = null;
+  _meta: { tagName: string; props: Partial<T> } | null = null;
   _id = nanoid(6);
 
-  /** JSDoc
-   * @param {string} tagName
-   * @param {Object} props
-   *
-   * @returns {void}
-   */
-  constructor(tagName = "div", propsWithChildren = {}) {
-    const eventBus = new EventBus();
+  constructor(tagName = "div", propsWithChildren: Partial<T> = {}) {
+    const eventBus = new EventBus<BlockEvents>();
     this.eventBus = () => eventBus;
 
     const { props, children } = this._getChildrenAndProps(propsWithChildren);
-    this.children = children;
+    this.children = children as C;
 
     this._meta = {
       tagName,
@@ -40,13 +48,19 @@ export default class Block<T extends Record<string, any> = any> {
     this._registerEvents(eventBus);
     eventBus.emit(Block.EVENTS.INIT);
   }
-  _registerEvents(eventBus) {
+
+  _registerEvents(eventBus: EventBus<BlockEvents>) {
     eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
+
   _createResources() {
+    if (!this._meta) {
+      throw new Error("Meta information is not initialized");
+    }
+
     const { tagName, props } = this._meta;
     this._element = this._createDocumentElement(tagName);
     if (typeof props.className === "string") {
@@ -56,17 +70,19 @@ export default class Block<T extends Record<string, any> = any> {
 
     if (typeof props.attrs === "object") {
       Object.entries(props.attrs).forEach(([attrName, attrValue]) => {
-        this._element.setAttribute(attrName, attrValue);
+        this._element?.setAttribute(attrName, attrValue as string);
       });
     }
   }
+
   init() {
     this._createResources();
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
   }
-  _getChildrenAndProps(propsAndChildren) {
-    const children = {};
-    const props = {};
+
+  _getChildrenAndProps(propsAndChildren: Record<string,unknown>) {
+    const children: Record<string, Block | Block[]> = {};
+  const props: Partial<T> = {};
 
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -74,62 +90,73 @@ export default class Block<T extends Record<string, any> = any> {
           if (obj instanceof Block) {
             children[key] = value;
           } else {
-            props[key] = value;
+            props[key as keyof T] = value as T[keyof T];
           }
         });
-
         return;
       }
       if (value instanceof Block) {
         children[key] = value;
       } else {
-        props[key] = value;
+        props[key as keyof T] = value as T[keyof T];
       }
     });
 
-    return { children, props };
+    return { children, props: props as T };
   }
+
   _componentDidMount() {
     this.componentDidMount();
   }
-  componentDidMount(oldProps) {}
+
+  componentDidMount() {}
+
   dispatchComponentDidMount() {
-    this._eventBus().emit(Block.EVENTS.FLOW_CDM);
+    this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
-  _componentDidUpdate(oldProps, newProps) {
+
+  _componentDidUpdate(oldProps: Record<string,unknown>, newProps: Record<string,unknown>) {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
       return;
     }
     this._render();
   }
-  componentDidUpdate(oldProps, newProps) {
-    return true;
+
+  componentDidUpdate(oldProps: Record<string,unknown>, newProps: Record<string,unknown>): boolean {
+    if (oldProps && newProps) return true;
+    return true
   }
-  setProps(nextProps) {
-    if (!nextProps) {
+
+  componentWillUnmount() {}
+
+  setProps(newProps: Partial<T>) {
+    if (!newProps) {
       return;
     }
-    Object.assign(this.props, nextProps);
+    Object.assign(this.props, newProps);
   }
+
   get element() {
     return this._element;
   }
-  _addEvents() {
-    const { events = {} } = this.props;
-    Object.keys(events).forEach((eventName) => {
-      this._element.addEventListener(eventName, events[eventName]);
-    });
-  }
-  _removeEvents() {
-    const { events = {} } = this.props;
 
+  _addEvents() {
+    const { events = {} } = this.props as unknown as { events: Record<string, EventListener> };
     Object.keys(events).forEach((eventName) => {
-      this._element.removeEventListener(eventName, events[eventName]);
+      this._element?.addEventListener(eventName, events[eventName]);
     });
   }
+
+  _removeEvents() {
+    const { events = {} } = this.props as unknown as { events: Record<string, EventListener> };
+    Object.keys(events).forEach((eventName) => {
+      this._element?.removeEventListener(eventName, events[eventName]);
+    });
+  }
+
   _compile() {
-    const propsAndStubs = { ...this.props };
+    const propsAndStubs = { ...this.props } as Record<string,unknown>;
 
     Object.entries(this.children).forEach(([key, child]) => {
       if (Array.isArray(child)) {
@@ -141,7 +168,7 @@ export default class Block<T extends Record<string, any> = any> {
       }
     });
 
-    const fragment = this._createDocumentElement("template");
+    const fragment = this._createDocumentElement("template") as HTMLTemplateElement;
     const template = Handlebars.compile(this.render());
     fragment.innerHTML = template(propsAndStubs);
 
@@ -151,51 +178,56 @@ export default class Block<T extends Record<string, any> = any> {
           const stub = fragment.content.querySelector(
             `[data-id="${component._id}"]`,
           );
-
-          stub?.replaceWith(component.getContent());
+          const content = component.getContent();
+          if (content && stub) {
+            stub.replaceWith(content);
+          }
         });
       } else {
         const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
-
-        stub?.replaceWith(child.getContent());
+        const content = child.getContent();
+        if (content && stub) {
+          stub.replaceWith(content);
+        }
       }
     });
 
     return fragment.content;
   }
+
   _render() {
     this._removeEvents();
     const block = this._compile();
 
-    if (this._element.children.length === 0) {
+    if (this._element && this._element.children.length === 0) {
       this._element.appendChild(block);
-    } else {
+    } else if (this._element) {
       this._element.replaceChildren(block);
     }
 
     this._addEvents();
   }
-  render() {
+
+  render(): string {
     return "";
   }
+
   getContent() {
     return this.element;
   }
-  _makePropsProxy(props) {
+
+  _makePropsProxy(props: T): T {
     const eventBus = this.eventBus();
     const emitBind = eventBus.emit.bind(eventBus);
 
-    return new Proxy(props as any, {
+    return new Proxy(props, {
       get(target, prop) {
-        const value = target[prop];
+        const value = target[prop as keyof T];
         return typeof value === "function" ? value.bind(target) : value;
       },
       set(target, prop, value) {
-        const oldTarget = { ...target }; // <—— cloneDeep
-        target[prop] = value;
-
-        // Запускаем обновление компоненты 
-        // Плохой cloneDeep, в следующей итерации нужно заставлять добавлять cloneDeep им самим
+        const oldTarget = { ...target };
+        target[prop as keyof T] = value;
         emitBind(Block.EVENTS.FLOW_CDU, oldTarget, target);
         return true;
       },
@@ -204,27 +236,49 @@ export default class Block<T extends Record<string, any> = any> {
       },
     });
   }
-  _createDocumentElement(tagName) {
+
+  _createDocumentElement(tagName: string): HTMLElement {
     return document.createElement(tagName);
   }
+
   show() {
-    this.getContent().style.display = "flex";
+    if (this._element) {
+      this._element.style.display = "flex";
+    }
   }
+
   close() {
-    this.getContent().style.display = "none";
+    if (this._element) {
+      this._element.style.display = "none";
+    }
   }
-  addChildren(block, name) {
-    if (!(block instanceof Block)) throw new Error(`block arg: ${block} must an instance of class Block.`);
-    this.children[name] = block;
+
+  addChildren(block: Block, name: string) {
+    if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);
+    (this.children as Record<string, Block | Block[]>)[name] = block;
     this._render();
-    this.children[name]._element.scrollIntoView({behavior: 'smooth'});
-  }    
-  removeChildren(name) {
-    if (!this.children[name]) alert("You cannot delete Master Chat");
-    // if (!this.children[name]) throw new Error(`${name} is either not a child of ${this} or doesn't exist.`);
-    const remObj = Object.keys(this.children).indexOf(name);
+    block._element?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  prependChildren(block: Block, name: string) {
+    if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);
+    this.children = { [name]: block, ...this.children };
+    this._render();
+    
+    const keys = Object.keys(this.children);
+    const lastMes = keys.length > 1 ? keys[keys.length - 2] : keys[0];
+
+    if (lastMes && this.children[lastMes] instanceof Block) {
+      const content = this.children[lastMes].getContent();
+      if (content) {
+        content.scrollIntoView();
+      }
+    }
+  }
+
+  removeChildren(name: string) {
+    if (!this.children[name]) throw new Error(`${name} is either not a child of ${this} or doesn't exist.`);
     delete this.children[name];
     this._render();
-    this.children[Object.keys(this.children)[remObj-1]]._element.scrollIntoView({behavior: 'smooth'});
-  }    
+  }
 }

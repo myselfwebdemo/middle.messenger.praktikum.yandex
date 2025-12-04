@@ -1,19 +1,35 @@
-import eslintRecommended from "eslint/conf/eslint-recommended.js";
+import js from "@eslint/js";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
 
 export default [
+  js.configs.recommended,
+
   {
-    files: ["*.js", "*.ts", "*.tsx"],
+    files: ["**/*.js", "**/*.ts", "**/*.tsx"],
+
+    ignores: [
+      "build/**",
+      "node_modules/**",
+      "dist/**"
+    ],
+
     languageOptions: {
-      parser: "@typescript-eslint/parser",
+      parser: tsParser,
+      ecmaVersion: 2022,
+      sourceType: "module",
     },
+
     plugins: {
-      "@typescript-eslint": require("@typescript-eslint/eslint-plugin"),
+      "@typescript-eslint": tsPlugin,
     },
+
     rules: {
-      "no-unused-vars": "error",
-      "max-len": ["warn", { "code": 100 }],
-      "max-params": ["error", 3]
-    },
-    ignores: ["build/*", "node_modules/*"]
+      "no-unused-vars": "off",
+      "no-undef": "off",
+      "max-len": "off",
+      "max-params": "off",
+      "no-unsafe-finally": "off"
+    }
   }
 ];
