@@ -1,6 +1,6 @@
-import Block from 'core/Block';
 import '../dialog/dialog.css';
-import Button from 'components/button/button';
+import Block from '../../core/Block.ts';
+import Button from '../../components/button/button.ts';
 
 interface FatalProps {
     title: string

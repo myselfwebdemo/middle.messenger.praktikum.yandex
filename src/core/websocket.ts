@@ -1,4 +1,4 @@
-import { getChatToken } from 'services/service';
+import { getChatToken } from '../services/service.ts';
 
 interface SocketParams {
     userId: number;
@@ -14,8 +14,8 @@ interface TMes {
 
 export default class ChatConnection {
     private socket: WebSocket | null = null;
-    private pingInterval: number = 0;
-    private reconnectTimeout: number = 0;
+    private pingInterval!: ReturnType<typeof setTimeout>;
+    private reconnectTimeout!: ReturnType<typeof setTimeout>;
 
     private readonly userId: number;
     private readonly chatId: number;
@@ -81,7 +81,7 @@ export default class ChatConnection {
 
     private onClose() {
         clearInterval(this.pingInterval);
-        this.pingInterval = 0;
+        this.pingInterval = 0 as unknown as ReturnType<typeof setInterval>;
 
         if (!this.isManualClose) {
             this.reconnect();

@@ -1,14 +1,13 @@
-import Block from 'core/Block';
 import './chatapp.css';
-import Fatal from 'components/dialog/fatal';
-import Image from 'components/image/image';
-
-import DialogWindow from 'components/dialog/dialog';
-import MessageList from 'components/message/mes-list';
-import Input from 'components/input/input';
-import Button from 'components/button/button';
-import { MapInit } from 'utils/map';
-import { addUserToChat, delUserFromChat, searchUser } from 'services/service';
+import Block from '../../core/Block.ts';
+import Fatal from '../../components/dialog/fatal.ts';
+import Image from '../../components/image/image.ts';
+import DialogWindow from '../../components/dialog/dialog.ts';
+import MessageList from '../../components/message/mes-list.ts';
+import Input from '../../components/input/input.ts';
+import Button from '../../components/button/button.ts';
+import { MapInit } from '../../utils/map.ts';
+import { addUserToChat, delUserFromChat, searchUser } from '../../services/service.ts';
 
 interface ChatProps {
     nameOCR: string

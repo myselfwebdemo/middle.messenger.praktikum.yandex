@@ -1,5 +1,5 @@
-import Block from 'core/Block';
 import './button.css';
+import Block from '../../core/Block.ts';
 
 interface localProps {
     classTypeOfButton: string

@@ -1,5 +1,5 @@
-import Block from "core/Block";
 import './error.css';
+import Block from '../../core/Block.ts';
 
 interface eProps {
     src: string

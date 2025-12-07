@@ -4,7 +4,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
+    "types": ["vite/client","mocha", "chai", "sinon", "node"],
     "skipLibCheck": true,
 
     "moduleResolution": "Node",          
@@ -26,10 +26,10 @@
 
     "baseUrl": "src",
     "paths": {
-      "core/*": ["core/*"],
       "components/*": ["components/*"],
       "pages/*": ["pages/*"],
       "utils/*": ["utils/*"],
+      "core/*": ["core/*"],
       "main": ["main.ts"]
     }
   },

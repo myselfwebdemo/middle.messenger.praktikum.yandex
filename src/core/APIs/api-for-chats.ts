@@ -1,4 +1,4 @@
-import endPointAPI from "./api";
+import endPointAPI from './api.ts';
 
 export interface TCNew {
     title: string

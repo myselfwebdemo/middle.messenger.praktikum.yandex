@@ -1,6 +1,6 @@
-import Block from 'core/Block';
 import './message.css';
-import Button from 'components/button/button';
+import Block from '../../core/Block.ts';
+import Button from '../../components/button/button.ts';
 
 export default class MessageList extends Block<{}, Record<string,Block>> {
     constructor() {

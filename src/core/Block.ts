@@ -1,4 +1,4 @@
-import EventBus from "./EventBus";
+import EventBus from "./EventBus.ts";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
 
@@ -257,7 +257,9 @@ export default class Block<
     if (!(block instanceof Block)) throw new Error(`block arg: ${block} must be an instance of class Block.`);
     (this.children as Record<string, Block | Block[]>)[name] = block;
     this._render();
-    block._element?.scrollIntoView({ behavior: 'smooth' });
+    if (typeof block._element?.scrollIntoView === "function") {
+      block._element.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   prependChildren(block: Block, name: string) {
@@ -270,7 +272,7 @@ export default class Block<
 
     if (lastMes && this.children[lastMes] instanceof Block) {
       const content = this.children[lastMes].getContent();
-      if (content) {
+      if (content && typeof content.scrollIntoView === "function") {
         content.scrollIntoView();
       }
     }

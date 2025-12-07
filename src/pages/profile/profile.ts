@@ -1,16 +1,15 @@
-import Block from "core/Block";
 import './profile.css';
-
-import Button from 'components/button/button';
-import DialogWindow from 'components/dialog/dialog';
-import Image from 'components/image/image';
-import PSL from 'components/profile-info/psl';
-import type Router from "core/router";
-import Fatal from "components/dialog/fatal";
-import { changeAvatar, editPass, editUser, logout, self } from "../../services/service";
-import { linkStorage } from "utils/link-storage";
-import { injectRouter } from "utils/injectRouter";
-import { SERVER_BASE_URL } from "../../config";
+import Block from '../../core/Block.ts';
+import Button from '../../components/button/button.ts';
+import DialogWindow from '../../components/dialog/dialog.ts';
+import Image from '../../components/image/image.ts';
+import PSL from '../../components/profile-info/psl.ts';
+import type Router from '../../core/router.ts';
+import Fatal from '../../components/dialog/fatal.ts';
+import { changeAvatar, editPass, editUser, logout, self } from '../../services/service.ts';
+import { linkStorage } from '../../utils/link-storage.ts';
+import { injectRouter } from '../../utils/injectRouter.ts';
+import { SERVER_BASE_URL } from '../../config.ts';
 
 interface ProfileProps { 
     loading: boolean
@@ -81,21 +80,21 @@ class Profile extends Block<P, {page: Block}> {
     public render(): string {
         return `
             {{#if loading}}
-                <div class="loader-wrapper">
-                    <div class="global-loader-wrapper">
-                        <div class="global-loader"></div>
+                <div class='loader-wrapper'>
+                    <div class='global-loader-wrapper'>
+                        <div class='global-loader'></div>
                     </div>
                 </div>
             {{/if}}
 
             {{#if reqFail}}
-                <div class="api-req-res-notif arrn-fail">
+                <div class='api-req-res-notif arrn-fail'>
                     <p>{{ reqFail }}</p>
                     <img src='/assets/fail.png'>
                 </div>
             {{/if}}
             {{#if reqSuccess}}
-                <div class="api-req-res-notif arrn-success">
+                <div class='api-req-res-notif arrn-success'>
                     <p>Success</p>
                     <img src='/assets/success.png'>
                 </div>
@@ -265,20 +264,20 @@ class ProfileLanding extends Block<P1, Record<string,Block>> {
         return `
             {{{ ReturnBack }}}
 
-            <span class="profile-top">
-                <div class="profile-icon-wrapper">
+            <span class='profile-top'>
+                <div class='profile-icon-wrapper'>
                     {{{ ProfileIcon }}}
                 </div>
                 {{#if user.display_name}}
-                    <h1 id ="profile_user_fullname">{{ user.display_name }}</h1>
+                    <h1 id ='profile_user_fullname'>{{ user.display_name }}</h1>
                 {{else}}
-                    <h1 id ="profile_user_fullname">{{ user.first_name }} {{ user.second_name }}</h1>
+                    <h1 id ='profile_user_fullname'>{{ user.first_name }} {{ user.second_name }}</h1>
                 {{/if}}
             </span>
-            <div class="ps-lines">
+            <div class='ps-lines'>
                 {{{ l }}} {{{ l1 }}} {{{ l2 }}} {{{ l3 }}} {{{ l4 }}}
             </div>
-            <div class="profile-action">
+            <div class='profile-action'>
                 {{{ optionEditThis }}}
                 {{{ optionEditPassword }}}
                 {{{ LogOut }}}
@@ -438,21 +437,21 @@ class EditProfile extends Block<P1, Record<string,Block>> {
         return `
             {{{ ReturnBack }}}
 
-            <span class="profile-top">
-                <div class="profile-icon-wrapper">
+            <span class='profile-top'>
+                <div class='profile-icon-wrapper'>
                     {{{ ProfileIcon }}}
                 </div>
                 {{#if user.display_name}}
-                    <h1 id ="profile_user_fullname">{{ user.display_name }}</h1>
+                    <h1 id ='profile_user_fullname'>{{ user.display_name }}</h1>
                 {{else}}
-                    <h1 id ="profile_user_fullname">{{ user.first_name }} {{ user.second_name }}</h1>
+                    <h1 id ='profile_user_fullname'>{{ user.first_name }} {{ user.second_name }}</h1>
                 {{/if}}
             </span>
 
-            <div class="ps-lines">
+            <div class='ps-lines'>
                 {{{ l }}} {{{ l1 }}} {{{ l2 }}} {{{ l3 }}} {{{ l4 }}} {{{ l5 }}}
             </div>
-            <div class="profile-action">
+            <div class='profile-action'>
                 {{{ Submit }}}
                 {{{ Cancel }}}
             </div>
@@ -572,23 +571,23 @@ class SetNewPassword extends Block<P1, Record<string,Block>> {
         return `
             {{{ ReturnBack }}}
 
-            <span class="profile-top">
-                <div class="profile-icon-wrapper">
+            <span class='profile-top'>
+                <div class='profile-icon-wrapper'>
                     {{{ ProfileIcon }}}
                 </div>
                 {{#if user.display_name}}
-                    <h1 id ="profile_user_fullname">{{ user.display_name }}</h1>
+                    <h1 id ='profile_user_fullname'>{{ user.display_name }}</h1>
                 {{else}}
-                    <h1 id ="profile_user_fullname">{{ user.first_name }} {{ user.second_name }}</h1>
+                    <h1 id ='profile_user_fullname'>{{ user.first_name }} {{ user.second_name }}</h1>
                 {{/if}}
             </span>
 
-            <div class="ps-lines">
+            <div class='ps-lines'>
                 {{{ old }}} 
                 {{{ new }}}
                 {{{ confirm }}}
             </div>
-            <div class="profile-action">
+            <div class='profile-action'>
                 {{{ Submit }}}
                 {{{ Cancel }}}
             </div>

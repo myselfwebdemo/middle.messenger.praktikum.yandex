@@ -1,4 +1,4 @@
-import endPointAPI from "./api";
+import endPointAPI from './api.ts';
 
 interface TReqError {
     reason: string

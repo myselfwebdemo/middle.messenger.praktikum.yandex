@@ -1,14 +1,14 @@
-import Block from "core/Block";
+import Block from '../../core/Block.ts';
 import './form.css';
 
-import Input from "components/input/input";
-import Button from "components/button/button";
-import { resetForm, Routes, validate } from "main";
-import { formInputOnFocus, formInputOnBlur} from "main";
-import { injectRouter } from "utils/injectRouter";
-import { linkStorage } from "utils/link-storage";
-import { signup } from "../../services/service";
-import type Router from "core/router";
+import Input from '../../components/input/input.ts';
+import Button from '../../components/button/button.ts';
+import { resetForm, Routes, validate } from '../../main.ts';
+import { formInputOnFocus, formInputOnBlur} from '../../main.ts';
+import { injectRouter } from '../../utils/injectRouter.ts';
+import { linkStorage } from '../../utils/link-storage.ts';
+import { signup } from '../../services/service.ts';
+import type Router from '../../core/router.ts';
 
 interface signupProp {
     method: string
@@ -23,7 +23,7 @@ class SignupPage extends Block<P, Record<string,Block>> {
             ...props,
             attrs: {
                 method: props.method,
-                novalidate: "true"
+                novalidate: 'true'
             }, 
             events: {
                 focusin: (e: Event) => {
@@ -157,30 +157,30 @@ class SignupPage extends Block<P, Record<string,Block>> {
     public render(): string {
         return `
             {{#if loading}}
-                <div class="loader-wrapper">
-                    <div class="global-loader-wrapper">
-                        <div class="global-loader"></div>
+                <div class='loader-wrapper'>
+                    <div class='global-loader-wrapper'>
+                        <div class='global-loader'></div>
                     </div>
                 </div>
             {{/if}}
 
             {{#if reqFail}}
-                <div class="api-req-res-notif arrn-fail">
+                <div class='api-req-res-notif arrn-fail'>
                     <p>{{ reqFail }}</p>
                     <img src='/assets/fail.png'>
                 </div>
             {{/if}}
 
             {{{ SuggestAutoLogin }}}
-            <form class="form">
-                <div class="header">
-                    <h1 class="form-title">Join</h1>
-                    <span class="form-switch">
+            <form class='form'>
+                <div class='header'>
+                    <h1 class='form-title'>Join</h1>
+                    <span class='form-switch'>
                         <span>Part of a hub?</span> 
                         {{{ ChangeForm }}}
                     </span>
                 </div>
-                <div class="input-fields">
+                <div class='input-fields'>
                     {{{ Login }}}
                     {{{ Username }}}
                     {{{ FirstName }}}

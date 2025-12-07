@@ -1,23 +1,23 @@
-import Button from 'components/button/button';
-import Input from 'components/input/input';
-import Block from 'core/Block';
-import ChatList from './chat-list';
-import { injectRouter } from 'utils/injectRouter';
 import './chatapp.css';
-import FoundUsersList from './searched-users-list';
-import { addUserToChat, chatsUpdate, delChat, newChat, searchUser } from 'services/service';
-import FUUser from './searched-user-component';
-import Chat from './chat';
-import ChatCard from 'components/chat-card/chat-card';
-import Warning from 'components/dialog/warning';
-import ChatConnection from 'core/websocket';
-import Message from 'components/message/message';
-import Image from 'components/image/image';
-import { Routes } from 'main';
-import { StoreEvents } from 'core/storage';
-import DialogWindow from 'components/dialog/dialog';
-import { SERVER_BASE_URL } from '../../config';
-import type Router from 'core/router';
+import Button from '../../components/button/button.ts';
+import Input from '../../components/input/input.ts';
+import Block from '../../core/Block.ts';
+import ChatList from './chat-list.ts';
+import { injectRouter } from '../../utils/injectRouter.ts';
+import FoundUsersList from './searched-users-list.ts';
+import { addUserToChat, chatsUpdate, delChat, newChat, searchUser } from '../../services/service.ts';
+import FUUser from './searched-user-component.ts';
+import Chat from './chat.ts';
+import ChatCard from '../../components/chat-card/chat-card.ts';
+import Warning from '../../components/dialog/warning.ts';
+import ChatConnection from '../../core/websocket.ts';
+import Message from '../../components/message/message.ts';
+import Image from '../../components/image/image.ts';
+import { Routes } from '../../main.ts';
+import { StoreEvents } from '../../core/storage.ts';
+import DialogWindow from '../../components/dialog/dialog.ts';
+import { SERVER_BASE_URL } from '../../config.ts';
+import type Router from '../../core/router.ts';
 
 interface MesProps {
     router: Router

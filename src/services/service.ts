@@ -1,8 +1,8 @@
-import AuthRequests from "core/APIs/api-for-auth";
-import ChatRequests from "core/APIs/api-for-chats";
-import UserProfileRequests from "core/APIs/api-for-user";
-import { Routes } from "main";
-import type { TLogin } from "core/APIs/api-for-auth";
+import AuthRequests from '../core/APIs/api-for-auth.ts';
+import ChatRequests from '../core/APIs/api-for-chats.ts';
+import UserProfileRequests from '../core/APIs/api-for-user.ts';
+import { Routes } from '../main.ts';
+import type { TLogin } from '../core/APIs/api-for-auth.ts';
 
 const requests = new AuthRequests();
 const profileRequests = new UserProfileRequests();

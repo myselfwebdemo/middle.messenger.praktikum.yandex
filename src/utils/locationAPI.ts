@@ -1,4 +1,4 @@
-import { pinloc } from "./map";
+import { pinloc } from './map.ts';
 
 export async function getLocByQuery(query: string) {
     const q = encodeURIComponent(query);

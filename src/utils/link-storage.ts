@@ -1,5 +1,5 @@
-import type Block from "core/Block";
-import { StoreEvents } from "../core/storage";
+import type Block from '../core/Block.ts';
+import { StoreEvents } from '../core/storage.ts';
 
 // Mixim Rule:  In TypeScript, when working with mixins, the constructor of the mixin class must have a rest parameter typed as any[]. 
 //              This is because the mixin needs to be compatible with any possible subclass constructor signature, 

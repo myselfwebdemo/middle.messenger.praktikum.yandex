@@ -1,5 +1,5 @@
-import Block from "core/Block";
-import './input.css'
+import './input.css';
+import Block from '../../core/Block.ts';
 
 interface InputProps {
     id: string

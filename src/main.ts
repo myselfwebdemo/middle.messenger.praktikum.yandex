@@ -1,16 +1,18 @@
+/// <reference path='./global.d.ts' />
+
 import './style.css'
 import Handlebars from 'handlebars';
-import LoginPage from './pages/forms/login';
-import SignupPage from './pages/forms/signup';
-import ChatAPP from './pages/chatapp/chatapp';
-import E from './pages/errors/error';
-import Router from 'core/router';
-// import Home from 'pages/app-landing/landing-page';
-import Profile from 'pages/profile/profile';
-import formValidationHandler from 'utils/formValidation';
-import { Storage } from 'core/storage';
-import { checkLogin } from 'services/service';
-  
+import LoginPage from './pages/forms/login.ts';
+import SignupPage from './pages/forms/signup.ts';
+import ChatAPP from './pages/chatapp/chatapp.ts';
+import E from './pages/errors/error.ts';
+import Router from './core/router.ts';
+// import Home from 'pages/app-landing/landing-page.ts';
+import Profile from './pages/profile/profile.ts';
+import formValidationHandler from './utils/formValidation.ts';
+import { Storage } from './core/storage.ts';
+import { checkLogin } from './services/service.ts';
+
 export function clg(...i: unknown[]): void {
     console.log(...i);
 }
@@ -114,8 +116,8 @@ export enum Routes {
     E404 = '/404',
     E500 = '/500',
 }
-window.router = new Router('#app');
 
+window.router = new Router('#app');
 window.router.use(Routes.Landing, LoginPage, {method: 'get', formState: {login: '', password: ''}, router: window.router})
             // .use('/', Home)
             // .use(Routes.LogIn, LoginPage, {method: 'get'})

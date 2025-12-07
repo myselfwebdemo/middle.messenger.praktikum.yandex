@@ -1,5 +1,5 @@
-import { Routes } from "main";
-import Route, { type BlockConstructor } from "./route";
+import { Routes } from "../main.ts";
+import Route, { type BlockConstructor } from "./route.ts";
 
 export default class Router {
     private static _instance: Router | null = null;
@@ -56,7 +56,7 @@ export default class Router {
     forward() {
         this.history.forward();
     }
-    getRoute(pathname:  string) {
+    getRoute(pathname: string) {
         return this.routes.find(route => route.match(pathname));
     }
 }

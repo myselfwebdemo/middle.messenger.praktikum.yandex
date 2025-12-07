@@ -1,4 +1,4 @@
-import Block from "./Block";
+import Block from "./Block.ts";
 import Handlebars, { type HelperOptions } from "handlebars";
 
 type PropsBlock = Record<string, unknown>;

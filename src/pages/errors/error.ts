@@ -1,7 +1,7 @@
-import Button from "components/button/button";
-import e from "components/error/error";
-import Block from "core/Block";
 import './errors.css';
+import Button from '../../components/button/button.ts';
+import e from '../../components/error/error.ts';
+import Block from '../../core/Block.ts';
 
 interface EProps {
     eSrc: string
