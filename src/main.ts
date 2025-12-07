@@ -13,7 +13,7 @@ import formValidationHandler from './utils/formValidation.ts';
 import { Storage } from './core/storage.ts';
 import { checkLogin } from './services/service.ts';
 
-export function clg(...i: unknown[]): void {
+export function clg(....i: unknown[]): void {
     console.log(...i);
 }
 
