@@ -12,12 +12,8 @@
     "lint:js": "eslint src --ext .ts,.js",
     "lint:css": "stylelint \"**/*.css\"",
     "lint": "npm run lint:ts && npm run lint:js && npm run lint:css",
-    "test": "mocha"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint && npm run build"
-    }
+    "test": "mocha",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

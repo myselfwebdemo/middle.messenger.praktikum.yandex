@@ -9,12 +9,11 @@ import E from './pages/errors/error.ts';
 import Router from './core/router.ts';
 // import Home from 'pages/app-landing/landing-page.ts';
 import Profile from './pages/profile/profile.ts';
-import formValidationHandler from './utils/formValidation.ts';
 import { Storage } from './core/storage.ts';
 import { checkLogin } from './services/service.ts';
+import formValidationHandler from './utils/formValidation.ts';
 
-// what?
-export function clg(....i: unknown[]): void {
+export function clg(...i: unknown[]): void {
     console.log(...i);
 }
 
@@ -89,24 +88,6 @@ export function resetForm() {
     });
 }
 
-Handlebars.registerHelper('isNumber', (value) => {
-    return typeof value === 'number' && !isNaN(value)
-});
-Handlebars.registerHelper('eq', (a,b) => {
-    return a === b;
-})
-Handlebars.registerHelper('deq', (a,b) => {
-    return a !== b;
-})
-
-window.memory = new Storage({
-    loading: false,
-    user: {},
-    chats: {},
-    eAPI: null,
-    sAPI: null,
-});
-
 export enum Routes {
     Landing = '/',
     // LogIn = '/log-in',
@@ -118,15 +99,35 @@ export enum Routes {
     E500 = '/500',
 }
 
-window.router = new Router('#app');
-window.router.use(Routes.Landing, LoginPage, {method: 'get', formState: {login: '', password: ''}, router: window.router})
-            // .use('/', Home)
-            // .use(Routes.LogIn, LoginPage, {method: 'get'})
-             .use(Routes.App, ChatAPP, {router: window.router, user: window.memory.take().user})
-             .use(Routes.SignUp, SignupPage, {method: 'post', formState: {email:'',login:'',first_name:'',second_name:'',phone:'',password:''}, router: window.router})
-             .use(Routes.SetUp, Profile, { level: 0, user: window.memory.take().user })
-             .use(Routes.E404, E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
-             .use(Routes.E500, E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
-window.router.start();
-
-await checkLogin();
+if (typeof window !== 'undefined') {
+    Handlebars.registerHelper('isNumber', (value) => {
+        return typeof value === 'number' && !isNaN(value)
+    });
+    Handlebars.registerHelper('eq', (a,b) => {
+        return a === b;
+    })
+    Handlebars.registerHelper('deq', (a,b) => {
+        return a !== b;
+    })
+    
+    window.memory = new Storage({
+        loading: false,
+        user: {},
+        chats: {},
+        eAPI: null,
+        sAPI: null,
+    });
+    
+    window.router = new Router('#app');
+    window.router.use(Routes.Landing, LoginPage, {method: 'get', formState: {login: '', password: ''}, router: window.router})
+                // .use('/', Home)
+                // .use(Routes.LogIn, LoginPage, {method: 'get'})
+                 .use(Routes.App, ChatAPP, {router: window.router, user: window.memory.take().user})
+                 .use(Routes.SignUp, SignupPage, {method: 'post', formState: {email:'',login:'',first_name:'',second_name:'',phone:'',password:''}, router: window.router})
+                 .use(Routes.SetUp, Profile, { level: 0, user: window.memory.take().user })
+                 .use(Routes.E404, E, {eSrc: 'error.png', eAlt: 'Error 404: not found', error: '404'})
+                 .use(Routes.E500, E, {eSrc: 'error.png', eAlt: "Error 500: something went wrong on our end, we're already fixing it", error: '500'})
+    window.router.start();
+    
+    await checkLogin();
+}
