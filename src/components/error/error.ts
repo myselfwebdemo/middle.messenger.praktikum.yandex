@@ -6,7 +6,7 @@ interface eProps {
     alt: string
     ernum: string
 }
-export default class e extends Block {
+export default class EC extends Block {
     constructor(props: eProps) {
         super('div', {
             ...props,

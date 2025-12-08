@@ -1,4 +1,4 @@
-import endPointAPI from './api.ts';
+import EndPointAPI from './api.ts';
 
 export interface TPass {
     oldPassword: string
@@ -7,7 +7,7 @@ export interface TPass {
 
 
 export default class UserProfileRequests {
-    private readonly xhrUser = new endPointAPI('user');
+    private readonly xhrUser = new EndPointAPI('user');
     private static _instance: UserProfileRequests;
 
     constructor() {

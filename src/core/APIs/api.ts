@@ -16,7 +16,7 @@ interface RequestType {
 
 type RequestWithoutMethod = Omit<RequestType, 'method'>;
 
-export default class endPointAPI {
+export default class EndPointAPI {
     private baseURL: string = SERVER_BASE_URL;
 
     constructor(path: string) {

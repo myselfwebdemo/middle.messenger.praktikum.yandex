@@ -1,7 +1,7 @@
 import './errors.css';
 import Button from '../../components/button/button.ts';
-import e from '../../components/error/error.ts';
 import Block from '../../core/Block.ts';
+import EC from '../../components/error/error.ts';
 
 interface EProps {
     eSrc: string
@@ -15,7 +15,7 @@ export default class E extends Block<P, Record<string,Block>> {
         super('div', {
             className: 'error-container',
 
-            Error: new e({
+            Error: new EC({
                 src: props.eSrc,
                 alt: props.eAlt,
                 ernum: props.error

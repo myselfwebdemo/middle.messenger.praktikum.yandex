@@ -1,4 +1,4 @@
-import endPointAPI from './api.ts';
+import EndPointAPI from './api.ts';
 
 export interface TCNew {
     title: string
@@ -13,7 +13,7 @@ export interface TNewUser {
 
 
 export default class ChatRequests {
-    private readonly xhrChats = new endPointAPI('chats');
+    private readonly xhrChats = new EndPointAPI('chats');
     private static _instance: ChatRequests;
 
     constructor() {

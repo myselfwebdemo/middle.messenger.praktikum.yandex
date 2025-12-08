@@ -1,4 +1,4 @@
-import endPointAPI from './api.ts';
+import EndPointAPI from './api.ts';
 
 interface TReqError {
     reason: string
@@ -13,7 +13,7 @@ export interface TLogin {
 }
 
 export default class AuthRequests {
-    private readonly xhrAuth = new endPointAPI('auth');
+    private readonly xhrAuth = new EndPointAPI('auth');
     private static _instance: AuthRequests;
 
     constructor() {

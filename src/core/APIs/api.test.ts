@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import endPointAPI from './api.ts';
+import EndPointAPI from './api.ts';
 import { SERVER_BASE_URL } from '../../config.ts';
 
 class FakeXHR {
@@ -34,7 +34,7 @@ class FakeXHR {
     }
 }
 
-describe('endPointAPI module', () => {
+describe('EndPointAPI module', () => {
     let xhrStub: sinon.SinonStub;
 
     beforeEach(() => {
@@ -46,7 +46,7 @@ describe('endPointAPI module', () => {
     });
 
     it('GET should call open() with correct URL and method', async () => {
-        const api = new endPointAPI('test');
+        const api = new EndPointAPI('test');
         await api.get('/endpoint');
         const fake = xhrStub.firstCall.returnValue as FakeXHR;
 
@@ -57,7 +57,7 @@ describe('endPointAPI module', () => {
     });
 
     it('POST should send JSON body', async () => {
-        const api = new endPointAPI('test');
+        const api = new EndPointAPI('test');
         const data = { login: 'test' };
         await api.post('/foo', { data });
         const fake = xhrStub.firstCall.returnValue as FakeXHR;
@@ -69,7 +69,7 @@ describe('endPointAPI module', () => {
     });
 
     it('PUT should send JSON body', async () => {
-        const api = new endPointAPI('test');
+        const api = new EndPointAPI('test');
         const data = { login: 'update' };
         await api.put('/bar', { data });
         const fake = xhrStub.firstCall.returnValue as FakeXHR;
@@ -81,7 +81,7 @@ describe('endPointAPI module', () => {
     });
 
     it('DELETE should send JSON body', async () => {
-        const api = new endPointAPI('test');
+        const api = new EndPointAPI('test');
         const data = { login: 'delete' };
         await api.delete('/baz', { data });
         const fake = xhrStub.firstCall.returnValue as FakeXHR;
@@ -93,7 +93,7 @@ describe('endPointAPI module', () => {
     });
 
     it('should send FormData without JSON headers', async () => {
-        const api = new endPointAPI('test');
+        const api = new EndPointAPI('test');
         const formData = new FormData();
         formData.append('login', 'form');
         await api.post('/form', { data: formData });
@@ -105,7 +105,7 @@ describe('endPointAPI module', () => {
     });
 
     it('should reject promise on non-2xx status', async () => {
-        const api = new endPointAPI('test');
+        const api = new EndPointAPI('test');
         const fake = new FakeXHR();
         xhrStub.callsFake(() => fake);
         fake.status = 500;
@@ -120,7 +120,7 @@ describe('endPointAPI module', () => {
     });
 
     it('should resolve promise on successful response', async () => {
-        const api = new endPointAPI('test');
+        const api = new EndPointAPI('test');
         const fake = new FakeXHR();
         xhrStub.callsFake(() => fake);
         fake.status = 200;
