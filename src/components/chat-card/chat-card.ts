@@ -1,6 +1,6 @@
-import Block from 'core/Block';
 import './chat-card.css';
-import Image from 'components/image/image';
+import Block from '../../core/Block.ts';
+import Image from '../../components/image/image.ts';
 
 interface CardInterface {
     recipientName: string

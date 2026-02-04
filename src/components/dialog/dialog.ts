@@ -1,9 +1,9 @@
-import Block from 'core/Block';
-import Button from '../button/button';
-import Input from '../input/input';
-import { getLocByQuery } from 'utils/locationAPI';
-import SelfSearch from '../input/selfsearch';
 import './dialog.css';
+import Block from '../../core/Block.ts';
+import Button from '../button/button.ts';
+import Input from '../input/input.ts';
+import { getLocByQuery } from '../../utils/locationAPI.ts';
+import SelfSearch from '../input/selfsearch.ts';
 
 interface DialogProps {
     title: string

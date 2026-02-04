@@ -1,6 +1,6 @@
-import Block from 'core/Block';
-import Input from '../input/input';
 import './psl.css';
+import Block from '../../core/Block.ts';
+import Input from '../input/input.ts';
 
 interface PSLProps {
     trait: string

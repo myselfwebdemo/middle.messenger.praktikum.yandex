@@ -1,7 +1,7 @@
-import EventBus from "./EventBus";
+import EventBus from './EventBus.ts';
 
 export enum StoreEvents {
-    Updated = "Updated",
+    Updated = 'Updated',
 }
 export class Storage extends EventBus<StoreEvents> {
     private static _instance: Storage;

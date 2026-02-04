@@ -1,5 +1,5 @@
-import { renderWithQuery } from 'core/renderDOM';
-import type Block from './Block';
+import { renderWithQuery } from '../core/renderDOM.ts';
+import type Block from './Block.ts';
 
 export type BlockConstructor<P extends Record<string, unknown>> = new (props: P) => Block<P>;
 

@@ -1,8 +1,8 @@
 import './landing-style.css';
 
 import Button from "components/button/button";
-import Block from "core/Block";
-import type Router from 'core/router';
+import Block from "../../core/Block";
+import type Router from '../../core/router';
 import { checkLogin } from 'services/service';
 import { injectRouter } from "utils/injectRouter";
 

@@ -1,8 +1,8 @@
-import Block from 'core/Block';
 import './chatapp.css';
-import { linkStorage } from 'utils/link-storage';
-import { injectRouter } from 'utils/injectRouter';
-import ChatCard from 'components/chat-card/chat-card';
+import Block from '../../core/Block.ts';
+import { linkStorage } from '../../utils/link-storage.ts';
+import { injectRouter } from '../../utils/injectRouter.ts';
+import ChatCard from '../../components/chat-card/chat-card.ts';
 
 class ChatList extends Block<{}, Record<string,Block>> {
     constructor() {

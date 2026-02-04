@@ -1,5 +1,5 @@
-import Block from "core/Block";
 import './image.css';
+import Block from '../../core/Block.ts';
 
 interface ImageProps {
     class: string

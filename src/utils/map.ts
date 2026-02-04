@@ -1,5 +1,5 @@
-import { getLocByCoords } from './locationAPI';
 import './map.css';
+import { getLocByCoords } from './locationAPI.ts';
 import L, { Map as LeafletMap, Marker as LeafletMarker, Icon as LeafletIcon } from 'leaflet';
 
 let map: LeafletMap, marker: LeafletMarker, pin: LeafletIcon;
@@ -27,7 +27,6 @@ export async function MapInit() {
   
   const co = await approxL() || {lat:0, lon: 0}
   map = L.map('map').setView([co.lat, co.lon], 12);
-  // clg(map, l);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,

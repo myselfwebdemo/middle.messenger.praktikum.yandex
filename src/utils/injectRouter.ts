@@ -1,4 +1,4 @@
-import type Block from "core/Block";
+import type Block from '../core/Block.ts';
 
 export function injectRouter<T extends new (...args: any[]) => Block>(block: T) {
     return class extends block {

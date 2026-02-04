@@ -1,6 +1,6 @@
-import { SERVER_BASE_URL } from "../../config";
-import type { TCDel, TCNew, TNewUser } from "./api-for-chats";
-import type { TPass } from "./api-for-user";
+import { SERVER_BASE_URL } from "../../config.ts";
+import type { TCDel, TCNew, TNewUser } from "./api-for-chats.ts";
+import type { TPass } from "./api-for-user.ts";
 
 enum METHOD {
     GET = "GET",
@@ -16,7 +16,7 @@ interface RequestType {
 
 type RequestWithoutMethod = Omit<RequestType, 'method'>;
 
-export default class endPointAPI {
+export default class EndPointAPI {
     private baseURL: string = SERVER_BASE_URL;
 
     constructor(path: string) {

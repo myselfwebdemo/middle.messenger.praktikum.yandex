@@ -1,5 +1,5 @@
-import Block from 'core/Block';
 import './chatapp.css';
+import Block from '../../core/Block.ts';
 
 export default class FoundUsersList extends Block<{},Record<string,Block>> {
     constructor() {

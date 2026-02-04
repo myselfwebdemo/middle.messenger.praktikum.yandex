@@ -1,0 +1,6 @@
+{
+    "extension": ["ts"],
+    "spec": "./src/**/*.test.ts",
+    "require": ["ts-node/register","./jsdom-mocha-env.js","./src/main.ts"],
+    "loader": ["ts-node/esm", "./src/lcss.js"]
+}

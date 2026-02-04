@@ -1,5 +1,5 @@
-import Block from 'core/Block';
 import '../dialog/dialog.css';
+import Block from '../../core/Block.ts';
 
 interface WarningProps {
     mesWarning: string

@@ -14,6 +14,15 @@ npm run build      # build project in dist/
 npm run preview    # start local preview of the build
 ```
 
+## Running Tests
+This project uses Mocha and Chai for testing.
+
+```bash
+# run all tests
+npm run test
+```
+Tests are located next to module that they assess: Block, Router, endPointAPI, Component registration modules. 
+
 ## Deployed App
 Link: https://middle-messenger-yandex-praktikum.netlify.app/
 
